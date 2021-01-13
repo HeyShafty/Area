@@ -1,0 +1,22 @@
+{
+  "name": "b-yep-500-ren-5-1-area-eliott.palueau",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EpitechIT2020/B-YEP-500-REN-5-1-area-eliott.palueau.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EpitechIT2020/B-YEP-500-REN-5-1-area-eliott.palueau/issues"
+  },
+  "homepage": "https://github.com/EpitechIT2020/B-YEP-500-REN-5-1-area-eliott.palueau#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
