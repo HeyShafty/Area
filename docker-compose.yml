@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  server:
+    build: ./server
+    environment:
+      - SERVER_PORT=3000
+    ports:
+      - "8080:3000"
+  client_mobile:
+    build: ./mobile
+    depends_on:
+      - server
+    volumes:
+      - common:/usr/share/nginx/html
+  client_web:
+    build: ./front
+    depends_on:
+      - server
+    ports:
+      - "8081:80"
+    volumes:
+      - common:/usr/share/nginx/html
+volumes:
+  common:
