@@ -1,6 +1,9 @@
 import 'package:area/register.dart';
+import 'package:area/services/area_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:msal_flutter/msal_flutter.dart';
 
 class Login extends StatelessWidget {
   @override
@@ -86,7 +89,9 @@ class Login extends StatelessWidget {
                           style: TextStyle(color: Colors.black54, fontSize: 15),
                         )),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        await this.officeOauth();
+                      },
                       icon: Image.asset("assets/images/microsoft.png"),
                       color: Colors.blue,
                     )
@@ -97,5 +102,27 @@ class Login extends StatelessWidget {
   void openRegisterPage(BuildContext context) {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => Register()));
+  }
+
+  Future<void> officeOauth() async {
+    var pca = await PublicClientApplication.createPublicClientApplication(
+        "24ffcb55-7348-48a4-bbe7-c6c5b3763578",
+        authority:
+            "https://login.microsoftonline.com/901cb4ca-b862-4029-9306-e5cd0f6d9f86");
+
+    try {
+      String token = await pca.acquireToken(
+          ["api://db074310-a1fb-45a3-8dd9-8462d3f688f8/user.base.read"]);
+      AreaService().accessToken = token;
+    } on MsalException {
+      Fluttertoast.showToast(
+          msg: "Something went wrong...",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
   }
 }
