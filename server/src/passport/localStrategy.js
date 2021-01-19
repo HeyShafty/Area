@@ -1,0 +1,61 @@
+const passport = require('passport');
+const Strategy = require('passport-local').Strategy;
+const bcrypt = require('bcrypt');
+const User = require('../models/User');
+const { LOCAL_PASSPORT_CONFIG } = require('../config/passportLocalConfig');
+
+const STRATEGY_LOCAL_SIGN_IN = 'local-sign-in';
+const STRATEGY_LOCAL_SIGN_UP = 'local-sign-up';
+
+passport.use(STRATEGY_LOCAL_SIGN_IN, new Strategy(LOCAL_PASSPORT_CONFIG,
+    async (req, email, password, cb) => {
+        try {
+            let user = await User.findOne({ email, isMicrosoftAuthed: false });
+
+            if (!user) {
+                return cb(null, false);
+            } else {
+                const isValid = await bcrypt.compare(password, user.password);
+
+                if (!isValid) {
+                    return cb(null, false);
+                }
+                return cb(null, user);
+            }
+        } catch (error) {
+            return cb(error);
+        }
+    })
+);
+
+passport.use(STRATEGY_LOCAL_SIGN_UP, new Strategy(LOCAL_PASSPORT_CONFIG,
+    async (req, email, password, cb) => {
+        if (!req.body.fullName) {
+            return cb(null, false, { code: 400, message: 'Missing fullName property.' });
+        }
+        try {
+            let user = await User.findOne({ email, isMicrosoftAuthed: false });
+
+            if (user) {
+                return cb(null, false, { code: 409, message: 'A user with the given email already exists.' });
+            } else {
+                console.log(email);
+                console.log(password);
+                console.log(req.body.fullName);
+                user = await User.create({
+                    email,
+                    password,
+                    displayName: req.body.fullName
+                });
+                return cb(null, user);
+            }
+        } catch (error) {
+            return cb(error);
+        }
+    })
+);
+
+module.exports = {
+    STRATEGY_LOCAL_SIGN_IN,
+    STRATEGY_LOCAL_SIGN_UP,
+}
