@@ -18,7 +18,7 @@ async function getPrivateKey(request, rawJwtToken, done) {
         if (!decodedAccessToken) {
             return done(null, false);
         }
-        const response = await Axios.get(JWT_KEYS_URL);
+        const response = await Axios.get(AZURE_DISCOVERY_URL);
 
         for (let key of response.data.keys) {
             if (key && key.kid === decodedAccessToken?.header?.kid && key.x5c && key.x5c.length) {
