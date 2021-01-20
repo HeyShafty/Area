@@ -75,7 +75,7 @@ class Login extends StatelessWidget {
                     ),
                     Padding(
                         padding: const EdgeInsets.only(top: 10.0),
-                        child: FlatButton(
+                        child: TextButton(
                           onPressed: () => this.openRegisterPage(context),
                           child: Text(
                             'Don\'t have an account? Sign up',
