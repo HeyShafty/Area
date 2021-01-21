@@ -91,6 +91,7 @@
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue'
+import axios from 'vue-ts-axios';
 
 export default defineComponent({
   name: 'SignIn',
@@ -141,9 +142,20 @@ export default defineComponent({
     },
 
     // CALL SERVER FOR SIGN-IN
-    signIn() {
+    async signIn() {
       console.log(this.email + ' wants to sign-in')
-      // TODO: call server for sign in and manage errors
+      await axios.post('http://localhost:8080/auth/sign-in', {
+        email: this.email,
+        password: this.password,
+      })
+      .then(function (response: any) {
+        console.log(response);
+      })
+      .catch(function (error: any) {
+        console.log(error);
+      })
+      // TODO: manage errors
+      this.$router.push('/')
     },
 
     // MANAGE SIGN-IN WITH OFFICE
