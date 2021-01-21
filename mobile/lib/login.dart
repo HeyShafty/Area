@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:developer' as developer;
+import 'dart:io';
+
 import 'package:area/register.dart';
 import 'package:area/services/area_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,12 +9,30 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:msal_flutter/msal_flutter.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  static const String TENANT_ID = "901cb4ca-b862-4029-9306-e5cd0f6d9f86";
+  static const String APP_ID = "24ffcb55-7348-48a4-bbe7-c6c5b3763578";
+  static const String SERVER_SCOPE = "api://db074310-a1fb-45a3-8dd9-8462d3f688f8/user.base.read";
+
+  final AreaService areaServiceInstance = AreaService();
+  String _emailError;
+  String _passwordError;
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    Timer.run(() => this.showServerIpAlertDialog(context));
+  }
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController usernameController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
-
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -34,25 +56,23 @@ class Login extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 10.0),
                         child: TextField(
                           obscureText: false,
-                          controller: usernameController,
+                          controller: this._emailController,
                           decoration: InputDecoration(
-                              contentPadding:
-                                  EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                              contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                              errorText: this._emailError,
                               hintText: "Email",
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(32.0))),
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
                         )),
                     Padding(
                       padding: const EdgeInsets.only(top: 25.0),
                       child: TextField(
                         obscureText: true,
-                        controller: passwordController,
+                        controller: this._passwordController,
                         decoration: InputDecoration(
-                            contentPadding:
-                                EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                            contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                            errorText: this._passwordError,
                             hintText: "Password",
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(32.0))),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
                       ),
                     ),
                     Padding(
@@ -63,9 +83,11 @@ class Login extends StatelessWidget {
                         color: Theme.of(context).primaryColor,
                         child: MaterialButton(
                             minWidth: (MediaQuery.of(context).size.width),
-                            padding:
-                                EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                            onPressed: () {},
+                            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                            onPressed: () {
+                              this.signInWithCredentials(
+                                  this._emailController.value.text, this._passwordController.value.text);
+                            },
                             child: Text(
                               'Sign in',
                               style: TextStyle(color: Colors.white),
@@ -100,29 +122,104 @@ class Login extends StatelessWidget {
   }
 
   void openRegisterPage(BuildContext context) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => Register()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Register()));
   }
 
   Future<void> officeOauth() async {
-    var pca = await PublicClientApplication.createPublicClientApplication(
-        "24ffcb55-7348-48a4-bbe7-c6c5b3763578",
-        authority:
-            "https://login.microsoftonline.com/901cb4ca-b862-4029-9306-e5cd0f6d9f86");
+    var pca = await PublicClientApplication.createPublicClientApplication(APP_ID,
+        authority: "https://login.microsoftonline.com/" + TENANT_ID);
 
     try {
-      String token = await pca.acquireToken(
-          ["api://db074310-a1fb-45a3-8dd9-8462d3f688f8/user.base.read"]);
-      AreaService().accessToken = token;
+      String token = await pca.acquireToken([SERVER_SCOPE, "offline_access"]);
+      developer.log(token);
+      developer.log(this.areaServiceInstance.serverIp);
+      this.areaServiceInstance.accessToken = token;
     } on MsalException {
-      Fluttertoast.showToast(
-          msg: "Something went wrong...",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
+      this.showToast("Could not log in with Microsoft.");
     }
+  }
+
+  void showToast(String message) {
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
+
+  bool isFormValid(String email, String password) {
+    bool isValid = true;
+    String emailErrorMessage;
+    String passwordErrorMessage;
+
+    if (email.length == 0) {
+      emailErrorMessage = "Email must not be empty";
+      isValid = false;
+    }
+    if (RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+            .hasMatch(email) ==
+        false) {
+      emailErrorMessage = "Invalid email";
+      isValid = false;
+    }
+    if (password.length < 3) {
+      passwordErrorMessage = "Password must be formed of at list 3 characters";
+      isValid = false;
+    }
+    this.setState(() {
+      this._emailError = emailErrorMessage;
+      this._passwordError = passwordErrorMessage;
+    });
+    return isValid;
+  }
+
+  void signInWithCredentials(String email, String password) {
+    if (this.isFormValid(email, password) == false) {
+      return;
+    }
+  }
+
+  Future<void> showServerIpAlertDialog(BuildContext context) {
+    TextEditingController serverIpController = TextEditingController(text: '10.0.2.2');
+
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Server ip'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Please enter the server ip address and port bellow.'),
+                TextField(
+                  obscureText: false,
+                  controller: serverIpController,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                    hintText: "127.0.0.1",
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(onPressed: () => exit(0), child: Text('Cancel')),
+            TextButton(
+                onPressed: () {
+                  if (serverIpController.value.text == "") {
+                    return;
+                  }
+                  this.areaServiceInstance.serverIp = serverIpController.value.text;
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK')),
+          ],
+        );
+      },
+    );
   }
 }
