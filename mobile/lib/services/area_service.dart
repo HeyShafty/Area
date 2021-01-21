@@ -1,9 +1,7 @@
 class AreaService {
   static final AreaService _singleton = AreaService._internal();
-
-  String get accessToken => accessToken;
-
-  set accessToken(String value) => accessToken = value;
+  String accessToken = "";
+  String serverIp = "";
 
   factory AreaService() {
     return _singleton;
