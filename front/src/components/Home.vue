@@ -8,7 +8,7 @@
 import { ref, defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'HelloWorld',
+  name: 'Home',
   setup: () => {
     const count = ref(0)
     return { count }

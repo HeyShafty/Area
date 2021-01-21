@@ -8,7 +8,6 @@ const routes = [
     { path: '/', component: Page_Home },
     { path: '/signin', component: Page_SignIn },
     { path: '/signup', component: Page_SignUp },
-    { path: '/mabite', component: Page_SignIn },
     { path: '/:pathMatch(.*)*', component: Page_404 }
 ];
 const history = createWebHistory();
