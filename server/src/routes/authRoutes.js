@@ -6,6 +6,7 @@ const isLoggedIn = require("../passport/isLoggedIn");
 const { JWT_SECRET_KEY } = require('../config/jwtConfig')
 const { STRATEGY_OFFICE_JWT } = require("../passport/officeJwtStrategy");
 const { STRATEGY_LOCAL_SIGN_IN, STRATEGY_LOCAL_SIGN_UP } = require('../passport/localStrategy');
+const { STRATEGY_JWT } = require('../passport/jwtStrategy');
 
 const router = express.Router();
 
@@ -66,6 +67,14 @@ router.get('/office-jwt', (req, res, next) => {
         });
     })(req, res, next);
 });
+
+router.get('/protected', passport.authenticate(STRATEGY_JWT, {session: false}),
+    (req,res) => {
+        const { user } = req;
+
+        res.status(200).send({ user });
+    }
+);
 
 router.get('/logout', (req, res) => {
     req.logout();
