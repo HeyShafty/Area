@@ -4,7 +4,7 @@
       <button class="mr-2" aria-label="Open Menu" @click="drawer">
         <span class="iconify" data-icon="mdi:menu" data-inline="false"></span>
       </button>
-      <h3 class="my-4 text-2xl">Chad Area Virgin Zia</h3>
+      <h3 class="my-4 text-2xl">ChadArea</h3>
     </div>
     <div class="flex items-center">
       <div class="hidden md:block md:flex md:justify-between md:bg-transparent">
