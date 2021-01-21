@@ -76,7 +76,9 @@
                 <span class="h-px"></span>
                 <div class="container mx-auto space-y-0.5">
                   <h5 class="font-semibold text-gray-700">First time here?</h5>
-                  <h5 v-on:click="goToSignUp" class="font-semibold text-blue-500 cursor-pointer">Create an account</h5>
+                  <router-link to="/signup" v-slot="{ href, route, navigate, isActive, isExactActive }">
+                    <h5 class="font-semibold text-blue-500 cursor-pointer">Create an account</h5>
+                  </router-link>
                 </div>
               </div>
             </div>
@@ -148,11 +150,6 @@ export default defineComponent({
     officeSignIn() {
       alert("TODO")
     },
-
-    // NAVIGATE TO SIGN UP PAGE
-    goToSignUp() {
-      alert("GHASSANE ALED")
-    }
   }
 })
 </script>

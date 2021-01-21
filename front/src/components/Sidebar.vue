@@ -26,38 +26,49 @@
       <span @click="isOpen = false" class="flex w-full items-center p-4 border-b">
         <img src="../assets/AREALOGO.png" alt="Logo" class="h-auto w-32 mx-auto" />
       </span>
-      <span @click="isOpen = false" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
-        <span class="mr-2">
-          <span class="iconify" data-icon="mdi:home" data-inline="false"></span>
+      <router-link to="/" v-slot="{ href, route, navigate, isActive, isExactActive }">
+        <span @click="isOpen = false" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
+          <span class="mr-2">
+            <span class="iconify" data-icon="mdi:home" data-inline="false"></span>
+          </span>
+          <span>Home</span>
         </span>
-        <span>Home</span>
-      </span>
+      </router-link>
       <span @click="isOpen = false" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
         <span class="mr-2">
           <span class="iconify" data-icon="mdi:view-dashboard" data-inline="false"></span>
         </span>
-        <span>Dashboard</span></span>
+        <span>Dashboard</span>
+      </span>
       <span @click="isOpen = false" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
         <span class="mr-2">
           <span class="iconify" data-icon="mdi:information" data-inline="false"></span>
         </span>
-      <span>About</span></span>
+        <span>About</span>
+      </span>
       <span @click="isOpen = false" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
-      <span class="mr-2">
-          <span class="iconify" data-icon="mdi:code-json" data-inline="false"></span>
+        <span class="mr-2">
+            <span class="iconify" data-icon="mdi:code-json" data-inline="false"></span>
         </span>
-        <span>about.json</span></span>
+        <span>about.json</span>
+      </span>
       <div class="fixed bottom-0 w-full">
-        <span @click="isOpen = false" class="flex items-center p-4 bg-blue-500 text-white hover:bg-blue-600">
-        <span class="mr-2">
-            <span class="iconify" data-icon="mdi:account" data-inline="false"></span>
+        <router-link to="/signin" v-slot="{ href, route, navigate, isActive, isExactActive }">
+          <span @click="isOpen = false" class="flex items-center p-4 bg-blue-500 text-white hover:bg-blue-600">
+            <span class="mr-2">
+              <span class="iconify" data-icon="mdi:account" data-inline="false"></span>
+            </span>
+            <span>Sign In</span>
           </span>
-          <span>Sign In</span></span>
-        <span @click="isOpen = false" class="flex items-center p-4 bg-blue-500 text-white hover:bg-blue-600">
-        <span class="mr-2">
-            <span class="iconify" data-icon="mdi:account-multiple-plus" data-inline="false"></span>
+        </router-link>
+        <router-link to="/signup" v-slot="{ href, route, navigate, isActive, isExactActive }">
+          <span @click="isOpen = false" class="flex items-center p-4 bg-blue-500 text-white hover:bg-blue-600">
+            <span class="mr-2">
+              <span class="iconify" data-icon="mdi:account-multiple-plus" data-inline="false"></span>
+            </span>
+            <span>Sign Up</span>
           </span>
-          <span>Sign Up</span></span>
+        </router-link>
       </div>
     </aside>
   </nav>
