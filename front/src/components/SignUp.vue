@@ -67,6 +67,7 @@
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue'
+import axios from 'vue-ts-axios';
 
 export default defineComponent({
   name: 'SignUp',
@@ -131,9 +132,21 @@ export default defineComponent({
     },
 
     // CALL SERVER FOR SIGN-UP
-    signUp() {
+    async signUp() {
       console.log(this.username + ' wants to create an account')
-      // TODO: call server for registration here
+      await axios.post('http://localhost:8080/auth/sign-up', {
+        fullName: this.username,
+        email: this.email,
+        password: this.password,
+      })
+      .then(function (response: any) {
+        console.log(response);
+      })
+      .catch(function (error: any) {
+        console.log(error);
+      })
+      // TODO: manage errors
+      this.$router.push('signin')
     }
   },
 })
