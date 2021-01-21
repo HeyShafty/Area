@@ -30,69 +30,11 @@ router.get('/ping', isLoggedIn, (req, res) => {
     res.send(true);
 });
 
-<<<<<<< HEAD
-/**
- * @swagger
- *
- * /auth/sign-in:
- *   post:
- *      summary: Authenticate to the application.
- *      produces:
- *        - application/json
- *      parameters:
- *        - name: email
- *          description: User email.
- *          in: formData
- *          required: true
- *          type: string
- *        - name: password
- *          description: User password.
- *          in: formData
- *          required: true
- *          type: string
- *      responses:
- *        200:
- *          description: Authenticated.
- *          content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  token:
- *                    type: string
- *        401:
- *          description: Cannot find email or password.
- *        409:
- *          description: Wrong credentials.
- *        500:
- *          description: Error.
- */
-router.post('/sign-in', (req, res, next) => {
-    passport.authenticate(STRATEGY_LOCAL_SIGN_IN, (err, user, info) => {
-        if (err) {
-            console.log(err);
-            return res.sendStatus(500);
-        }
-        if (!user) {
-            if (info.hasOwnProperty('code') && info.hasOwnProperty('message')) {
-                return res.status(info.code).json({ message: info.message });
-            } else {
-                return res.sendStatus(400);
-            }
-        }
-        req.logIn(user, { session: false }, (err) => {
-            if (err) {
-                return next(err);
-            }
-            const body = { email: user.email, displayName: user.displayName };
-            const token = jwt.sign({ user: body }, JWT_SECRET_KEY, { expiresIn: '2 years' });
-=======
 router.post('/sign-in',
     passport.authenticate(STRATEGY_LOCAL_SIGN_IN, { session: false }), (req, res) => {
         let user = req.user;
         const body = { email: user.email, displayName: user.displayName };
         const token = jwt.sign({ user: body }, JWT_SECRET_KEY, { expiresIn: '7 days' });
->>>>>>> Disabling user session for office-jwt auth endpoint.
 
             res.json({ token });
         })

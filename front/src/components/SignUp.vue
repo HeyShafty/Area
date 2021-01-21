@@ -143,6 +143,7 @@ export default defineComponent({
         email: this.email,
         password: this.password,
       })
+<<<<<<< HEAD
       .then( (response: any) => {
         console.log(response);
         this.$router.push('signin')
@@ -154,6 +155,16 @@ export default defineComponent({
         if (error.response.status == 500)
           this.errorMessages['request'] = 'Server Error.';
       })
+=======
+      .then(function (response: any) {
+        console.log(response);
+      })
+      .catch(function (error: any) {
+        console.log(error);
+      })
+      // TODO: manage errors
+      this.$router.push('signin')
+>>>>>>> [ADD] Adding server call for SignIn/SignUp + changing front port to 8081
     }
   },
 })
