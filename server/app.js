@@ -1,5 +1,4 @@
 const express = require('express');
-const expressSession = require('express-session');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const cors = require('cors');
@@ -23,11 +22,6 @@ function startServer() {
   app.use(bodyParser.urlencoded({
     extended: false
   }));
-  app.use(expressSession({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: false
-  }));
   app.use(cookieParser());
   app.set('trust proxy', true);
   app.use(cors({
@@ -35,7 +29,6 @@ function startServer() {
     credentials: true
   }));
   app.use(passport.initialize({}));
-  app.use(passport.session({}));
 
   app.get('/', (req, res) => {
     res.send('Hello World!');

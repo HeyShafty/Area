@@ -15,7 +15,7 @@ router.get('/ping', isLoggedIn, (req, res) => {
 });
 
 router.post('/sign-in',
-    passport.authenticate(STRATEGY_LOCAL_SIGN_IN), (req, res) => {
+    passport.authenticate(STRATEGY_LOCAL_SIGN_IN, {session: false}), (req, res) => {
         let user = req.user;
         const body = { email: user.email, displayName: user.displayName };
         const token = jwt.sign({ user: body }, JWT_SECRET_KEY, { expiresIn: '7 days' });
@@ -36,7 +36,7 @@ router.post('/sign-up', (req, res, next) => {
                 return res.sendStatus(400);
             }
         }
-        req.logIn(user, (err) => {
+        req.logIn(user, {session: false}, (err) => {
             if (err) {
                 return next(err);
             }
