@@ -8,7 +8,6 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const moment = require('moment');
 
-require('./src/config/initSessions');
 const authRouter = require('./src/routes/authRoutes');
 
 const { ALLOWED_ORIGINS } = require('./src/config/config');
