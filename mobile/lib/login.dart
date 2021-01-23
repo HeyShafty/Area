@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:msal_flutter/msal_flutter.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
+import 'constants.dart';
 import 'main.dart';
 
 class Login extends StatefulWidget {
@@ -27,7 +28,6 @@ class _LoginState extends State<Login> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
-  bool _isLoading = false;
 
   @override
   void initState() {
@@ -172,9 +172,7 @@ class _LoginState extends State<Login> {
       emailErrorMessage = "Email must not be empty";
       isValid = false;
     }
-    if (RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-            .hasMatch(email) ==
-        false) {
+    if (RegExp(EMAIL_REGEX).hasMatch(email) == false) {
       emailErrorMessage = "Invalid email";
       isValid = false;
     }
