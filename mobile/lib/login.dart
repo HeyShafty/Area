@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer' as developer;
 import 'dart:io';
 
 import 'package:area/register.dart';
@@ -8,6 +7,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:msal_flutter/msal_flutter.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
+
+import 'main.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -24,6 +26,8 @@ class _LoginState extends State<Login> {
   String _passwordError;
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -62,6 +66,7 @@ class _LoginState extends State<Login> {
                               errorText: this._emailError,
                               hintText: "Email",
                               border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+                          keyboardType: TextInputType.emailAddress,
                         )),
                     Padding(
                       padding: const EdgeInsets.only(top: 25.0),
@@ -77,28 +82,24 @@ class _LoginState extends State<Login> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 25.0),
-                      child: Material(
-                        elevation: 5.0,
-                        borderRadius: BorderRadius.circular(30.0),
-                        color: Theme.of(context).primaryColor,
-                        child: MaterialButton(
-                            minWidth: (MediaQuery.of(context).size.width),
-                            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                            onPressed: () {
-                              this.signInWithCredentials(
-                                  this._emailController.value.text, this._passwordController.value.text);
-                            },
-                            child: Text(
-                              'Sign in',
-                              style: TextStyle(color: Colors.white),
-                              textAlign: TextAlign.center,
-                            )),
+                      child: RoundedLoadingButton(
+                        child: Text(
+                          'Sign in',
+                          style: TextStyle(color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                        controller: _btnController,
+                        onPressed: () {
+                          FocusScope.of(context).unfocus();
+                          this.signInWithCredentials(
+                              this._emailController.value.text, this._passwordController.value.text);
+                        },
                       ),
                     ),
                     Padding(
                         padding: const EdgeInsets.only(top: 10.0),
                         child: TextButton(
-                          onPressed: () => this.openRegisterPage(context),
+                          onPressed: () => this.openRegisterPage(),
                           child: Text(
                             'Don\'t have an account? Sign up',
                             style: TextStyle(color: Colors.blue, fontSize: 15),
@@ -112,7 +113,7 @@ class _LoginState extends State<Login> {
                         )),
                     IconButton(
                       onPressed: () async {
-                        await this.officeOauth();
+                        await this.signInWithMicrosoft();
                       },
                       icon: Image.asset("assets/images/microsoft.png"),
                       color: Colors.blue,
@@ -121,21 +122,33 @@ class _LoginState extends State<Login> {
         ));
   }
 
-  void openRegisterPage(BuildContext context) {
+  void openRegisterPage() {
     Navigator.push(context, MaterialPageRoute(builder: (context) => Register()));
   }
 
-  Future<void> officeOauth() async {
+  void openHomePage() {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+            builder: (context) => MyHomePage(
+                  title: "mdr",
+                )),
+        (Route<dynamic> route) => false);
+  }
+
+  Future<void> signInWithMicrosoft() async {
     var pca = await PublicClientApplication.createPublicClientApplication(APP_ID,
         authority: "https://login.microsoftonline.com/" + TENANT_ID);
 
     try {
-      String token = await pca.acquireToken([SERVER_SCOPE, "offline_access"]);
-      developer.log(token);
-      developer.log(this.areaServiceInstance.serverIp);
-      this.areaServiceInstance.accessToken = token;
+      String token = await pca.acquireToken([SERVER_SCOPE]);
+
+      await this.areaServiceInstance.signInWithAccessToken(token);
+      this.openHomePage();
     } on MsalException {
-      this.showToast("Could not log in with Microsoft.");
+      this.showToast("Couldn't sign you in with Microsoft.");
+    } catch (e) {
+      this.showToast(e.toString());
     }
   }
 
@@ -166,7 +179,7 @@ class _LoginState extends State<Login> {
       isValid = false;
     }
     if (password.length < 3) {
-      passwordErrorMessage = "Password must be formed of at list 3 characters";
+      passwordErrorMessage = "Password must be formed of at least 3 characters";
       isValid = false;
     }
     this.setState(() {
@@ -176,14 +189,24 @@ class _LoginState extends State<Login> {
     return isValid;
   }
 
-  void signInWithCredentials(String email, String password) {
+  Future<void> signInWithCredentials(String email, String password) async {
     if (this.isFormValid(email, password) == false) {
+      this._btnController.reset();
       return;
+    }
+    try {
+      this._btnController.start();
+      await this.areaServiceInstance.signInWithCredentials(email, password);
+      this._btnController.success();
+      this.openHomePage();
+    } catch (e) {
+      this._btnController.reset();
+      this.showToast(e.toString());
     }
   }
 
   Future<void> showServerIpAlertDialog(BuildContext context) {
-    TextEditingController serverIpController = TextEditingController(text: '10.0.2.2');
+    TextEditingController serverIpController = TextEditingController(text: '10.0.2.2:8080');
 
     return showDialog(
       context: context,
