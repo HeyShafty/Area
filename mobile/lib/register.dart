@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
+import 'constants.dart';
 import 'main.dart';
 import 'services/area_service.dart';
 
@@ -115,9 +116,7 @@ class _RegisterState extends State<Register> {
       emailError = "Email must not be empty";
       isValid = false;
     }
-    if (RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-            .hasMatch(email) ==
-        false) {
+    if (RegExp(EMAIL_REGEX).hasMatch(email) == false) {
       emailError = "Invalid email";
       isValid = false;
     }
