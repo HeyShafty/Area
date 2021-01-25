@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:area/register.dart';
 import 'package:area/services/area_service.dart';
+import 'package:area/services/shared_preferences_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -21,6 +22,7 @@ class _LoginState extends State<Login> {
   static const String TENANT_ID = "901cb4ca-b862-4029-9306-e5cd0f6d9f86";
   static const String APP_ID = "24ffcb55-7348-48a4-bbe7-c6c5b3763578";
   static const String SERVER_SCOPE = "api://db074310-a1fb-45a3-8dd9-8462d3f688f8/user.base.read";
+  static const String IP_KEY = "IP";
 
   final AreaService areaServiceInstance = AreaService();
   String _emailError;
@@ -91,8 +93,7 @@ class _LoginState extends State<Login> {
                         controller: _btnController,
                         onPressed: () {
                           FocusScope.of(context).unfocus();
-                          this.signInWithCredentials(
-                              this._emailController.value.text, this._passwordController.value.text);
+                          this.signInWithCredentials(this._emailController.value.text, this._passwordController.value.text);
                         },
                       ),
                     ),
@@ -137,8 +138,8 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> signInWithMicrosoft() async {
-    var pca = await PublicClientApplication.createPublicClientApplication(APP_ID,
-        authority: "https://login.microsoftonline.com/" + TENANT_ID);
+    var pca =
+        await PublicClientApplication.createPublicClientApplication(APP_ID, authority: "https://login.microsoftonline.com/" + TENANT_ID);
 
     try {
       String token = await pca.acquireToken([SERVER_SCOPE]);
@@ -203,9 +204,15 @@ class _LoginState extends State<Login> {
     }
   }
 
-  Future<void> showServerIpAlertDialog(BuildContext context) {
-    TextEditingController serverIpController = TextEditingController(text: '10.0.2.2:8080');
+  Future<void> showServerIpAlertDialog(BuildContext context) async {
+    String storedIp = await SharedPreferencesService.getString(IP_KEY);
+    TextEditingController serverIpController;
 
+    if (storedIp == null || storedIp == "") {
+      serverIpController = TextEditingController(text: '10.0.2.2:8080');
+    } else {
+      serverIpController = TextEditingController(text: storedIp);
+    }
     return showDialog(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -221,7 +228,7 @@ class _LoginState extends State<Login> {
                   controller: serverIpController,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                    hintText: "127.0.0.1",
+                    hintText: "10.0.2.2:8080",
                   ),
                 ),
               ],
@@ -230,12 +237,23 @@ class _LoginState extends State<Login> {
           actions: <Widget>[
             TextButton(onPressed: () => exit(0), child: Text('Cancel')),
             TextButton(
-                onPressed: () {
+                onPressed: () async {
                   if (serverIpController.value.text == "") {
                     return;
                   }
+
                   this.areaServiceInstance.serverIp = serverIpController.value.text;
+                  FocusScope.of(context).unfocus();
+                  try {
+                    await this.areaServiceInstance.checkIp();
+                  } catch (e) {
+                    return this.showToast("Bad ip address.");
+                  }
+                  await SharedPreferencesService.saveString(IP_KEY, serverIpController.value.text);
                   Navigator.of(context).pop();
+                  if (await this.areaServiceInstance.getStoredAccessToken() == true) {
+                    this.openHomePage();
+                  }
                 },
                 child: Text('OK')),
           ],
