@@ -100,10 +100,11 @@ class _RegisterState extends State<Register> {
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-            builder: (context) => MyHomePage(
+            builder: (context) =>
+                MyHomePage(
                   title: "mdr",
                 )),
-        (Route<dynamic> route) => false);
+            (Route<dynamic> route) => false);
   }
 
   bool isFormValid(String username, String email, String password) {
