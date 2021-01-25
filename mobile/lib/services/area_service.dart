@@ -1,9 +1,12 @@
 import 'dart:convert';
 
+import 'package:area/services/shared_preferences_service.dart';
 import 'package:http/http.dart' as http;
 
 class AreaService {
+  static const String TOKEN_KEY = "token";
   static final AreaService _singleton = AreaService._internal();
+
   String accessToken = "";
   String _serverIp = "";
 
@@ -20,24 +23,41 @@ class AreaService {
     return _singleton;
   }
 
+  Future<bool> getStoredAccessToken() async {
+    String accessToken = await SharedPreferencesService.getString(TOKEN_KEY);
+
+    if (accessToken == null || accessToken == "") {
+      return false;
+    }
+    this.accessToken = accessToken;
+    return true;
+  }
+
+  Future<void> checkIp() async {
+    http.Response response = await http.get("http://" + this.serverIp).timeout(const Duration(seconds: 3));
+
+    if (response.statusCode != 200) {
+      throw ("Bad ip address.");
+    }
+  }
+
   Future<void> signInWithAccessToken(String token) async {
-    http.Response response = await http.get("http://" + serverIp + "/auth/office-jwt", headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': 'Bearer ' + token
-    });
+    http.Response response = await http.get("http://" + this.serverIp + "/auth/office-jwt",
+        headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': 'Bearer ' + token});
     if (response.statusCode != 200) {
       throw ("Couldn't sign you in with Microsoft.");
     }
 
     final Map<String, dynamic> decodedBody = jsonDecode(response.body);
-    if (decodedBody["token"] == "") {
+    if (decodedBody[TOKEN_KEY] == "") {
       throw ("Couldn't sign you in with Microsoft.");
     }
-    this.accessToken = decodedBody["token"];
+    this.accessToken = decodedBody[TOKEN_KEY];
+    await SharedPreferencesService.saveString(TOKEN_KEY, this.accessToken);
   }
 
   Future<void> signInWithCredentials(String email, String password) async {
-    http.Response response = await http.post("http://" + serverIp + "/auth/sign-in",
+    http.Response response = await http.post("http://" + this.serverIp + "/auth/sign-in",
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -50,14 +70,15 @@ class AreaService {
     }
 
     final Map<String, dynamic> decodedBody = jsonDecode(response.body);
-    if (decodedBody["token"] == "") {
+    if (decodedBody[TOKEN_KEY] == "") {
       throw ("Couldn't sign you in.");
     }
-    this.accessToken = decodedBody["token"];
+    this.accessToken = decodedBody[TOKEN_KEY];
+    await SharedPreferencesService.saveString(TOKEN_KEY, this.accessToken);
   }
 
   Future<void> signUp(String username, String email, String password) async {
-    http.Response response = await http.post("http://" + serverIp + "/auth/sign-up",
+    http.Response response = await http.post("http://" + this.serverIp + "/auth/sign-up",
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -70,10 +91,11 @@ class AreaService {
     }
 
     final Map<String, dynamic> decodedBody = jsonDecode(response.body);
-    if (decodedBody["token"] == "") {
+    if (decodedBody[TOKEN_KEY] == "") {
       throw ("Couldn't sign you up.");
     }
-    this.accessToken = decodedBody["token"];
+    this.accessToken = decodedBody[TOKEN_KEY];
+    await SharedPreferencesService.saveString(TOKEN_KEY, this.accessToken);
   }
 
   AreaService._internal();
