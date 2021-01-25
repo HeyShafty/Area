@@ -30,6 +30,42 @@ router.get('/ping', isLoggedIn, (req, res) => {
     res.send(true);
 });
 
+/**
+ * @swagger
+ *
+ * /auth/sign-in:
+ *   post:
+ *      summary: Authenticate to the application.
+ *      produces:
+ *        - application/json
+ *      parameters:
+ *        - name: email
+ *          description: User email.
+ *          in: formData
+ *          required: true
+ *          type: string
+ *        - name: password
+ *          description: User password.
+ *          in: formData
+ *          required: true
+ *          type: string
+ *      responses:
+ *        200:
+ *          description: Authenticated.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  token:
+ *                    type: string
+ *        401:
+ *          description: Cannot find email or password.
+ *        409:
+ *          description: Wrong credentials.
+ *        500:
+ *          description: Error.
+ */
 router.post('/sign-in', (req, res, next) => {
     passport.authenticate(STRATEGY_LOCAL_SIGN_IN, (err, user, info) => {
         if (err) {
@@ -174,6 +210,16 @@ router.get('/protected', passport.authenticate(STRATEGY_JWT, { session: false })
     }
 );
 
+/**
+ * @swagger
+ *
+ * /auth/logout:
+ *   get:
+ *     summary: Ends session.
+ *     responses:
+ *       302:
+ *         description: Session ended, redirecting to login page.
+ */
 router.get('/logout', (req, res) => {
     req.logout();
     // res.redirect(CLIENT_WEB_URI + '/auth/login'); // TODO: Watch out for the path
