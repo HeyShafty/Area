@@ -84,7 +84,7 @@ router.post('/sign-in', (req, res, next) => {
                 return next(err);
             }
             const body = { email: user.email, displayName: user.displayName };
-            const token = jwt.sign({ user: body }, JWT_SECRET_KEY, { expiresIn: '7 days' });
+            const token = jwt.sign({ user: body }, JWT_SECRET_KEY, { expiresIn: '2 years' });
 
             res.json({ token });
         })
@@ -150,7 +150,7 @@ router.post('/sign-up', (req, res, next) => {
                 return next(err);
             }
             const body = { email: user.email, displayName: user.displayName };
-            const token = jwt.sign({ user: body }, JWT_SECRET_KEY, { expiresIn: '7 days' });
+            const token = jwt.sign({ user: body }, JWT_SECRET_KEY, { expiresIn: '2 years' });
 
             res.json({ token });
         });
