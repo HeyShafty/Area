@@ -13,14 +13,30 @@ router.get('/ping', isLoggedIn, (req, res) => {
     res.send(true);
 });
 
-router.post('/sign-in',
-    passport.authenticate(STRATEGY_LOCAL_SIGN_IN), (req, res) => {
-        let user = req.user;
-        const body = { email: user.email, displayName: user.displayName };
-        const token = jwt.sign({ user: body }, JWT_SECRET_KEY, { expiresIn: '7 days' });
+router.post('/sign-in', (req, res, next) => {
+    passport.authenticate(STRATEGY_LOCAL_SIGN_IN, (err, user, info) => {
+        if (err) {
+            console.log(err);
+            return res.sendStatus(500);
+        }
+        if (!user) {
+            if (info.hasOwnProperty('code') && info.hasOwnProperty('message')) {
+                return res.status(info.code).json({ message: info.message });
+            } else {
+                return res.sendStatus(400);
+            }
+        }
+        req.logIn(user, { session: false }, (err) => {
+            if (err) {
+                return next(err);
+            }
+            const body = { email: user.email, displayName: user.displayName };
+            const token = jwt.sign({ user: body }, JWT_SECRET_KEY, { expiresIn: '7 days' });
 
-        res.json({ token });
-    });
+            res.json({ token });
+        })
+    })(req, res, next);
+});
 
 router.post('/sign-up', (req, res, next) => {
     passport.authenticate(STRATEGY_LOCAL_SIGN_UP, (err, user, info) => {

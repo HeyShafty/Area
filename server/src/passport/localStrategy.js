@@ -13,12 +13,12 @@ passport.use(STRATEGY_LOCAL_SIGN_IN, new Strategy(LOCAL_PASSPORT_CONFIG,
             let user = await User.findOne({ email, isMicrosoftAuthed: false });
 
             if (!user) {
-                return cb(null, false);
+                return cb(null, false, { code: 409, message: 'Wrong credentials' });
             } else {
                 const isValid = await bcrypt.compare(password, user.password);
 
                 if (!isValid) {
-                    return cb(null, false);
+                    return cb(null, false, { code: 409, message: 'Wrong credentials' });
                 }
                 return cb(null, user);
             }
@@ -39,9 +39,6 @@ passport.use(STRATEGY_LOCAL_SIGN_UP, new Strategy(LOCAL_PASSPORT_CONFIG,
             if (user) {
                 return cb(null, false, { code: 409, message: 'A user with the given email already exists.' });
             } else {
-                console.log(email);
-                console.log(password);
-                console.log(req.body.fullName);
                 user = await User.create({
                     email,
                     password,
