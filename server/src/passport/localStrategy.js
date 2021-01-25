@@ -13,7 +13,7 @@ passport.use(STRATEGY_LOCAL_SIGN_IN, new Strategy(LOCAL_PASSPORT_CONFIG,
             let user = await User.findOne({ email, isMicrosoftAuthed: false });
 
             if (!user) {
-                return cb(null, false, { code: 409, message: 'Wrong credentials' });
+                return cb(null, false, { code: 401, message: 'User does not exist' });
             } else {
                 const isValid = await bcrypt.compare(password, user.password);
 

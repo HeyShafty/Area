@@ -12,6 +12,22 @@ const authRouter = require('./src/routes/authRoutes');
 const { ALLOWED_ORIGINS } = require('./src/config/config');
 const { MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PASSWORD } = require('./src/config/mongoConfig');
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerJSDoc = require('swagger-jsdoc');
+
+const options = {
+  definition: {
+      openapi: '3.0.3',
+      info: {
+          title: 'Area',
+          version: '1.0.0'
+      }
+  },
+  apis: [ './src/routes/*Routes*.js' ]
+};
+
+const swaggerSpec = swaggerJSDoc(options);
+
 const port = process.env.SERVER_PORT || 8080;
 
 function startServer() {
@@ -39,6 +55,7 @@ function startServer() {
   app.get('/about.json', (req, res) => {
     res.json({ client: { host: req.ip }, server: { current_time: moment().unix() } });
   });
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
   app.listen(port, () => { console.log(`Example app listening at http://localhost:${port}`); });
 }
