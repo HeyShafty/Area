@@ -2,7 +2,7 @@
   <div class="flex items-center min-h-screen p-4 bg-gray-100 lg:justify-center">
     <div class="container mx-auto">
     <!-- AREA LOGO -->
-      <img class="mx-auto h-60 w-auto mb-5 -mt-20" src="../assets/AREALOGO.png">
+      <img class="mx-auto h-60 w-auto" src="../assets/AREALOGO.png">
     <!-- CARD -->
       <div
         class="mx-auto overflow-hidden bg-white rounded-md shadow-lg max-w-md"
@@ -46,6 +46,7 @@
               >
                 Sign-In
               </button>
+              <span v-if="errorMessages.request" class="text-sm font-semibold text-red-500">{{errorMessages.request}}</span>
             </div>
             <!-- "OR LOGIN WITH" DIVIDER -->
             <div class="flex flex-col space-y-5">
@@ -119,7 +120,7 @@ export default defineComponent({
     validateEmail() {
       let regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       if (!regexEmail.test(this.email))
-        this.errorMessages['email'] = 'Invalid Email Address';
+        this.errorMessages['email'] = 'Invalid Email Address.';
       else
         this.errorMessages['email'] = '';
     },
@@ -127,7 +128,7 @@ export default defineComponent({
     // CHECK IF PASSWORD IS LONG ENOUGH
     validatePassword() {
       if (this.password.length < 6 )
-        this.errorMessages['password'] = 'Too short password';
+        this.errorMessages['password'] = 'Too short password.';
       else
         this.errorMessages['password'] = '';
     },
@@ -148,14 +149,17 @@ export default defineComponent({
         email: this.email,
         password: this.password,
       })
-      .then(function (response: any) {
+      .then( (response: any) =>  {
         console.log(response);
+        this.$router.push('/')
       })
-      .catch(function (error: any) {
+      .catch( (error: any) => {
         console.log(error);
+        if (error.response.status == 409)
+          this.errorMessages['request'] = 'Invalid credentials.';
+        if (error.response.status == 500)
+          this.errorMessages['request'] = 'Server Error.';
       })
-      // TODO: manage errors
-      this.$router.push('/')
     },
 
     // MANAGE SIGN-IN WITH OFFICE

@@ -1,8 +1,8 @@
 <template>
-  <div class="flex items-center min-h-screen p-4 bg-gray-100 lg:justify-center">
+  <div class="flex items-center min-h-screen p-6 bg-gray-100 lg:justify-center">
     <div class="container mx-auto">
     <!-- AREA LOGO -->
-      <img class="mx-auto h-60 w-auto mb-5 -mt-20" src="../assets/AREALOGO.png">
+      <img class="mx-auto h-60 w-auto" src="../assets/AREALOGO.png">
     <!-- CARD -->
       <div
         class="mx-auto overflow-hidden bg-white rounded-md shadow-lg max-w-md"
@@ -57,6 +57,7 @@
               >
                 Sign-Up
               </button>
+              <span v-if="errorMessages.request" class="text-sm font-semibold text-red-500">{{errorMessages.request}}</span>
             </div>
           </form>
         </div>
@@ -80,6 +81,7 @@ export default defineComponent({
       username: '',
       email: '',
       password: '',
+
       errorMessages: [],
     }
   },
@@ -99,7 +101,9 @@ export default defineComponent({
     validateUsername() {
       let regexUsername = /^[a-zA-Z0-9]*$/;
       if (!regexUsername.test(this.username))
-        this.errorMessages['username'] = 'Invalid Username';
+        this.errorMessages['username'] = 'Invalid username.';
+      else if (this.username.length < 3)
+        this.errorMessages['username'] = 'Too short username.';
       else
         this.errorMessages['username'] = '';
     },
@@ -108,15 +112,15 @@ export default defineComponent({
     validateEmail() {
       let regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       if (!regexEmail.test(this.email))
-        this.errorMessages['email'] = 'Invalid Email Address';
+        this.errorMessages['email'] = 'Invalid email address.';
       else
         this.errorMessages['email'] = '';
     },
 
     // CHECK IF PASSWORD IS LONG ENOUGH
     validatePassword() {
-      if (this.password.length < 6 )
-        this.errorMessages['password'] = 'Too short password';
+      if (this.password.length < 6)
+        this.errorMessages['password'] = 'Too short password.';
       else
         this.errorMessages['password'] = '';
     },
@@ -139,14 +143,17 @@ export default defineComponent({
         email: this.email,
         password: this.password,
       })
-      .then(function (response: any) {
+      .then( (response: any) => {
         console.log(response);
+        this.$router.push('signin')
       })
-      .catch(function (error: any) {
+      .catch( (error: any) => {
         console.log(error);
+        if (error.response.status == 409)
+          this.errorMessages['request'] = 'A user with the given email already exists.';
+        if (error.response.status == 500)
+          this.errorMessages['request'] = 'Server Error.';
       })
-      // TODO: manage errors
-      this.$router.push('signin')
     }
   },
 })
