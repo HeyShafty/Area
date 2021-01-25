@@ -12,7 +12,7 @@ RUN wget -q -O sdk-tools.zip https://dl.google.com/android/repository/sdk-tools-
 RUN unzip -q sdk-tools.zip && rm sdk-tools.zip
 RUN mv tools Android/sdk/tools
 RUN cd Android/sdk/tools/bin && yes | ./sdkmanager --licenses
-RUN cd Android/sdk/tools/bin && ./sdkmanager "build-tools;29.0.2" "patcher;v4" "platform-tools" "platforms;android-29" "sources;android-29"
+RUN cd Android/sdk/tools/bin && ./sdkmanager "build-tools;29.0.2" "patcher;v4" "platform-tools" "platforms;android-29" "sources;android-29" >/dev/null
 ENV PATH "$PATH:/home/developer/Android/sdk/platform-tools"
 
 RUN git clone https://github.com/flutter/flutter.git
