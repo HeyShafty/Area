@@ -142,6 +142,7 @@ export default defineComponent({
         password: this.password,
       })
 <<<<<<< HEAD
+<<<<<<< HEAD
       .then( (response: any) =>  {
         console.log(response);
         this.$router.push('/')
@@ -155,13 +156,19 @@ export default defineComponent({
       })
 =======
       .then(function (response: any) {
+=======
+      .then( (response: any) =>  {
+>>>>>>> Adding SignUp/In pages finies (manque juste office)
         console.log(response);
+        this.$router.push('/')
       })
-      .catch(function (error: any) {
+      .catch( (error: any) => {
         console.log(error);
+        if (error.response.status == 409)
+          this.errorMessages['request'] = 'Invalid credentials.';
+        if (error.response.status == 500)
+          this.errorMessages['request'] = 'Server Error.';
       })
-      // TODO: manage errors
-      this.$router.push('/')
     },
 
     // MANAGE SIGN-IN WITH OFFICE

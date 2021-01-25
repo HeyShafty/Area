@@ -144,6 +144,7 @@ export default defineComponent({
         password: this.password,
       })
 <<<<<<< HEAD
+<<<<<<< HEAD
       .then( (response: any) => {
         console.log(response);
         this.$router.push('signin')
@@ -157,14 +158,25 @@ export default defineComponent({
       })
 =======
       .then(function (response: any) {
+=======
+      .then( (response: any) => {
+>>>>>>> Adding SignUp/In pages finies (manque juste office)
         console.log(response);
+        this.$router.push('signin')
       })
-      .catch(function (error: any) {
+      .catch( (error: any) => {
         console.log(error);
+        if (error.response.status == 409)
+          this.errorMessages['request'] = 'A user with the given email already exists.';
+        if (error.response.status == 500)
+          this.errorMessages['request'] = 'Server Error.';
       })
+<<<<<<< HEAD
       // TODO: manage errors
       this.$router.push('signin')
 >>>>>>> [ADD] Adding server call for SignIn/SignUp + changing front port to 8081
+=======
+>>>>>>> Adding SignUp/In pages finies (manque juste office)
     }
   },
 })
