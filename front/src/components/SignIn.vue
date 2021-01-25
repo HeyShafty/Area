@@ -79,9 +79,13 @@
 import { ref, defineComponent } from 'vue'
 import axios from 'vue-ts-axios';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import OfficeLogin from './OfficeLogin.vue'
 =======
 >>>>>>> [ADD] Adding server call for SignIn/SignUp + changing front port to 8081
+=======
+import OfficeLogin from './OfficeLogin.vue'
+>>>>>>> [ADD] Adding office login qui marche a 29%
 
 export default defineComponent({
   name: 'SignIn',
@@ -170,12 +174,15 @@ export default defineComponent({
           this.errorMessages['request'] = 'Server Error.';
       })
     },
+<<<<<<< HEAD
 
     // MANAGE SIGN-IN WITH OFFICE
     officeSignIn() {
       alert("TODO")
 >>>>>>> [ADD] Adding server call for SignIn/SignUp + changing front port to 8081
     },
+=======
+>>>>>>> [ADD] Adding office login qui marche a 29%
   }
 })
 </script>
