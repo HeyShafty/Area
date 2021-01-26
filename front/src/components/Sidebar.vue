@@ -34,12 +34,14 @@
           <span>Home</span>
         </span>
       </router-link>
-      <span @click="isOpen = false" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
-        <span class="mr-2">
-          <span class="iconify" data-icon="mdi:view-dashboard" data-inline="false"></span>
+      <router-link to="/dashboard" v-slot="{ href, route, navigate, isActive, isExactActive }">
+        <span @click="isOpen = false" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
+          <span class="mr-2">
+            <span class="iconify" data-icon="mdi:view-dashboard" data-inline="false"></span>
+          </span>
+          <span>Dashboard</span>
         </span>
-        <span>Dashboard</span>
-      </span>
+      </router-link>
       <span @click="isOpen = false" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
         <span class="mr-2">
           <span class="iconify" data-icon="mdi:information" data-inline="false"></span>
