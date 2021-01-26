@@ -86,11 +86,15 @@ import axios from 'axios'
 import { baseUri } from '../config'
 >>>>>>> [ADD] Sign In/Up tout fini mais jsp si ça build
 import OfficeLogin from './OfficeLogin.vue'
+<<<<<<< HEAD
 =======
 >>>>>>> [ADD] Adding server call for SignIn/SignUp + changing front port to 8081
 =======
 import OfficeLogin from './OfficeLogin.vue'
 >>>>>>> [ADD] Adding office login qui marche a 29%
+=======
+import currentUser from '../services/UserService'
+>>>>>>> [ADD] Added a UserService that stores the current user.
 
 export default defineComponent({
   name: 'SignIn',
@@ -182,6 +186,7 @@ export default defineComponent({
           },
         });
         console.log(ret);
+        currentUser.connect();
         this.$router.push('/dashboard');
       } catch (error) {
 >>>>>>> [ADD] Sign In/Up tout fini mais jsp si ça build

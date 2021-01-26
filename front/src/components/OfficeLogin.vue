@@ -40,7 +40,11 @@ import axios from 'axios'
 import { AccountInfo, AuthenticationResult } from '@azure/msal-browser'
 import { authServiceObj } from '../services/OfficeAuthService'
 import { baseUri } from '../config'
+<<<<<<< HEAD
 >>>>>>> [ADD] Sign In/Up tout fini mais jsp si ça build
+=======
+import currentUser from '../services/UserService'
+>>>>>>> [ADD] Added a UserService that stores the current user.
 
 export default defineComponent({
   name: '404',
@@ -98,6 +102,7 @@ export default defineComponent({
           },
         });
         console.log(ret);
+        currentUser.connect()
         this.$router.push('/dashboard');
       } catch (error) {
         console.log(error);
