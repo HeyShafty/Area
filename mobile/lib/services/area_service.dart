@@ -42,7 +42,7 @@ class AreaService {
   }
 
   Future<void> signInWithAccessToken(String token) async {
-    http.Response response = await http.get("http://" + this.serverIp + "/auth/office-jwt",
+    http.Response response = await http.post("http://" + this.serverIp + "/auth/office-jwt",
         headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': 'Bearer ' + token});
     if (response.statusCode != 200) {
       throw ("Couldn't sign you in with Microsoft.");
