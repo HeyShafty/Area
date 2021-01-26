@@ -21,15 +21,17 @@ const router = createRouter({history, routes});
 
 router.beforeEach((to, from, next) => {
     console.log(to.fullPath);
-    if (!currentUser.isConnected() && (to.fullPath == '/dashboard' || to.fullPath == '/profile' || to.fullPath == '/signout')) {
+    if (to.fullPath == "/signout") {
+        currentUser.disconnect();
+        console.log('User disconnected');
+        next('/signin');
+    } else if (!currentUser.isConnected() && (to.fullPath == '/dashboard' || to.fullPath == '/profile')) {
         console.log("Unauthorized Route. You need to connect.");
         next('/signin')
-    }
-    else if (currentUser.isConnected() && (to.fullPath == '/signup' || to.fullPath == '/signin')) {
+    } else if (currentUser.isConnected() && (to.fullPath == '/signup' || to.fullPath == '/signin')) {
         console.log("You are already connected.");
         next('/dashboard')
-    }
-    else {
+    } else {
         console.log("Just a regular redirection.");
         next()
     }

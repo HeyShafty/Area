@@ -180,13 +180,11 @@ export default defineComponent({
 =======
       try {
         const ret = await axios.post(baseUri +'/auth/sign-in', {
-          params: {
-            email: this.email,
-            password: this.password,
-          },
+          email: this.email,
+          password: this.password,
         });
         console.log(ret);
-        currentUser.connect();
+        currentUser.connect(ret.token);
         this.$router.push('/dashboard');
       } catch (error) {
 >>>>>>> [ADD] Sign In/Up tout fini mais jsp si ça build
