@@ -43,20 +43,23 @@
         >Office</span
       >
     </button>
+    <span v-if="errorMessages" class="text-sm font-semibold text-red-500">{{errorMessages}}</span>
   </div>
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from "vue";
-import axios from "axios";
-import { authServiceObj } from "../services/AuthService";
-import { AccountInfo, AuthenticationResult } from "@azure/msal-browser";
+import { ref, defineComponent } from 'vue'
+import axios from 'axios'
+import { AccountInfo, AuthenticationResult } from '@azure/msal-browser'
+import { authServiceObj } from '../services/AuthService'
+import { baseUri } from '../config'
 
 export default defineComponent({
   name: "OfficeLogin",
   data() {
     return {
       loginInitialState: true,
+      errorMessage: ''
     };
   },
   async mounted() {
@@ -96,17 +99,18 @@ export default defineComponent({
       this.loginInitialState = true;
 
       console.log("OFFICE TOKEN = " + accessToken);
-      // Call server ici
       try {
-        const ret = await axios.get("http://localhost:8080/auth/office-jwt", {
+        const ret = await axios.post(baseUri +'/auth/office-jwt', {}, {
           headers: {
             authorization: `Bearer ${accessToken}`,
           },
         });
         console.log(ret);
-        // this.$router.push("/");
+        this.$router.push('/');
       } catch (error) {
         console.log(error);
+        if (error.response.status == 500)
+          this.errorMessages = 'Server Error.';
       }
     },
   },

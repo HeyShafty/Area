@@ -77,7 +77,8 @@
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue'
-import axios from 'vue-ts-axios';
+import axios from 'axios'
+import { baseUri } from '../config'
 import OfficeLogin from './OfficeLogin.vue'
 
 export default defineComponent({
@@ -134,21 +135,22 @@ export default defineComponent({
     // CALL SERVER FOR SIGN-IN
     async signIn() {
       console.log(this.email + ' wants to sign-in')
-      await axios.post('http://localhost:8080/auth/sign-in', {
-        email: this.email,
-        password: this.password,
-      })
-      .then( (response: any) =>  {
-        console.log(response);
-        this.$router.push('/')
-      })
-      .catch( (error: any) => {
+      try {
+        const ret = await axios.post(baseUri +'/auth/sign-in', {
+          params: {
+            email: this.email,
+            password: this.password,
+          },
+        });
+        console.log(ret);
+        this.$router.push('/');
+      } catch (error) {
         console.log(error);
         if (error.response.status == 409)
           this.errorMessages['request'] = 'Invalid credentials.';
         if (error.response.status == 500)
           this.errorMessages['request'] = 'Server Error.';
-      })
+      }
     },
   }
 })

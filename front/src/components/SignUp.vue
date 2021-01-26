@@ -53,7 +53,7 @@
                 type="button"
                 v-on:click="signUp"
                 v-bind:disabled="checkInputs() == false"
-                class="disabled:opacity-40 w-full px-4 py-2 text-lg font-semibold text-white transition-colors duration-300 bg-blue-500 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-blue-200 focus:ring-4"
+                class="disabled:opacity-50 w-full px-4 py-2 text-lg font-semibold text-white transition-colors duration-300 bg-blue-500 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-blue-200 focus:ring-4"
               >
                 Sign-Up
               </button>
@@ -68,7 +68,8 @@
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue'
-import axios from 'vue-ts-axios';
+import axios from 'axios';
+import { baseUri } from '../config'
 
 export default defineComponent({
   name: 'SignUp',
@@ -138,22 +139,21 @@ export default defineComponent({
     // CALL SERVER FOR SIGN-UP
     async signUp() {
       console.log(this.username + ' wants to create an account')
-      await axios.post('http://localhost:8080/auth/sign-up', {
-        fullName: this.username,
-        email: this.email,
-        password: this.password,
-      })
-      .then( (response: any) => {
-        console.log(response);
-        this.$router.push('signin')
-      })
-      .catch( (error: any) => {
+      try {
+        const ret = await axios.post(baseUri +'/auth/sign-up', {
+          fullName: this.username,
+          email: this.email,
+          password: this.password,
+        });
+        console.log(ret);
+        this.$router.push('signin');
+      } catch (error) {
         console.log(error);
         if (error.response.status == 409)
           this.errorMessages['request'] = 'A user with the given email already exists.';
         if (error.response.status == 500)
           this.errorMessages['request'] = 'Server Error.';
-      })
+      }
     }
   },
 })
