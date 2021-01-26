@@ -5,6 +5,7 @@ import Page_404 from './components/404.vue'
 import Page_Home from './components/Home.vue'
 import Page_Dashboard from './components/Dashboard.vue'
 import Page_Profile from './components/Profile.vue'
+import currentUser from './services/UserService'
 
 const routes = [
     { path: '/', component: Page_Home },
@@ -17,5 +18,21 @@ const routes = [
 const history = createWebHistory();
 
 const router = createRouter({history, routes});
+
+router.beforeEach((to, from, next) => {
+    console.log(to.fullPath);
+    if (!currentUser.isConnected() && (to.fullPath == '/dashboard' || to.fullPath == '/profile' || to.fullPath == '/signout')) {
+        console.log("Unauthorized Route. You need to connect.");
+        next('/signin')
+    }
+    else if (currentUser.isConnected() && (to.fullPath == '/signup' || to.fullPath == '/signin')) {
+        console.log("You are already connected.");
+        next('/dashboard')
+    }
+    else {
+        console.log("Just a regular redirection.");
+        next()
+    }
+});
 
 export default router;

@@ -53,6 +53,7 @@ import axios from 'axios'
 import { AccountInfo, AuthenticationResult } from '@azure/msal-browser'
 import { authServiceObj } from '../services/OfficeAuthService'
 import { baseUri } from '../config'
+import currentUser from '../services/UserService'
 
 export default defineComponent({
   name: "OfficeLogin",
@@ -106,6 +107,7 @@ export default defineComponent({
           },
         });
         console.log(ret);
+        currentUser.connect()
         this.$router.push('/dashboard');
       } catch (error) {
         console.log(error);

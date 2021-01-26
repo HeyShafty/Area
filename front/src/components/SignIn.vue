@@ -80,6 +80,7 @@ import { ref, defineComponent } from 'vue'
 import axios from 'axios'
 import { baseUri } from '../config'
 import OfficeLogin from './OfficeLogin.vue'
+import currentUser from '../services/UserService'
 
 export default defineComponent({
   name: 'SignIn',
@@ -143,6 +144,7 @@ export default defineComponent({
           },
         });
         console.log(ret);
+        currentUser.connect();
         this.$router.push('/dashboard');
       } catch (error) {
         console.log(error);

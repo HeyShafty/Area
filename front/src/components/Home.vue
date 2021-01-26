@@ -12,7 +12,7 @@
                 <span class="text-indigo-600 xl:inline"> automate workflows</span>
                 </h1>
                 <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                  Easy automation for busy people. From social media to emails, connect your favourite apps so you can save time to do the things you love.
+                  Easy automation for busy people. <br> From social media to emails, connect your favourite <br> apps so you can save time to do the things you love.
                 </p>
                 <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start"></div>
               </div>
