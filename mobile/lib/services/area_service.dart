@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'package:area/services/shared_preferences_service.dart';
 import 'package:http/http.dart' as http;
 
+import '../constants.dart';
+
 class AreaService {
-  static const String TOKEN_KEY = "token";
   static final AreaService _singleton = AreaService._internal();
 
   String accessToken = "";

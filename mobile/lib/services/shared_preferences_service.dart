@@ -12,8 +12,8 @@ class SharedPreferencesService {
     return prefs.getString(key);
   }
 
-  static Future<bool> clearContent() async {
+  static Future<bool> clearValueByKey(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.clear();
+    return prefs.remove(key);
   }
 }

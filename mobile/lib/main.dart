@@ -2,6 +2,8 @@ import 'package:area/login.dart';
 import 'package:area/services/shared_preferences_service.dart';
 import 'package:flutter/material.dart';
 
+import 'constants.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -88,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
             TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Cancel')),
             TextButton(
                 onPressed: () async {
-                  await SharedPreferencesService.clearContent();
+                  await SharedPreferencesService.clearValueByKey(TOKEN_KEY);
                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Login()), (Route<dynamic> route) => false);
                 },
                 child: Text('Yes')),
