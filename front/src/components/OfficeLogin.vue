@@ -51,7 +51,7 @@
 import { ref, defineComponent } from 'vue'
 import axios from 'axios'
 import { AccountInfo, AuthenticationResult } from '@azure/msal-browser'
-import { authServiceObj } from '../services/AuthService'
+import { authServiceObj } from '../services/OfficeAuthService'
 import { baseUri } from '../config'
 
 export default defineComponent({

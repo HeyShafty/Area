@@ -2,7 +2,7 @@
   <div class="flex items-center min-h-screen p-6 bg-gray-100 lg:justify-center">
     <div class="container mx-auto root">
     <!-- AREA LOGO -->
-      <img class="mx-auto h-60 w-auto" src="../assets/AREALOGO.png">
+      <img class="mx-auto w-auto object-fit:contain max-w-sm mb-10" src="../assets/AREALOGO.png">
     <!-- CARD -->
       <div
         class="mx-auto overflow-hidden bg-white rounded-md shadow-lg max-w-md"
@@ -164,6 +164,6 @@ a {
   color: #42b983;
 }
 .root {
-  margin-top : 65px;
+  margin-top : 25px;
 }
 </style>
