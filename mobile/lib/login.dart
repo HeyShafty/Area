@@ -43,8 +43,8 @@ class _LoginState extends State<Login> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.blue,
-          title: Text("Sign in"),
           centerTitle: true,
+          title: Text("Sign in"),
         ),
         body: Center(
           child: SingleChildScrollView(
@@ -128,13 +128,7 @@ class _LoginState extends State<Login> {
   }
 
   void openHomePage() {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-            builder: (context) => MyHomePage(
-                  title: "mdr",
-                )),
-        (Route<dynamic> route) => false);
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MyHomePage()), (Route<dynamic> route) => false);
   }
 
   Future<void> signInWithMicrosoft() async {

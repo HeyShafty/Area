@@ -87,8 +87,8 @@ class _RegisterState extends State<Register> {
                         controller: _btnController,
                         onPressed: () {
                           FocusScope.of(context).unfocus();
-                          this.signUp(this._usernameController.value.text, this._emailController.value.text,
-                              this._passwordController.value.text);
+                          this.signUp(
+                              this._usernameController.value.text, this._emailController.value.text, this._passwordController.value.text);
                         },
                       ),
                     )
@@ -97,14 +97,7 @@ class _RegisterState extends State<Register> {
   }
 
   void openHomePage() {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                MyHomePage(
-                  title: "mdr",
-                )),
-            (Route<dynamic> route) => false);
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MyHomePage()), (Route<dynamic> route) => false);
   }
 
   bool isFormValid(String username, String email, String password) {
