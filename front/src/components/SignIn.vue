@@ -2,7 +2,7 @@
   <div class="flex items-center min-h-screen p-4 bg-gray-100 lg:justify-center">
     <div class="container mx-auto">
     <!-- AREA LOGO -->
-      <img class="mx-auto h-60 w-auto mb-5 -mt-20" src="../assets/AREALOGO.png">
+      <img class="mx-auto h-60 w-auto" src="../assets/AREALOGO.png">
     <!-- CARD -->
       <div
         class="mx-auto overflow-hidden bg-white rounded-md shadow-lg max-w-md"
@@ -46,6 +46,7 @@
               >
                 Sign-In
               </button>
+              <span v-if="errorMessages.request" class="text-sm font-semibold text-red-500">{{errorMessages.request}}</span>
             </div>
             <!-- "OR LOGIN WITH" DIVIDER -->
             <div class="flex flex-col space-y-5">
@@ -56,27 +57,14 @@
               </span>
               <!-- OFFICE LOGIN BUTTON -->
               <div class="flex flex-col space-y-4">
-                <a
-                  v-on:click="officeSignIn"
-                  class="flex items-center cursor-pointer justify-center py-2 space-x-2 transition-colors duration-300 border border-blue-500 rounded-md group hover:bg-blue-500 focus:outline-none"
-                >
-                  <span>
-                    <!-- OFFICE ICON -->
-                    <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                      viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" width="2vh" height="2vh" xml:space="preserve">
-                      <path style="fill:#4CAF50;" d="M272,240h240V16c0-8.832-7.168-16-16-16H272V240z"/>
-                      <path style="fill:#F44336;" d="M240,240V0H16C7.168,0,0,7.168,0,16v224H240z"/>
-                      <path style="fill:#2196F3;" d="M240,272H0v224c0,8.832,7.168,16,16,16h224V272z"/>
-                      <path style="fill:#FFC107;" d="M272,272v240h224c8.832,0,16-7.168,16-16V272H272z"/>
-                    </svg>
-                  </span>
-                  <span class="text-sm mt-1 font-medium text-blue-500 group-hover:text-white">Office</span>
-                </a>
+                <OfficeLogin></OfficeLogin>
                 <!-- REGISTER REDIRECT -->
                 <span class="h-px"></span>
                 <div class="container mx-auto space-y-0.5">
                   <h5 class="font-semibold text-gray-700">First time here?</h5>
-                  <h5 v-on:click="goToSignUp" class="font-semibold text-blue-500 cursor-pointer">Create an account</h5>
+                  <router-link to="/signup" v-slot="{ href, route, navigate, isActive, isExactActive }">
+                    <h5 class="font-semibold text-blue-500 cursor-pointer">Create an account</h5>
+                  </router-link>
                 </div>
               </div>
             </div>
@@ -89,9 +77,15 @@
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue'
+import axios from 'axios'
+import { baseUri } from '../config'
+import OfficeLogin from './OfficeLogin.vue'
 
 export default defineComponent({
   name: 'SignIn',
+    components: {
+    OfficeLogin,
+  },
   setup: () => {
     const count = ref(0)
     return { count }
@@ -116,7 +110,7 @@ export default defineComponent({
     validateEmail() {
       let regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       if (!regexEmail.test(this.email))
-        this.errorMessages['email'] = 'Invalid Email Address';
+        this.errorMessages['email'] = 'Invalid Email Address.';
       else
         this.errorMessages['email'] = '';
     },
@@ -124,7 +118,7 @@ export default defineComponent({
     // CHECK IF PASSWORD IS LONG ENOUGH
     validatePassword() {
       if (this.password.length < 6 )
-        this.errorMessages['password'] = 'Too short password';
+        this.errorMessages['password'] = 'Too short password.';
       else
         this.errorMessages['password'] = '';
     },
@@ -139,20 +133,25 @@ export default defineComponent({
     },
 
     // CALL SERVER FOR SIGN-IN
-    signIn() {
+    async signIn() {
       console.log(this.email + ' wants to sign-in')
-      // TODO: call server for sign in and manage errors
+      try {
+        const ret = await axios.post(baseUri +'/auth/sign-in', {
+          params: {
+            email: this.email,
+            password: this.password,
+          },
+        });
+        console.log(ret);
+        this.$router.push('/');
+      } catch (error) {
+        console.log(error);
+        if (error.response.status == 409)
+          this.errorMessages['request'] = 'Invalid credentials.';
+        if (error.response.status == 500)
+          this.errorMessages['request'] = 'Server Error.';
+      }
     },
-
-    // MANAGE SIGN-IN WITH OFFICE
-    officeSignIn() {
-      alert("TODO")
-    },
-
-    // NAVIGATE TO SIGN UP PAGE
-    goToSignUp() {
-      alert("GHASSANE ALED")
-    }
   }
 })
 </script>

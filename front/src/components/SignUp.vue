@@ -1,8 +1,8 @@
 <template>
-  <div class="flex items-center min-h-screen p-4 bg-gray-100 lg:justify-center">
+  <div class="flex items-center min-h-screen p-6 bg-gray-100 lg:justify-center">
     <div class="container mx-auto">
     <!-- AREA LOGO -->
-      <img class="mx-auto h-60 w-auto mb-5 -mt-20" src="../assets/AREALOGO.png">
+      <img class="mx-auto h-60 w-auto" src="../assets/AREALOGO.png">
     <!-- CARD -->
       <div
         class="mx-auto overflow-hidden bg-white rounded-md shadow-lg max-w-md"
@@ -53,10 +53,11 @@
                 type="button"
                 v-on:click="signUp"
                 v-bind:disabled="checkInputs() == false"
-                class="disabled:opacity-40 w-full px-4 py-2 text-lg font-semibold text-white transition-colors duration-300 bg-blue-500 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-blue-200 focus:ring-4"
+                class="disabled:opacity-50 w-full px-4 py-2 text-lg font-semibold text-white transition-colors duration-300 bg-blue-500 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-blue-200 focus:ring-4"
               >
                 Sign-Up
               </button>
+              <span v-if="errorMessages.request" class="text-sm font-semibold text-red-500">{{errorMessages.request}}</span>
             </div>
           </form>
         </div>
@@ -67,6 +68,8 @@
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue'
+import axios from 'axios';
+import { baseUri } from '../config'
 
 export default defineComponent({
   name: 'SignUp',
@@ -79,6 +82,7 @@ export default defineComponent({
       username: '',
       email: '',
       password: '',
+
       errorMessages: [],
     }
   },
@@ -98,7 +102,9 @@ export default defineComponent({
     validateUsername() {
       let regexUsername = /^[a-zA-Z0-9]*$/;
       if (!regexUsername.test(this.username))
-        this.errorMessages['username'] = 'Invalid Username';
+        this.errorMessages['username'] = 'Invalid username.';
+      else if (this.username.length < 3)
+        this.errorMessages['username'] = 'Too short username.';
       else
         this.errorMessages['username'] = '';
     },
@@ -107,15 +113,15 @@ export default defineComponent({
     validateEmail() {
       let regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       if (!regexEmail.test(this.email))
-        this.errorMessages['email'] = 'Invalid Email Address';
+        this.errorMessages['email'] = 'Invalid email address.';
       else
         this.errorMessages['email'] = '';
     },
 
     // CHECK IF PASSWORD IS LONG ENOUGH
     validatePassword() {
-      if (this.password.length < 6 )
-        this.errorMessages['password'] = 'Too short password';
+      if (this.password.length < 6)
+        this.errorMessages['password'] = 'Too short password.';
       else
         this.errorMessages['password'] = '';
     },
@@ -131,9 +137,23 @@ export default defineComponent({
     },
 
     // CALL SERVER FOR SIGN-UP
-    signUp() {
+    async signUp() {
       console.log(this.username + ' wants to create an account')
-      // TODO: call server for registration here
+      try {
+        const ret = await axios.post(baseUri +'/auth/sign-up', {
+          fullName: this.username,
+          email: this.email,
+          password: this.password,
+        });
+        console.log(ret);
+        this.$router.push('signin');
+      } catch (error) {
+        console.log(error);
+        if (error.response.status == 409)
+          this.errorMessages['request'] = 'A user with the given email already exists.';
+        if (error.response.status == 500)
+          this.errorMessages['request'] = 'Server Error.';
+      }
     }
   },
 })
