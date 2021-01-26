@@ -1,5 +1,8 @@
 import 'package:area/login.dart';
+import 'package:area/services/shared_preferences_service.dart';
 import 'package:flutter/material.dart';
+
+import 'constants.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,10 +24,6 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -42,7 +41,14 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        centerTitle: true,
+        actions: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(right: 15.0),
+            child: IconButton(onPressed: () => this.signOut(), icon: Icon(Icons.logout)),
+          )
+        ],
+        title: Text('Area'),
       ),
       body: Center(
         child: Column(
@@ -63,6 +69,34 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),
+    );
+  }
+
+  signOut() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Sign out'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Do you really want to sign out?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Cancel')),
+            TextButton(
+                onPressed: () async {
+                  await SharedPreferencesService.clearValueByKey(TOKEN_KEY);
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Login()), (Route<dynamic> route) => false);
+                },
+                child: Text('Yes')),
+          ],
+        );
+      },
     );
   }
 }

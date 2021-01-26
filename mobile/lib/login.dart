@@ -22,7 +22,6 @@ class _LoginState extends State<Login> {
   static const String TENANT_ID = "901cb4ca-b862-4029-9306-e5cd0f6d9f86";
   static const String APP_ID = "24ffcb55-7348-48a4-bbe7-c6c5b3763578";
   static const String SERVER_SCOPE = "api://db074310-a1fb-45a3-8dd9-8462d3f688f8/user.base.read";
-  static const String IP_KEY = "IP";
 
   final AreaService areaServiceInstance = AreaService();
   String _emailError;
@@ -43,8 +42,8 @@ class _LoginState extends State<Login> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.blue,
-          title: Text("Sign in"),
           centerTitle: true,
+          title: Text("Sign in"),
         ),
         body: Center(
           child: SingleChildScrollView(
@@ -128,13 +127,7 @@ class _LoginState extends State<Login> {
   }
 
   void openHomePage() {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-            builder: (context) => MyHomePage(
-                  title: "mdr",
-                )),
-        (Route<dynamic> route) => false);
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MyHomePage()), (Route<dynamic> route) => false);
   }
 
   Future<void> signInWithMicrosoft() async {
