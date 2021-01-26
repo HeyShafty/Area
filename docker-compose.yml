@@ -27,6 +27,7 @@ services:
     build: ./front
     depends_on:
       - server
+      - client_mobile
     ports:
       - "8081:8081"
     volumes:
