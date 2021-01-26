@@ -15,23 +15,44 @@
         <path style="fill:#FFC107;" d="M272,272v240h224c8.832,0,16-7.168,16-16V272H272z"/>
       </svg>
       </span>
+<<<<<<< HEAD
       <span class="text-sm mt-1 font-medium text-blue-500 group-hover:text-white">Office</span>
 	  </button>
+=======
+      <span
+        class="text-sm mt-1 font-medium text-blue-500 group-hover:text-white"
+        >Office</span
+      >
+    </button>
+    <span v-if="errorMessages" class="text-sm font-semibold text-red-500">{{errorMessages}}</span>
+>>>>>>> [ADD] Sign In/Up tout fini mais jsp si ça build
   </div>
 </template>
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue'
+<<<<<<< HEAD
 import axios from 'axios';
 import { authServiceObj } from '../services/AuthService';
 import { AccountInfo, AuthenticationResult } from '@azure/msal-browser';
+=======
+import axios from 'axios'
+import { AccountInfo, AuthenticationResult } from '@azure/msal-browser'
+import { authServiceObj } from '../services/AuthService'
+import { baseUri } from '../config'
+>>>>>>> [ADD] Sign In/Up tout fini mais jsp si ça build
 
 export default defineComponent({
   name: '404',
     data() {
     return {
       loginInitialState: true,
+<<<<<<< HEAD
     }
+=======
+      errorMessage: ''
+    };
+>>>>>>> [ADD] Sign In/Up tout fini mais jsp si ça build
   },
   async mounted() {
     let res: AuthenticationResult | null = null;
@@ -69,22 +90,21 @@ export default defineComponent({
       }
       this.loginInitialState = true
 
-      console.log('OFFICE TOKEN = ' +accessToken)
-      // Call server ici
-      await axios.get('http://localhost:8080/auth/office-jwt', {
-        headers: {
-          authorization: `Bearer ${accessToken}`
-        }
-      })
-      .then( (response: any) =>  {
-        console.log(response);
-        // this.$router.push('/')
-      })
-      .catch( (error: any) => {
+      console.log("OFFICE TOKEN = " + accessToken);
+      try {
+        const ret = await axios.post(baseUri +'/auth/office-jwt', {}, {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        });
+        console.log(ret);
+        this.$router.push('/');
+      } catch (error) {
         console.log(error);
-        //this.errorMessages['request'] = 'Server Error.';
-      })
-    }
+        if (error.response.status == 500)
+          this.errorMessages = 'Server Error.';
+      }
+    },
   },
 
 

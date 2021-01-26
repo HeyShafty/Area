@@ -77,9 +77,14 @@
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue'
+<<<<<<< HEAD
 import axios from 'vue-ts-axios';
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+import axios from 'axios'
+import { baseUri } from '../config'
+>>>>>>> [ADD] Sign In/Up tout fini mais jsp si ça build
 import OfficeLogin from './OfficeLogin.vue'
 =======
 >>>>>>> [ADD] Adding server call for SignIn/SignUp + changing front port to 8081
@@ -141,6 +146,7 @@ export default defineComponent({
     // CALL SERVER FOR SIGN-IN
     async signIn() {
       console.log(this.email + ' wants to sign-in')
+<<<<<<< HEAD
       await axios.post('http://localhost:8080/auth/sign-in', {
         email: this.email,
         password: this.password,
@@ -167,12 +173,24 @@ export default defineComponent({
         this.$router.push('/')
       })
       .catch( (error: any) => {
+=======
+      try {
+        const ret = await axios.post(baseUri +'/auth/sign-in', {
+          params: {
+            email: this.email,
+            password: this.password,
+          },
+        });
+        console.log(ret);
+        this.$router.push('/');
+      } catch (error) {
+>>>>>>> [ADD] Sign In/Up tout fini mais jsp si ça build
         console.log(error);
         if (error.response.status == 409)
           this.errorMessages['request'] = 'Invalid credentials.';
         if (error.response.status == 500)
           this.errorMessages['request'] = 'Server Error.';
-      })
+      }
     },
 <<<<<<< HEAD
 

@@ -182,7 +182,7 @@ router.post('/sign-up', (req, res, next) => {
  *       500:
  *         description: Error.
  */
-router.get('/office-jwt', (req, res, next) => {
+router.post('/office-jwt', (req, res, next) => {
     passport.authenticate(STRATEGY_OFFICE_JWT, (err, user) => {
         if (err) {
             return res.sendStatus(500);
