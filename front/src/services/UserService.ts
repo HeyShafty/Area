@@ -1,24 +1,33 @@
 class User {
-    isAuthentificated: boolean = false;
+    isAuthenticated: boolean = false;
     jwt: string = "";
 
     constructor() {
-        this.isAuthentificated = false;
-        this.jwt = "";
+        const storedJwt = localStorage.getItem("jwt");
+
+        if (storedJwt != null) {
+            this.isAuthenticated = true;
+            this.jwt = storedJwt;
+        } else {
+            this.isAuthenticated = false;
+            this.jwt = "";
+        }
     }
 
     connect(jwt:string) {
-        this.isAuthentificated = true;
+        this.isAuthenticated = true;
         this.jwt = jwt;
+        localStorage.setItem("jwt", jwt);
     }
 
     disconnect() {
-        this.isAuthentificated = false;
+        this.isAuthenticated = false;
         this.jwt = "";
+        localStorage.removeItem("jwt");
     }
 
     isConnected() {
-        return this.isAuthentificated;
+        return this.isAuthenticated;
     }
 
     getJwt() {

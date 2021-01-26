@@ -24,6 +24,7 @@ router.beforeEach((to, from, next) => {
     if (to.fullPath == "/signout") {
         currentUser.disconnect();
         console.log('User disconnected');
+        localStorage.clear();
         next('/signin');
     } else if (!currentUser.isConnected() && (to.fullPath == '/dashboard' || to.fullPath == '/profile')) {
         console.log("Unauthorized Route. You need to connect.");
