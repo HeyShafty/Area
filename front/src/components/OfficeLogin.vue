@@ -98,7 +98,7 @@ export default defineComponent({
           },
         });
         console.log(ret);
-        this.$router.push('/');
+        this.$router.push('/dashboard');
       } catch (error) {
         console.log(error);
         if (error.response.status == 500)

@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center min-h-screen p-4 bg-gray-100 lg:justify-center">
-    <div class="container mx-auto">
+    <div class="container mx-auto root">
     <!-- AREA LOGO -->
       <img class="mx-auto h-60 w-auto" src="../assets/AREALOGO.png">
     <!-- CARD -->
@@ -182,7 +182,7 @@ export default defineComponent({
           },
         });
         console.log(ret);
-        this.$router.push('/');
+        this.$router.push('/dashboard');
       } catch (error) {
 >>>>>>> [ADD] Sign In/Up tout fini mais jsp si ça build
         console.log(error);
@@ -208,5 +208,8 @@ export default defineComponent({
 <style scoped>
 a {
   color: #42b983;
+}
+.root {
+  margin-top : 65px;
 }
 </style>
