@@ -38,7 +38,7 @@ import { AccountInfo, AuthenticationResult } from '@azure/msal-browser';
 =======
 import axios from 'axios'
 import { AccountInfo, AuthenticationResult } from '@azure/msal-browser'
-import { authServiceObj } from '../services/AuthService'
+import { authServiceObj } from '../services/OfficeAuthService'
 import { baseUri } from '../config'
 >>>>>>> [ADD] Sign In/Up tout fini mais jsp si ça build
 
