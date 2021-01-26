@@ -138,13 +138,11 @@ export default defineComponent({
       console.log(this.email + ' wants to sign-in')
       try {
         const ret = await axios.post(baseUri +'/auth/sign-in', {
-          params: {
-            email: this.email,
-            password: this.password,
-          },
+          email: this.email,
+          password: this.password,
         });
         console.log(ret);
-        currentUser.connect();
+        currentUser.connect(ret.token);
         this.$router.push('/dashboard');
       } catch (error) {
         console.log(error);

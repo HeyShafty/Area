@@ -178,7 +178,18 @@ export default defineComponent({
       this.paramString = "";
       this.paramHour = "";
       this.paramMinute = "";
-
+    },
+    getServices() {
+      return ["Twitter", "Outlook", "Youtube", "Github", "Timer"];
+      // Faudrait le recup du serveur.
+    },
+    getServiceActions(service) {
+      for (var i = 0; i < this.actions.services.length; i++) {
+        if (service == this.action.services[i].serviceName)
+          return this.action.services[i].actions;
+      }
+      console.log("Ton code pue la merde.");
+      return "";
     }
   }
 })

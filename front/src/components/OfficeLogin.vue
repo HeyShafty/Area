@@ -107,7 +107,7 @@ export default defineComponent({
           },
         });
         console.log(ret);
-        currentUser.connect()
+        currentUser.connect(ret.data.token)
         this.$router.push('/dashboard');
       } catch (error) {
         console.log(error);
