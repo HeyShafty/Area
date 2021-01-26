@@ -46,12 +46,11 @@ function startServer() {
   }));
   app.use(passport.initialize({}));
 
+  app.use('/auth', authRouter);
+
   app.get('/', (req, res) => {
     res.send('Hello World!');
   });
-
-  app.use('/auth', authRouter);
-
   app.get('/about.json', (req, res) => {
     res.json({ client: { host: req.ip }, server: { current_time: moment().unix() } });
   });
