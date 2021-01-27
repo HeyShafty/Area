@@ -8,6 +8,7 @@ const morgan = require('morgan');
 const moment = require('moment');
 
 const authRouter = require('./src/routes/authRoutes');
+const connectRouter = require('./src/routes/connectRoutes');
 
 const { ALLOWED_ORIGINS } = require('./src/config/config');
 const { MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PASSWORD } = require('./src/config/mongoConfig');
@@ -46,7 +47,8 @@ function startServer() {
   }));
   app.use(passport.initialize({}));
 
-  app.use('/auth', authRouter);
+    app.use('/auth', authRouter);
+    app.use('/connect', connectRouter);
 
   app.get('/', (req, res) => {
     res.send('Hello World!');
