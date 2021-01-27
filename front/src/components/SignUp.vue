@@ -139,20 +139,6 @@ export default defineComponent({
     // CALL SERVER FOR SIGN-UP
     async signUp() {
       console.log(this.username + ' wants to create an account')
-<<<<<<< HEAD
-      await axios.post('http://localhost:8080/auth/sign-up', {
-        fullName: this.username,
-        email: this.email,
-        password: this.password,
-      })
-<<<<<<< HEAD
-<<<<<<< HEAD
-      .then( (response: any) => {
-        console.log(response);
-        this.$router.push('signin')
-      })
-      .catch( (error: any) => {
-=======
       try {
         const ret = await axios.post(baseUri +'/auth/sign-up', {
           fullName: this.username,
@@ -162,38 +148,12 @@ export default defineComponent({
         console.log(ret);
         this.$router.push('signin');
       } catch (error) {
->>>>>>> [ADD] Sign In/Up tout fini mais jsp si ça build
         console.log(error);
         if (error.response.status == 409)
           this.errorMessages['request'] = 'A user with the given email already exists.';
         if (error.response.status == 500)
           this.errorMessages['request'] = 'Server Error.';
-<<<<<<< HEAD
-      })
-=======
-      .then(function (response: any) {
-=======
-      .then( (response: any) => {
->>>>>>> Adding SignUp/In pages finies (manque juste office)
-        console.log(response);
-        this.$router.push('signin')
-      })
-      .catch( (error: any) => {
-        console.log(error);
-        if (error.response.status == 409)
-          this.errorMessages['request'] = 'A user with the given email already exists.';
-        if (error.response.status == 500)
-          this.errorMessages['request'] = 'Server Error.';
-      })
-<<<<<<< HEAD
-      // TODO: manage errors
-      this.$router.push('signin')
->>>>>>> [ADD] Adding server call for SignIn/SignUp + changing front port to 8081
-=======
->>>>>>> Adding SignUp/In pages finies (manque juste office)
-=======
       }
->>>>>>> [ADD] Sign In/Up tout fini mais jsp si ça build
     }
   },
 })

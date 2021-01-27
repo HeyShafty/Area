@@ -1,62 +1,67 @@
 <template>
-	<div class="flex flex-col space-y-4">
-		<button
-    type="button"
-		  v-on:click="officeSignIn"
-		  class="flex items-center cursor-pointer justify-center py-2 space-x-2 transition-colors duration-300 border border-blue-500 rounded-md group hover:bg-blue-500 focus:outline-none"
-	  >
+  <div class="flex flex-col space-y-4">
+    <button
+      type="button"
+      v-on:click="officeSignIn"
+      class="flex items-center cursor-pointer justify-center py-2 space-x-2 transition-colors duration-300 border border-blue-500 rounded-md group hover:bg-blue-500 focus:outline-none"
+    >
       <span>
-      <!-- OFFICE ICON -->
-      <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-        viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" width="2vh" height="2vh" xml:space="preserve">
-        <path style="fill:#4CAF50;" d="M272,240h240V16c0-8.832-7.168-16-16-16H272V240z"/>
-        <path style="fill:#F44336;" d="M240,240V0H16C7.168,0,0,7.168,0,16v224H240z"/>
-        <path style="fill:#2196F3;" d="M240,272H0v224c0,8.832,7.168,16,16,16h224V272z"/>
-        <path style="fill:#FFC107;" d="M272,272v240h224c8.832,0,16-7.168,16-16V272H272z"/>
-      </svg>
+        <!-- OFFICE ICON -->
+        <svg
+          version="1.1"
+          id="Capa_1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          x="0px"
+          y="0px"
+          viewBox="0 0 512 512"
+          style="enable-background: new 0 0 512 512"
+          width="2vh"
+          height="2vh"
+          xml:space="preserve"
+        >
+          <path
+            style="fill: #4caf50"
+            d="M272,240h240V16c0-8.832-7.168-16-16-16H272V240z"
+          />
+          <path
+            style="fill: #f44336"
+            d="M240,240V0H16C7.168,0,0,7.168,0,16v224H240z"
+          />
+          <path
+            style="fill: #2196f3"
+            d="M240,272H0v224c0,8.832,7.168,16,16,16h224V272z"
+          />
+          <path
+            style="fill: #ffc107"
+            d="M272,272v240h224c8.832,0,16-7.168,16-16V272H272z"
+          />
+        </svg>
       </span>
-<<<<<<< HEAD
-      <span class="text-sm mt-1 font-medium text-blue-500 group-hover:text-white">Office</span>
-	  </button>
-=======
       <span
         class="text-sm mt-1 font-medium text-blue-500 group-hover:text-white"
         >Office</span
       >
     </button>
     <span v-if="errorMessages" class="text-sm font-semibold text-red-500">{{errorMessages}}</span>
->>>>>>> [ADD] Sign In/Up tout fini mais jsp si ça build
   </div>
 </template>
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue'
-<<<<<<< HEAD
-import axios from 'axios';
-import { authServiceObj } from '../services/AuthService';
-import { AccountInfo, AuthenticationResult } from '@azure/msal-browser';
-=======
 import axios from 'axios'
 import { AccountInfo, AuthenticationResult } from '@azure/msal-browser'
 import { authServiceObj } from '../services/OfficeAuthService'
 import { baseUri } from '../config'
-<<<<<<< HEAD
->>>>>>> [ADD] Sign In/Up tout fini mais jsp si ça build
-=======
 import currentUser from '../services/UserService'
->>>>>>> [ADD] Added a UserService that stores the current user.
 
 export default defineComponent({
-  name: '404',
-    data() {
+  name: "OfficeLogin",
+  data() {
     return {
       loginInitialState: true,
-<<<<<<< HEAD
-    }
-=======
       errorMessage: ''
     };
->>>>>>> [ADD] Sign In/Up tout fini mais jsp si ça build
   },
   async mounted() {
     let res: AuthenticationResult | null = null;
@@ -70,10 +75,10 @@ export default defineComponent({
 
     const account: AccountInfo | null = authServiceObj.handleResponse(res);
     if (account) {
-          await this.getUserProfile();
-      } else {
-          this.loginInitialState = false
-      }
+      await this.getUserProfile();
+    } else {
+      this.loginInitialState = false;
+    }
   },
 
   methods: {
@@ -89,10 +94,10 @@ export default defineComponent({
     // GET OFFICE ACCOUNT INFOS
     async getUserProfile() {
       let accessToken: string = await authServiceObj.getToken();
-      if (accessToken === '') {
-        this.loginInitialState = false
+      if (accessToken === "") {
+        this.loginInitialState = false;
       }
-      this.loginInitialState = true
+      this.loginInitialState = true;
 
       console.log("OFFICE TOKEN = " + accessToken);
       try {
@@ -111,9 +116,7 @@ export default defineComponent({
       }
     },
   },
-
-
-})
+});
 </script>
 
 <style scoped>

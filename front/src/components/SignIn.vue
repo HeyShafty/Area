@@ -77,24 +77,10 @@
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue'
-<<<<<<< HEAD
-import axios from 'vue-ts-axios';
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 import axios from 'axios'
 import { baseUri } from '../config'
->>>>>>> [ADD] Sign In/Up tout fini mais jsp si ça build
 import OfficeLogin from './OfficeLogin.vue'
-<<<<<<< HEAD
-=======
->>>>>>> [ADD] Adding server call for SignIn/SignUp + changing front port to 8081
-=======
-import OfficeLogin from './OfficeLogin.vue'
->>>>>>> [ADD] Adding office login qui marche a 29%
-=======
 import currentUser from '../services/UserService'
->>>>>>> [ADD] Added a UserService that stores the current user.
 
 export default defineComponent({
   name: 'SignIn',
@@ -150,34 +136,6 @@ export default defineComponent({
     // CALL SERVER FOR SIGN-IN
     async signIn() {
       console.log(this.email + ' wants to sign-in')
-<<<<<<< HEAD
-      await axios.post('http://localhost:8080/auth/sign-in', {
-        email: this.email,
-        password: this.password,
-      })
-<<<<<<< HEAD
-<<<<<<< HEAD
-      .then( (response: any) =>  {
-        console.log(response);
-        this.$router.push('/')
-      })
-      .catch( (error: any) => {
-        console.log(error);
-        if (error.response.status == 409)
-          this.errorMessages['request'] = 'Invalid credentials.';
-        if (error.response.status == 500)
-          this.errorMessages['request'] = 'Server Error.';
-      })
-=======
-      .then(function (response: any) {
-=======
-      .then( (response: any) =>  {
->>>>>>> Adding SignUp/In pages finies (manque juste office)
-        console.log(response);
-        this.$router.push('/')
-      })
-      .catch( (error: any) => {
-=======
       try {
         const ret = await axios.post(baseUri +'/auth/sign-in', {
           email: this.email,
@@ -187,7 +145,6 @@ export default defineComponent({
         currentUser.connect(ret.token);
         this.$router.push('/dashboard');
       } catch (error) {
->>>>>>> [ADD] Sign In/Up tout fini mais jsp si ça build
         console.log(error);
         if (error.response.status == 409)
           this.errorMessages['request'] = 'Invalid credentials.';
@@ -195,15 +152,6 @@ export default defineComponent({
           this.errorMessages['request'] = 'Server Error.';
       }
     },
-<<<<<<< HEAD
-
-    // MANAGE SIGN-IN WITH OFFICE
-    officeSignIn() {
-      alert("TODO")
->>>>>>> [ADD] Adding server call for SignIn/SignUp + changing front port to 8081
-    },
-=======
->>>>>>> [ADD] Adding office login qui marche a 29%
   }
 })
 </script>
