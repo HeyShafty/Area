@@ -24,7 +24,7 @@
     </transition>
     <aside class="transform top-0 left-0 w-64 bg-white fixed h-full overflow-auto ease-in-out transition-all duration-300 z-30" :class="isOpen ? 'translate-x-0' : '-translate-x-full'">
       <span @click="isOpen = false" class="flex w-full items-center p-4 border-b">
-        <img src="../assets/AREALOGO.png" alt="Logo" class="h-auto w-32 mx-auto" />
+        <img src="../assets/AREALOGO.png" alt="Logo" class="h-auto mx-auto object-fit:contain" />
       </span>
       <router-link to="/" v-slot="{ href, route, navigate, isActive, isExactActive }">
         <span @click="isOpen = false" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
@@ -34,12 +34,14 @@
           <span>Home</span>
         </span>
       </router-link>
-      <span @click="isOpen = false" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
-        <span class="mr-2">
-          <span class="iconify" data-icon="mdi:view-dashboard" data-inline="false"></span>
+      <router-link to="/dashboard" v-slot="{ href, route, navigate, isActive, isExactActive }">
+        <span @click="isOpen = false" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
+          <span class="mr-2">
+            <span class="iconify" data-icon="mdi:view-dashboard" data-inline="false"></span>
+          </span>
+          <span>Dashboard</span>
         </span>
-        <span>Dashboard</span>
-      </span>
+      </router-link>
       <span @click="isOpen = false" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
         <span class="mr-2">
           <span class="iconify" data-icon="mdi:information" data-inline="false"></span>

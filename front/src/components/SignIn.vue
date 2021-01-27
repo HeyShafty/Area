@@ -1,8 +1,8 @@
 <template>
   <div class="flex items-center min-h-screen p-4 bg-gray-100 lg:justify-center">
-    <div class="container mx-auto">
+    <div class="container mx-auto root">
     <!-- AREA LOGO -->
-      <img class="mx-auto h-60 w-auto" src="../assets/AREALOGO.png">
+      <img class="mx-auto max-w-sm w-auto object-fit:contain mb-10" src="../assets/AREALOGO.png">
     <!-- CARD -->
       <div
         class="mx-auto overflow-hidden bg-white rounded-md shadow-lg max-w-md"
@@ -80,6 +80,7 @@ import { ref, defineComponent } from 'vue'
 import axios from 'axios'
 import { baseUri } from '../config'
 import OfficeLogin from './OfficeLogin.vue'
+import currentUser from '../services/UserService'
 
 export default defineComponent({
   name: 'SignIn',
@@ -137,13 +138,12 @@ export default defineComponent({
       console.log(this.email + ' wants to sign-in')
       try {
         const ret = await axios.post(baseUri +'/auth/sign-in', {
-          params: {
-            email: this.email,
-            password: this.password,
-          },
+          email: this.email,
+          password: this.password,
         });
         console.log(ret);
-        this.$router.push('/');
+        currentUser.connect(ret.token);
+        this.$router.push('/dashboard');
       } catch (error) {
         console.log(error);
         if (error.response.status == 409)
@@ -159,5 +159,8 @@ export default defineComponent({
 <style scoped>
 a {
   color: #42b983;
+}
+.root {
+  margin-top : 25px;
 }
 </style>

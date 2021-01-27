@@ -5,26 +5,51 @@
       <div class="max-w-7xl mx-auto">
         <div class="z-10 pb-8 sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
           <div class="pt-6 px-4 sm:px-6 lg:px-8"></div>
-          <main class="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
-            <div class="sm:text-center lg:text-left">
-              <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
+            <main class="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
+              <div class="sm:text-center lg:text-left">
+                <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
                 <span class="xl:inline">Connect your apps and</span>
                 <span class="text-indigo-600 xl:inline"> automate workflows</span>
-              </h1>
-              <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                Easy automation for busy people. From social media to emails, connect your favourite apps so you can save time to do the things you love.
-              </p>
-              <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
+                </h1>
+                <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
+                  Easy automation for busy people. <br> From social media to emails, connect your favourite <br> apps so you can save time to do the things you love.
+                </p>
+                <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start"></div>
               </div>
-            </div>
-          </main>
+            </main>
+          </div>
+        </div>
+        <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
+          <img class="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full" src="../assets/background.jpg" alt="">
         </div>
       </div>
-      <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-        <img class="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full" src="../assets/background.jpg" alt="">
+    </div>
+
+    <!-- Get started section -->
+    <div class="bg-gray-50">
+      <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
+        <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+          <span class="block">Ready to dive in?</span>
+          <span class="block text-indigo-600">Start using ChadArea for free today.</span>
+        </h2>
+        <div class="mt-8 flex lg:mt-0 lg:flex-shrink-0">
+          <router-link to="/signup" v-slot="{ href, route, navigate, isActive, isExactActive }">
+            <div class="inline-flex rounded-md shadow">
+              <p class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                Sign Up
+              </p>
+            </div>
+          </router-link>
+          <router-link to="/signin" v-slot="{ href, route, navigate, isActive, isExactActive }">
+            <div class="ml-3 inline-flex rounded-md shadow">
+              <p class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50">
+                Sign In
+              </p>
+            </div>
+          </router-link>
+        </div>
       </div>
     </div>
-  </div>
 
   <!-- Features Section -->
   <div class="py-12 bg-white">
@@ -58,7 +83,6 @@
               </dd>
             </div>
           </div>
-
           <div class="flex">
             <div class="flex-shrink-0">
               <div class="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
@@ -77,7 +101,6 @@
               </dd>
             </div>
           </div>
-
           <div class="flex">
             <div class="flex-shrink-0">
               <div class="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
@@ -96,7 +119,6 @@
               </dd>
             </div>
           </div>
-
           <div class="flex">
             <div class="flex-shrink-0">
               <div class="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
@@ -119,6 +141,18 @@
     </div>
 
     <!-- Testimonials Section -->
+    <div class="center linespace md:w-1/2 md:px-4 mt-6 md:mt-0">
+      <div class="testimonial center p-6 border-2 border-solid flex hover:border-indigo-400 hover:bg-indigo-100 transition-colors duration-300">
+        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden mr-4 md:mr-6 flex-shrink-0">
+          <img src="../assets/avatar.png" alt="profile image" class="w-full h-full object-cover">
+        </div>
+        <div>
+          <p class="center text-gray-600">"It really saves me time and effort. I can send emails directly from twitter! It's way faster! Using ChadArea has really changed my life."</p>
+          <div class="text-gray-900 font-bold uppercase mt-6">- An anonymous user.</div>
+          <div class="text-gray-600">(not us)</div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -129,3 +163,26 @@ export default defineComponent({
   name: 'Home',
 })
 </script>
+
+<style scoped>
+.testimonial {
+  border-radius: 1rem;
+}
+
+.linespace {
+  margin-top: 65px; 
+  margin-bottom: 65px; 
+}
+
+.center {
+  width: 100;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.stickybottom {
+  display: block;
+  position: sticky;
+  bottom: 0px;
+}
+</style>

@@ -51,8 +51,9 @@
 import { ref, defineComponent } from 'vue'
 import axios from 'axios'
 import { AccountInfo, AuthenticationResult } from '@azure/msal-browser'
-import { authServiceObj } from '../services/AuthService'
+import { authServiceObj } from '../services/OfficeAuthService'
 import { baseUri } from '../config'
+import currentUser from '../services/UserService'
 
 export default defineComponent({
   name: "OfficeLogin",
@@ -106,7 +107,8 @@ export default defineComponent({
           },
         });
         console.log(ret);
-        this.$router.push('/');
+        currentUser.connect(ret.data.token)
+        this.$router.push('/dashboard');
       } catch (error) {
         console.log(error);
         if (error.response.status == 500)
