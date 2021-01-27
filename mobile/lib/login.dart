@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:area/register.dart';
@@ -11,7 +12,7 @@ import 'package:msal_flutter/msal_flutter.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 import 'constants.dart';
-import 'main.dart';
+import 'home.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -19,10 +20,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  static const String TENANT_ID = "901cb4ca-b862-4029-9306-e5cd0f6d9f86";
-  static const String APP_ID = "24ffcb55-7348-48a4-bbe7-c6c5b3763578";
-  static const String SERVER_SCOPE = "api://db074310-a1fb-45a3-8dd9-8462d3f688f8/user.base.read";
-
   final AreaService areaServiceInstance = AreaService();
   String _emailError;
   String _passwordError;
@@ -136,7 +133,7 @@ class _LoginState extends State<Login> {
 
     try {
       String token = await pca.acquireToken([SERVER_SCOPE]);
-
+      log(token);
       await this.areaServiceInstance.signInWithAccessToken(token);
       this.openHomePage();
     } on MsalException {

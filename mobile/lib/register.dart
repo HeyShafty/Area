@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 import 'constants.dart';
-import 'main.dart';
+import 'home.dart';
 import 'services/area_service.dart';
 
 class Register extends StatefulWidget {
