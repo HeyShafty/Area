@@ -188,7 +188,7 @@ export default defineComponent({
         if (service == this.action.services[i].serviceName)
           return this.action.services[i].actions;
       }
-      console.log("Ton code pue la merde.");
+      console.log("Ton code pue la merde...");
       return "";
     }
   }
