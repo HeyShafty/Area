@@ -1,6 +1,6 @@
 <template>
   <div class=" min-h-screen p-6 bg-gray-100 lg:justify-center">
-		<div class=" -space-y-96">
+		<div class="md:-space-y-96 sm:-space-y-48">
 			<EditInfos></EditInfos>
       <EditPassword></EditPassword>
 		</div>
