@@ -34,14 +34,16 @@
           <span>Home</span>
         </span>
       </router-link>
-      <router-link to="/dashboard" v-slot="{ href, route, navigate, isActive, isExactActive }">
-        <span @click="isOpen = false" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
-          <span class="mr-2">
-            <span class="iconify" data-icon="mdi:view-dashboard" data-inline="false"></span>
+      <template v-if="isConnected()">
+        <router-link to="/dashboard" v-slot="{ href, route, navigate, isActive, isExactActive }">
+          <span @click="isOpen = false" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
+            <span class="mr-2">
+              <span class="iconify" data-icon="mdi:view-dashboard" data-inline="false"></span>
+            </span>
+            <span>Dashboard</span>
           </span>
-          <span>Dashboard</span>
-        </span>
-      </router-link>
+        </router-link>
+      </template>
       <span @click="isOpen = false" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
         <span class="mr-2">
           <span class="iconify" data-icon="mdi:information" data-inline="false"></span>
@@ -55,22 +57,42 @@
         <span>about.json</span>
       </span>
       <div class="fixed bottom-0 w-full">
-        <router-link to="/signin" v-slot="{ href, route, navigate, isActive, isExactActive }">
-          <span @click="isOpen = false" class="flex items-center p-4 bg-blue-500 text-white hover:bg-blue-600">
-            <span class="mr-2">
-              <span class="iconify" data-icon="mdi:account" data-inline="false"></span>
+        <template v-if="isConnected() == false">
+          <router-link to="/signin" v-slot="{ href, route, navigate, isActive, isExactActive }">
+            <span @click="isOpen = false" class="flex items-center p-4 bg-blue-500 text-white hover:bg-blue-600">
+              <span class="mr-2">
+                <span class="iconify" data-icon="mdi:account" data-inline="false"></span>
+              </span>
+              <span>Sign In</span>
             </span>
-            <span>Sign In</span>
-          </span>
-        </router-link>
-        <router-link to="/signup" v-slot="{ href, route, navigate, isActive, isExactActive }">
-          <span @click="isOpen = false" class="flex items-center p-4 bg-blue-500 text-white hover:bg-blue-600">
-            <span class="mr-2">
-              <span class="iconify" data-icon="mdi:account-multiple-plus" data-inline="false"></span>
+          </router-link>
+          <router-link to="/signup" v-slot="{ href, route, navigate, isActive, isExactActive }">
+            <span @click="isOpen = false" class="flex items-center p-4 bg-blue-500 text-white hover:bg-blue-600">
+              <span class="mr-2">
+                <span class="iconify" data-icon="mdi:account-multiple-plus" data-inline="false"></span>
+              </span>
+              <span>Sign Up</span>
             </span>
-            <span>Sign Up</span>
-          </span>
-        </router-link>
+          </router-link>
+        </template>
+        <template v-else>
+          <router-link to="/profile" v-slot="{ href, route, navigate, isActive, isExactActive }">
+            <span @click="isOpen = false" class="flex items-center p-4 bg-blue-500 text-white hover:bg-blue-600">
+              <span class="mr-2">
+                <span class="iconify" data-icon="mdi:account-circle" data-inline="false"></span>
+              </span>
+              <span>Profile</span>
+            </span>
+          </router-link>
+          <router-link to="/signout" v-slot="{ href, route, navigate, isActive, isExactActive }">
+            <span @click="isOpen = false" class="flex items-center p-4 bg-red-500 text-white hover:bg-red-600">
+              <span class="mr-2">
+                <span class="iconify" data-icon="mdi:logout-variant" data-inline="false"></span>
+              </span>
+              <span>Sign Out</span>
+            </span>
+          </router-link>
+        </template>
       </div>
     </aside>
   </nav>
@@ -78,6 +100,7 @@
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue'
+import currentUser from '../services/UserService'
 
 export default defineComponent({
   name: 'Sidebar',
@@ -89,6 +112,9 @@ export default defineComponent({
   methods: {
     drawer() {
       this.isOpen = !this.isOpen;
+    },
+    isConnected() {
+      return currentUser.isConnected();
     }
   },
   watch: {
