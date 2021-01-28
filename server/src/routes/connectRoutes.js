@@ -3,6 +3,7 @@ const isLoggedIn = require("../passport/isLoggedIn");
 const passport = require('passport');
 const User = require('../models/User');
 const { CLIENT_WEB_URI } = require('../config/config');
+const { STRATEGY_GOOGLE } = require('../passport/googleStrategy');
 require('../passport/googleStrategy');
 
 const router = express.Router();
@@ -30,7 +31,7 @@ const router = express.Router();
  *       500:
  *         description: Error.
  */
-router.get('/google', isLoggedIn, passport.authenticate('google', {
+router.get('/google', isLoggedIn, passport.authenticate(STRATEGY_GOOGLE, {
     scope: [ 'email', 'profile', 'openid', 'https://www.googleapis.com/auth/youtube.readonly' ],
     accessType: 'offline',
     prompt: 'consent',
@@ -51,7 +52,7 @@ router.get('/google', isLoggedIn, passport.authenticate('google', {
  *       500:
  *         description: Error.
  */
-router.get('/google/callback', isLoggedIn, passport.authenticate('google', {
+router.get('/google/callback', isLoggedIn, passport.authenticate(STRATEGY_GOOGLE, {
     scope:
         [ 'email', 'profile', 'openid', 'https://www.googleapis.com/auth/youtube.readonly' ],
     accessType: 'offline',

@@ -4,6 +4,8 @@ const User = require('../models/User');
 const { MONGOOSE_GOOGLE_KEY } = require('../config/googleConfig');
 const { GOOGLE_PASSPORT_CONFIG } = require('../config/googleConfig');
 
+const STRATEGY_GOOGLE = 'google';
+
 passport.use(new GoogleStrategy(GOOGLE_PASSPORT_CONFIG,
     async function (req, accessToken, refreshToken, profile, cb) {
         const user = req.user;
@@ -17,3 +19,7 @@ passport.use(new GoogleStrategy(GOOGLE_PASSPORT_CONFIG,
         }
     }
 ));
+
+module.exports = {
+    STRATEGY_GOOGLE
+}
