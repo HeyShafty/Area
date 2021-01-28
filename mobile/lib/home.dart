@@ -10,7 +10,6 @@ import 'package:oauth2_client/github_oauth2_client.dart';
 import 'package:oauth2_client/google_oauth2_client.dart';
 import 'package:oauth2_client/oauth2_client.dart';
 import 'package:oauth2_client/oauth2_helper.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'constants.dart';
 import 'login.dart';
@@ -121,36 +120,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  redirect(Uri authorizationUrl) async {
-    if (await canLaunch(authorizationUrl.toString())) {
-      await launch(authorizationUrl.toString());
-    }
-  }
-
-/*
-final authorizationEndpoint =
-          Uri.parse('https://login.microsoftonline.com/901cb4ca-b862-4029-9306-e5cd0f6d9f86/oauth2/v2.0/authorize');
-      final tokenEndpoint = Uri.parse('https://login.microsoftonline.com/901cb4ca-b862-4029-9306-e5cd0f6d9f86/oauth2/v2.0/token');
-      final identifier = '24ffcb55-7348-48a4-bbe7-c6c5b3763578';
-      final redirectUrl = Uri.parse('msauth.area.app://auth');
-
-      var grant = oauth2.AuthorizationCodeGrant(identifier, authorizationEndpoint, tokenEndpoint);
-      Uri authorizationUrl = grant.getAuthorizationUrl(redirectUrl, scopes: [
-        'https://graph.microsoft.com/profile',
-        'https://graph.microsoft.com/offline_access',
-        'https://graph.microsoft.com/openid'
-      ]);
-
-      await redirect(authorizationUrl);
-      getUriLinksStream().listen((Uri uri) async {
-        if (uri.toString().startsWith(redirectUrl.toString())) {
-          var client = await grant.handleAuthorizationResponse(this.uri.queryParameters);
-          log("MDR");
-          log(client.credentials.accessToken);
-          log(client.credentials.refreshToken);
-        }
-      });
- */
   signInWithMicrosoft() async {
     try {
       OAuth2Client googleClient = AzureOAuth2Client(redirectUri: 'area.app://auth', customUriScheme: 'area.app');
