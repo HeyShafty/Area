@@ -1,16 +1,16 @@
 <template>
   <div class="flex min-h-screen bg-gray-100 lg:justify-center">
-    <div class="container mx-auto">
+    <div class="my-3 px-3 w-full">
       <!-- CARD EDIT PASSWORD -->
-      <div class="mx-auto bg-white rounded-md shadow-lg md:w-4/12">
-        <div class="p-5 ">
+      <div class="mx-auto bg-white rounded-md shadow-lg md:w-1/4 mb-20">
+        <div class="p-5">
           <!-- HEADER -->
           <h3 class="my-4 text-xl font-semibold text-gray-700">Edit password</h3>
           <form action="#" class="flex flex-col space-y-5">
             <!-- CURRENT PASSWORD INPUT -->
             <div class="flex flex-col space-y-1">
               <div class="flex items-center justify-between">
-                <label for="password" class="text-md font-semibold text-gray-500">Current password</label>
+                <label class="text-md font-semibold text-gray-500">Current password</label>
               </div>
               <input
                 type="password"
@@ -47,7 +47,7 @@
             <!-- CONFIRM NEW PASSWORD INPUT -->
             <div class="flex flex-col space-y-1">
               <div class="flex items-center justify-between">
-                <label for="password" class="text-md font-semibold text-gray-500">Confirm new password</label>
+                <label class="text-md font-semibold text-gray-500">Confirm new password</label>
               </div>
               <input
                 type="password"

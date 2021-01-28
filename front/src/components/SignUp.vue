@@ -4,9 +4,7 @@
     <!-- AREA LOGO -->
       <img class="mx-auto w-auto object-fit:contain max-w-sm mb-10" src="../assets/AREALOGO.png">
     <!-- CARD -->
-      <div
-        class="mx-auto overflow-hidden bg-white rounded-md shadow-lg max-w-md"
-      >
+      <div class="mx-auto overflow-hidden bg-white rounded-md shadow-lg max-w-md">
         <div class="p-5 md:flex-1">
           <!-- CARD HEADER -->
           <h3 class="my-4 text-2xl font-semibold text-gray-700">Create account</h3>

@@ -2,11 +2,9 @@
   <div class="flex items-center min-h-screen p-4 bg-gray-100 lg:justify-center">
     <div class="container mx-auto root">
     <!-- AREA LOGO -->
-      <img class="mx-auto max-w-sm w-auto object-fit:contain mb-10" src="../assets/AREALOGO.png">
+    <img class="mx-auto max-w-sm w-auto object-fit:contain mb-10" src="../assets/AREALOGO.png">
     <!-- CARD -->
-      <div
-        class="mx-auto overflow-hidden bg-white rounded-md shadow-lg max-w-md"
-      >
+      <div class="mx-auto overflow-hidden bg-white rounded-md shadow-lg max-w-md" >
         <div class="p-5 md:flex-1">
           <!-- CARD HEADER -->
           <h3 class="my-4 text-2xl font-semibold text-gray-700">Sign-In to your account</h3>

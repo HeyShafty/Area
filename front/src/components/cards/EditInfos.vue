@@ -1,8 +1,8 @@
 <template>
   <div class="flex min-h-screen bg-gray-100 lg:justify-center">
-    <div class="container mx-auto">
-    <!-- CARD EDIT INFOS -->
-      <div class="mx-auto bg-white rounded-md shadow-lg md:w-4/12 mt-20">
+    <div class="my-3 px-3 w-full">
+      <!-- CARD EDIT INFOS -->
+      <div class="mx-auto bg-white rounded-md shadow-lg md:w-1/4 mt-20">
         <div class="p-5 ">
           <!-- HEADER -->
           <h3 class="my-4 text-xl font-semibold text-gray-700">Edit account informations</h3>
