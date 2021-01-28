@@ -13,6 +13,7 @@ passport.use(new GoogleStrategy(GOOGLE_PASSPORT_CONFIG,
         try {
             user.connectData.set(MONGOOSE_GOOGLE_KEY, { refresh_token: refreshToken });
             await User.updateOne({ email: user.email, isMicrosoftAuthed: user.isMicrosoftAuthed }, user);
+
             return cb(null, user);
         } catch (e) {
             return cb(null, false);

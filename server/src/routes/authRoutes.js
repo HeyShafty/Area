@@ -2,7 +2,7 @@ const passport = require('passport');
 const express = require('express');
 const jwt = require('jsonwebtoken');
 
-const isLoggedIn = require("../passport/isLoggedIn");
+const protectedRequest = require("../passport/protectedRequest");
 const { JWT_SECRET_KEY } = require('../config/jwtConfig')
 const { STRATEGY_OFFICE_JWT } = require("../passport/officeJwtStrategy");
 const { STRATEGY_LOCAL_SIGN_IN, STRATEGY_LOCAL_SIGN_UP } = require('../passport/localStrategy');
@@ -26,8 +26,10 @@ const router = express.Router();
  *       401:
  *         description: Invalid session.
  */
-router.get('/ping', isLoggedIn, (req, res) => {
-    res.send(true);
+router.get('/ping', protectedRequest, (req, res) => {
+    const { user } = req;
+
+    res.status(200).send({ user });
 });
 
 /**
@@ -200,30 +202,6 @@ router.post('/office-jwt', (req, res, next) => {
             res.json({ token });
         });
     })(req, res, next);
-});
-
-router.get('/protected', passport.authenticate(STRATEGY_JWT, { session: false }),
-    (req, res) => {
-        const { user } = req;
-
-        res.status(200).send({ user });
-    }
-);
-
-/**
- * @swagger
- *
- * /auth/logout:
- *   get:
- *     summary: Ends session.
- *     responses:
- *       302:
- *         description: Session ended, redirecting to login page.
- */
-router.get('/logout', (req, res) => {
-    req.logout();
-    // res.redirect(CLIENT_WEB_URI + '/auth/login'); // TODO: Watch out for the path
-    res.sendStatus(200);
 });
 
 module.exports = router;
