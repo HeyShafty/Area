@@ -2,6 +2,7 @@ const express = require('express');
 const passport = require('passport');
 const protectedRequest = require('../passport/protectedRequest');
 const { STRATEGY_GOOGLE } = require('../passport/googleStrategy');
+const { STRATEGY_GITHUB } = require('../passport/githubStrategy');
 
 const { CLIENT_WEB_URI } = require('../config/config');
 const { MSAL_SCOPES, MSAL_REDIRECT_URI } = require('../config/msalConfig');
@@ -97,8 +98,25 @@ router.get('/google/callback', (req, res, next) => {
             [ 'email', 'profile', 'openid', 'https://www.googleapis.com/auth/youtube.readonly' ],
         accessType: 'offline',
         successRedirect: CLIENT_WEB_URI + '/home',
-        failureRedirect: CLIENT_WEB_URI + '/home'
+        failureRedirect: CLIENT_WEB_URI + '/yes'
     })(req, res, next);
 });
+
+router.get('/github', (req, res, next) => {
+    passport.authenticate(STRATEGY_GITHUB, {
+        scope: [ 'repo', 'user' ],
+        failureRedirect: CLIENT_WEB_URI + '/home',
+        state: 'lets go les gars'
+    })(req, res, next);
+});
+
+router.get('/github/callback', (req, res, next) => {
+    console.log(req.query);
+    passport.authenticate(STRATEGY_GITHUB, {
+        scope: [ 'repo', 'user' ],
+        successRedirect: CLIENT_WEB_URI + '/home',
+        failureRedirect: CLIENT_WEB_URI + '/fail'
+    })(req, res, next);
+})
 
 module.exports = router;
