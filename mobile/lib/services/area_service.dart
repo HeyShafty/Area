@@ -5,6 +5,13 @@ import 'package:http/http.dart' as http;
 
 import '../constants.dart';
 
+enum Service {
+  GITHUB,
+  GOOGLE,
+  MICROSOFT,
+  TWITTER,
+}
+
 class AreaService {
   static final AreaService _singleton = AreaService._internal();
 
@@ -50,10 +57,7 @@ class AreaService {
     }
 
     final Map<String, dynamic> decodedBody = jsonDecode(response.body);
-    if (decodedBody[TOKEN_KEY] == "") {
-      throw ("Couldn't sign you in with Microsoft.");
-    }
-    this.accessToken = decodedBody[TOKEN_KEY];
+    this.accessToken = decodedBody[TOKEN_KEY] ?? (throw ("Couldn't sign you in with Microsoft."));
     await SharedPreferencesService.saveString(TOKEN_KEY, this.accessToken);
   }
 
@@ -71,10 +75,7 @@ class AreaService {
     }
 
     final Map<String, dynamic> decodedBody = jsonDecode(response.body);
-    if (decodedBody[TOKEN_KEY] == "") {
-      throw ("Couldn't sign you in.");
-    }
-    this.accessToken = decodedBody[TOKEN_KEY];
+    this.accessToken = decodedBody[TOKEN_KEY] ?? (throw ("Couldn't sign you in."));
     await SharedPreferencesService.saveString(TOKEN_KEY, this.accessToken);
   }
 
@@ -92,11 +93,19 @@ class AreaService {
     }
 
     final Map<String, dynamic> decodedBody = jsonDecode(response.body);
-    if (decodedBody[TOKEN_KEY] == "") {
-      throw ("Couldn't sign you up.");
-    }
-    this.accessToken = decodedBody[TOKEN_KEY];
+    this.accessToken = decodedBody[TOKEN_KEY] ?? (throw ("Couldn't sign you up."));
     await SharedPreferencesService.saveString(TOKEN_KEY, this.accessToken);
+  }
+
+  Future<String> getServiceRedirectionUrl(Service service) async {
+    String serviceConnectUri = SERVICES_CONNECT_URI[service];
+    http.Response response = await http.get("http://$serverIp/$serviceConnectUri");
+    if (response.statusCode != 200) {
+      throw ("Couldn't sign you in with this service.");
+    }
+
+    final Map<String, dynamic> decodedBody = jsonDecode(response.body);
+    return decodedBody[CONNECT_URL_KEY] ?? (throw ("Couldn't sign you in with this service."));
   }
 
   AreaService._internal();

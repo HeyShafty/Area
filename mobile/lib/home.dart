@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:area/custom_oauth2_clients/azure_oauth2_client.dart';
+import 'package:area/services/area_service.dart';
 import 'package:area/services/shared_preferences_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:oauth2_client/access_token_response.dart';
 import 'package:oauth2_client/github_oauth2_client.dart';
@@ -20,6 +22,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final AreaService areaServiceInstance = AreaService();
   Uri uri;
 
   @override
@@ -88,6 +91,16 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  signInWithService(Service service) async {
+    try {
+      final String url = await this.areaServiceInstance.getServiceRedirectionUrl(service);
+      await FlutterWebAuth.authenticate(url: url, callbackUrlScheme: 'area.chad');
+    } catch (e) {
+      log(e.toString());
+      this.showToast("Couldn't sign you in with this service.");
+    }
   }
 
   signInWithGitHub() async {
