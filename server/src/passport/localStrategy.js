@@ -30,8 +30,8 @@ passport.use(STRATEGY_LOCAL_SIGN_IN, new Strategy(LOCAL_PASSPORT_CONFIG,
 
 passport.use(STRATEGY_LOCAL_SIGN_UP, new Strategy(LOCAL_PASSPORT_CONFIG,
     async (req, email, password, cb) => {
-        if (!req.body.fullName) {
-            return cb(null, false, { code: 400, message: 'Missing fullName property.' });
+        if (!req.body.username) {
+            return cb(null, false, { code: 400, message: 'Missing username property.' });
         }
         try {
             let user = await User.findOne({ email, isMicrosoftAuthed: false });
@@ -42,7 +42,7 @@ passport.use(STRATEGY_LOCAL_SIGN_UP, new Strategy(LOCAL_PASSPORT_CONFIG,
                 user = await User.create({
                     email,
                     password,
-                    displayName: req.body.fullName
+                    displayName: req.body.username
                 });
                 return cb(null, user);
             }
