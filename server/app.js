@@ -11,6 +11,7 @@ const msal = require('@azure/msal-node');
 const authRouter = require('./src/routes/authRoutes');
 const connectRouter = require('./src/routes/connectRoutes');
 const microsoftRouter = require('./src/routes/microsoftRoutes');
+const profileRouter = require('./src/routes/profileRoutes');
 
 const { ALLOWED_ORIGINS } = require('./src/config/config');
 const { MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PASSWORD } = require('./src/config/mongoConfig');
@@ -55,6 +56,7 @@ function startServer() {
     app.use('/auth', authRouter);
     app.use('/connect', connectRouter);
     app.use('/microsoft', microsoftRouter);
+    app.use('/profile', profileRouter);
 
     app.get('/', (req, res) => {
         res.send('Hello World!');

@@ -1,21 +1,21 @@
 const passport = require('passport');
-const GithubStrategy = require('passport-github2').Strategy;
+const DiscordStrategy = require('passport-discord').Strategy;
 const User = require('../models/User');
-const { GITHUB_PASSPORT_CONFIG, MONGOOSE_GITHUB_KEY } = require('../config/githubConfig');
+const { DISCORD_PASSPORT_CONFIG, MONGOOSE_DISCORD_KEY } = require('../config/discordConfig');
 const { getUserFromSessionId } = require('../utils/connectSessionHelper');
 
-const STRATEGY_GITHUB = 'github';
+const STRATEGY_DISCORD = 'discord';
 
-passport.use(new GithubStrategy(GITHUB_PASSPORT_CONFIG,
+passport.use(new DiscordStrategy(DISCORD_PASSPORT_CONFIG,
     async function (req, accessToken, refreshToken, profile, done) {
-        const user = await getUserFromSessionId(req.query.state || '', 'github');
+        const user = await getUserFromSessionId(req.query.state || '', 'discord');
 
         if (!user) {
             return done(null, false);
         }
 
         try {
-            user.connectData.set(MONGOOSE_GITHUB_KEY, { refreshToken: refreshToken, accessToken: accessToken });
+            user.connectData.set(MONGOOSE_DISCORD_KEY, { accessToken: accessToken });
             await User.findByIdAndUpdate(user._id, user);
 
             return done(null, user);
@@ -26,5 +26,5 @@ passport.use(new GithubStrategy(GITHUB_PASSPORT_CONFIG,
 ));
 
 module.exports = {
-    STRATEGY_GITHUB
+    STRATEGY_DISCORD
 }
