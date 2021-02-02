@@ -139,7 +139,7 @@ export default defineComponent({
       console.log(this.username + ' wants to create an account')
       try {
         const ret = await axios.post(baseUri +'/auth/sign-up', {
-          fullName: this.username,
+          username: this.username,
           email: this.email,
           password: this.password,
         });
