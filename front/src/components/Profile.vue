@@ -118,7 +118,7 @@ export default defineComponent({
   },
   async mounted() {
     try {
-      const ret = await axios.post(baseUri +'/profile/info', {}, {
+      const ret = await axios.get(baseUri +'/profile/info', {
         headers: {
           authorization: `Bearer ${currentUser.jwt}`,
         },
