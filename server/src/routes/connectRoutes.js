@@ -5,16 +5,21 @@ const { STRATEGY_GOOGLE } = require('../passport/googleStrategy');
 const { STRATEGY_GITHUB } = require('../passport/githubStrategy');
 
 const { CLIENT_WEB_URI } = require('../config/config');
-const { MSAL_SCOPES, MSAL_REDIRECT_URI } = require('../config/msalConfig');
+const { MSAL_SCOPES, MSAL_REDIRECT_URI, MONGOOSE_MSAL_KEY } = require('../config/msalConfig');
+const User = require('../models/User');
+const { createConnectSession, getUserFromSessionId } = require('../utils/connectSessionHelper');
 
 const router = express.Router();
 
+const connectSessionMicrosoft = 'microsoft';
+
 router.get('/microsoft', protectedRequest, async (req, res) => {
+    const connectSessionId = await createConnectSession(req.user._id, connectSessionMicrosoft);
     const urlParameters = {
         scopes: [ 'profile', 'openid', 'offline_access', 'email', 'Mail.Read', 'Calendars.Read', 'User.Read', 'MailboxSettings.Read' ],
         redirectUri: 'http://localhost:8080/connect/microsoft/callback',
         prompt: 'select_account',
-        state: req.user._id
+        state: connectSessionId
     };
 
     try {
@@ -23,7 +28,7 @@ router.get('/microsoft', protectedRequest, async (req, res) => {
         res.json({ url: authUrl });
     } catch (err) {
         console.log(err);
-        res.redirect('/'); // TODO: front home page.
+        res.sendStatus(500);
     }
 });
 
@@ -33,24 +38,23 @@ router.get('/microsoft/callback', async (req, res) => {
         scopes: [ 'profile', 'openid', 'offline_access', 'email', 'Mail.Read', 'Calendars.Read', 'User.Read', 'MailboxSettings.Read' ],
         redirectUri: 'http://localhost:8080/connect/microsoft/callback'
     };
+    const user = await getUserFromSessionId(req.query.state || '', connectSessionMicrosoft);
 
+    if (!user) {
+        return res.status(400).send('Invalid state');
+    }
     try {
-        console.log(req.query);
         const response = await req.app.locals.msalClient.acquireTokenByCode(tokenRequest);
-        console.log(response);
-        const userDetails = await microsoft.getUserDetails(response.accessToken);
-        console.log(userDetails);
 
-        req.user.microsoftConnectData = {
-            isConnected: true,
-            homeAccountId: response.account.homeAccountId,
-            timeZone: userDetails.mailboxSettings.timeZone
-        };
-        // await User.updateOne({ email: req.user.email, isMicrosoftAuthed: req.user.isMicrosoftAuthed }, req.user);
+        user.connectData.set(MONGOOSE_MSAL_KEY, {
+            accessToken: response.accessToken,
+            data: { homeAccountId: response.account.homeAccountId }
+        });
+        await User.findByIdAndUpdate(user._id, user);
     } catch (err) {
         console.log(err)
     }
-    return res.redirect('http://localhost:8081' + '/home');
+    return res.redirect(CLIENT_WEB_URI + '/profile');
 });
 
 /**
@@ -67,15 +71,13 @@ router.get('/microsoft/callback', async (req, res) => {
  *       500:
  *         description: Error.
  */
-router.get('/google', (req, res, next) => {
-    passport.authenticate(STRATEGY_GOOGLE, {
-        scope: [ 'email', 'profile', 'openid', 'https://www.googleapis.com/auth/youtube.readonly' ],
-        accessType: 'offline',
-        prompt: 'consent',
-        failureRedirect: CLIENT_WEB_URI + '/home',
-        state: 'le pas de calais'
-    })(req, res, next);
-});
+router.get('/google', passport.authenticate(STRATEGY_GOOGLE, {
+    scope: [ 'email', 'profile', 'openid', 'https://www.googleapis.com/auth/youtube.readonly' ],
+    accessType: 'offline',
+    prompt: 'consent',
+    failureRedirect: CLIENT_WEB_URI + '/home',
+    state: 'le pas de calais'
+}));
 
 /**
  * @swagger
@@ -92,7 +94,6 @@ router.get('/google', (req, res, next) => {
  *         description: Error.
  */
 router.get('/google/callback', (req, res, next) => {
-    console.log(req.query);
     passport.authenticate(STRATEGY_GOOGLE, {
         scope:
             [ 'email', 'profile', 'openid', 'https://www.googleapis.com/auth/youtube.readonly' ],
@@ -111,7 +112,6 @@ router.get('/github', (req, res, next) => {
 });
 
 router.get('/github/callback', (req, res, next) => {
-    console.log(req.query);
     passport.authenticate(STRATEGY_GITHUB, {
         scope: [ 'repo', 'user' ],
         successRedirect: CLIENT_WEB_URI + '/home',

@@ -5,9 +5,6 @@ const ALLOWED_ORIGINS = [
     CLIENT_WEB_URI,
 ];
 
-// if (CLIENT_WEB_PORT === '80')
-//   ALLOWED_ORIGINS.push('http://localhost');
-
 module.exports = {
     ALLOWED_ORIGINS,
     CLIENT_WEB_URI

@@ -11,7 +11,7 @@ passport.use(new GoogleStrategy(GOOGLE_PASSPORT_CONFIG,
         const user = req.user;
 
         try {
-            user.connectData.set(MONGOOSE_GOOGLE_KEY, { refresh_token: refreshToken });
+            user.connectData.set(MONGOOSE_GOOGLE_KEY, { refreshToken: refreshToken });
             await User.updateOne({ email: user.email, isMicrosoftAuthed: user.isMicrosoftAuthed }, user);
 
             return cb(null, user);

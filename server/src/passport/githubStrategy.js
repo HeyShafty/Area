@@ -11,7 +11,7 @@ const STRATEGY_GITHUB = 'github';
 //         const user = req.user;
 
 //         try {
-//             user.connectData.set(MONGOOSE_GITHUB_KEY, { access_token: accessToken, refresh_token: refreshToken });
+//             user.connectData.set(MONGOOSE_GITHUB_KEY, { accessToken: accessToken, refreshToken: refreshToken });
 //             await User.updateOne({ email: user.email, isMicrosoftAuthed: user.isMicrosoftAuthed }, user);
 //             return cb(null, user);
 //         } catch (e) {
