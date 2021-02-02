@@ -1,12 +1,12 @@
 import 'package:area/services/area_service.dart';
 import 'package:flutter/cupertino.dart';
 
-class MyHomePage extends StatefulWidget {
+class MyDashboardPage extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MyDashboardPageState createState() => _MyDashboardPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyDashboardPageState extends State<MyDashboardPage> {
   final AreaService areaServiceInstance = AreaService();
 
   @override

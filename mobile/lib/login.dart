@@ -12,7 +12,7 @@ import 'package:msal_flutter/msal_flutter.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 import 'constants.dart';
-import 'home.dart';
+import 'main_page.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -124,7 +124,7 @@ class _LoginState extends State<Login> {
   }
 
   void openHomePage() {
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MyHomePage()), (Route<dynamic> route) => false);
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MyMainPage()), (Route<dynamic> route) => false);
   }
 
   Future<void> signInWithMicrosoft() async {

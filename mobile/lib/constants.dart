@@ -1,3 +1,4 @@
+import 'package:area/Models/service.dart';
 import 'package:area/services/area_service.dart';
 
 const String EMAIL_REGEX =
@@ -8,9 +9,9 @@ const String TENANT_ID = "901cb4ca-b862-4029-9306-e5cd0f6d9f86";
 const String APP_ID = "24ffcb55-7348-48a4-bbe7-c6c5b3763578";
 const String SERVER_SCOPE = "api://a8dcacc9-80da-4a2b-9f8a-6e20221951d0/user.base.read";
 const String CONNECT_URL_KEY = "url";
-const Map<Service, String> SERVICES_CONNECT_URI = {
-  Service.GITHUB: 'connect/github',
-  Service.GOOGLE: 'connect/google',
-  Service.MICROSOFT: 'connect/microsoft',
-  Service.TWITTER: 'connect/twitter'
+const Map<ServiceType, Service> SERVICES_CONNECT_URI = {
+  ServiceType.GITHUB: Service('Github', '/connect/github', 'assets/images/github.png'),
+  ServiceType.GOOGLE: Service('Google', '/connect/google', 'assets/images/google.png'),
+  ServiceType.MICROSOFT: Service('Microsoft', '/connect/microsoft', 'assets/images/microsoft.png'),
+  ServiceType.TWITTER: Service('Twitter', '/connect/twitter', 'assets/images/twitter.png'),
 };

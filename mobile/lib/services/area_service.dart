@@ -1,11 +1,13 @@
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:area/Models/service.dart';
 import 'package:area/services/shared_preferences_service.dart';
 import 'package:http/http.dart' as http;
 
 import '../constants.dart';
 
-enum Service {
+enum ServiceType {
   GITHUB,
   GOOGLE,
   MICROSOFT,
@@ -98,8 +100,10 @@ class AreaService {
   }
 
   Future<String> getServiceRedirectionUrl(Service service) async {
-    String serviceConnectUri = SERVICES_CONNECT_URI[service];
-    http.Response response = await http.get("http://$serverIp/$serviceConnectUri");
+    String serviceRedirectUri = service.uri;
+    Uri uri = Uri.http(this.serverIp, serviceRedirectUri, {'mobile': 'true'});
+    log(uri.toString());
+    http.Response response = await http.get(uri, headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken});
     if (response.statusCode != 200) {
       throw ("Couldn't sign you in with this service.");
     }

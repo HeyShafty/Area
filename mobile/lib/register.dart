@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 import 'constants.dart';
-import 'home.dart';
+import 'main_page.dart';
 import 'services/area_service.dart';
 
 class Register extends StatefulWidget {
@@ -97,7 +97,7 @@ class _RegisterState extends State<Register> {
   }
 
   void openHomePage() {
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MyHomePage()), (Route<dynamic> route) => false);
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MyMainPage()), (Route<dynamic> route) => false);
   }
 
   bool isFormValid(String username, String email, String password) {
