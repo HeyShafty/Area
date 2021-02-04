@@ -5,7 +5,7 @@ const protectedRequest = require('../passport/protectedRequest');
 const router = express.Router();
 
 router.get('/infos', protectedRequest, (req, res) => {
-    res.send({ displayName: req.user.displayName, email: req.user.email, services: req.user.connectData });
+    res.json({ displayName: req.user.displayName, email: req.user.email, services: req.user.connectData });
 });
 
 module.exports = router;

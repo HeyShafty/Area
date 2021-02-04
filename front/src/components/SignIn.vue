@@ -140,7 +140,7 @@ export default defineComponent({
           password: this.password,
         });
         console.log(ret);
-        currentUser.connect(ret.token);
+        currentUser.connect(ret.data.token);
         this.$router.push('/dashboard');
       } catch (error) {
         console.log(error);

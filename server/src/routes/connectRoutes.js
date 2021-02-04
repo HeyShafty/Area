@@ -104,8 +104,8 @@ router.get('/google/callback', (req, res, next) => {
         scope:
             [ 'email', 'profile', 'openid', 'https://www.googleapis.com/auth/youtube.readonly' ],
         accessType: 'offline',
-        successRedirect: CLIENT_WEB_URI + '/home',
-        failureRedirect: CLIENT_WEB_URI + '/yes'
+        successRedirect: CLIENT_WEB_URI + '/profile',
+        failureRedirect: CLIENT_WEB_URI + '/profile'
     })(req, res, next);
 });
 
@@ -148,8 +148,8 @@ router.get('/github/callback', (req, res, next) => {
     passport.authenticate(STRATEGY_GITHUB, {
         session: false,
         scope: [ 'repo', 'user' ],
-        successRedirect: CLIENT_WEB_URI + '/home',
-        failureRedirect: CLIENT_WEB_URI + '/home'
+        successRedirect: CLIENT_WEB_URI + '/profile',
+        failureRedirect: CLIENT_WEB_URI + '/profile'
     })(req, res, next);
 })
 
@@ -193,8 +193,8 @@ router.get('/discord/callback', (req, res, next) => {
     passport.authenticate(STRATEGY_DISCORD, {
         session: false,
         scope: [ 'guilds', 'messages.read', 'identify', 'email' ],
-        successRedirect: CLIENT_WEB_URI + '/home',
-        failureRedirect: CLIENT_WEB_URI + '/home'
+        successRedirect: CLIENT_WEB_URI + '/profile',
+        failureRedirect: CLIENT_WEB_URI + '/profile'
     })(req, res, next);
 })
 
