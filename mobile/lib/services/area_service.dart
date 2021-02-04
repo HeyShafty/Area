@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import '../constants.dart';
 
 enum ServiceType {
+  DISCORD,
   GITHUB,
   GOOGLE,
   MICROSOFT,
@@ -113,11 +114,11 @@ class AreaService {
   }
 
   Future<void> handleServiceRedirection(String callbackUrl, Service service) async {
-    if (!callbackUrl.contains("area.app:/auth")) {
+    if (!callbackUrl.contains(service.fullCallbackUrl)) {
       throw ("Bad redirect URI");
     }
 
-    Uri uri = Uri.parse("http://" + this._serverIp + service.redirectUri + callbackUrl.split("area.app:/auth")[1]);
+    Uri uri = Uri.parse("http://" + this._serverIp + service.serverRedirectUri + callbackUrl.split(service.fullCallbackUrl)[1]);
     http.Response response = await http.get(uri.toString());
     if (response.statusCode != 200) {
       throw ("Couldn't sign you in with this service.");

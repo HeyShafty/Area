@@ -61,6 +61,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(bottom: 20.0),
+                    child: getSignInWith(SERVICES_CONNECT_URI[ServiceType.DISCORD], false),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 20.0),
                     child: getSignInWith(SERVICES_CONNECT_URI[ServiceType.GITHUB], false),
                   ),
                   Padding(
@@ -87,7 +91,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
     });
     try {
       final String url = await this.areaServiceInstance.getServiceRedirectionUrl(service);
-      final String callbackUrl = await FlutterWebAuth.authenticate(url: url, callbackUrlScheme: 'area.app');
+      final String callbackUrl = await FlutterWebAuth.authenticate(url: url.toString(), callbackUrlScheme: service.callbackUrlScheme);
+
       await this.areaServiceInstance.handleServiceRedirection(callbackUrl, service);
     } catch (e) {
       log(e.toString());
