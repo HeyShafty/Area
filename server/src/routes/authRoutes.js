@@ -6,9 +6,14 @@ const protectedRequest = require("../passport/protectedRequest");
 const { JWT_SECRET_KEY } = require('../config/jwtConfig')
 const { STRATEGY_OFFICE_JWT } = require("../passport/officeJwtStrategy");
 const { STRATEGY_LOCAL_SIGN_IN, STRATEGY_LOCAL_SIGN_UP } = require('../passport/localStrategy');
-const { STRATEGY_JWT } = require('../passport/jwtStrategy');
 
 const router = express.Router();
+
+function makeToken(user, office) {
+    const body = { email: user.email, office };
+
+    return jwt.sign({ user: body }, JWT_SECRET_KEY, { expiresIn: '2 years' });
+}
 
 /**
  * @swagger
@@ -29,7 +34,7 @@ const router = express.Router();
 router.get('/ping', protectedRequest, (req, res) => {
     const { user } = req;
 
-    res.status(200).send({ user });
+    res.status(200).send({ email: user.email, displayName: user.displayName, isMicrosoftAuthed: user.isMicrosoftAuthed });
 });
 
 /**
@@ -71,7 +76,6 @@ router.get('/ping', protectedRequest, (req, res) => {
 router.post('/sign-in', (req, res, next) => {
     passport.authenticate(STRATEGY_LOCAL_SIGN_IN, (err, user, info) => {
         if (err) {
-            console.log(err);
             return res.sendStatus(500);
         }
         if (!user) {
@@ -85,10 +89,7 @@ router.post('/sign-in', (req, res, next) => {
             if (err) {
                 return next(err);
             }
-            const body = { email: user.email, displayName: user.displayName };
-            const token = jwt.sign({ user: body }, JWT_SECRET_KEY, { expiresIn: '2 years' });
-
-            res.json({ token });
+            return res.json({ token: makeToken(user, true) });
         })
     })(req, res, next);
 });
@@ -137,7 +138,6 @@ router.post('/sign-in', (req, res, next) => {
 router.post('/sign-up', (req, res, next) => {
     passport.authenticate(STRATEGY_LOCAL_SIGN_UP, (err, user, info) => {
         if (err) {
-            console.log(err);
             return res.sendStatus(500);
         }
         if (!user) {
@@ -151,10 +151,7 @@ router.post('/sign-up', (req, res, next) => {
             if (err) {
                 return next(err);
             }
-            const body = { email: user.email, displayName: user.displayName };
-            const token = jwt.sign({ user: body }, JWT_SECRET_KEY, { expiresIn: '2 years' });
-
-            res.json({ token });
+            return res.json({ token: makeToken(user, false) });
         });
     })(req, res, next);
 });
@@ -196,10 +193,7 @@ router.post('/office-jwt', (req, res, next) => {
             if (err) {
                 return next(err);
             }
-            const body = { email: user.email, displayName: user.displayName };
-            const token = jwt.sign({ user: body }, JWT_SECRET_KEY, { expiresIn: '2 years' });
-
-            res.json({ token });
+            return res.json({ token: makeToken(user, true) });
         });
     })(req, res, next);
 });
