@@ -86,7 +86,7 @@ class AreaService {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, String>{"email": email, "password": password, "fullName": username}));
+        body: jsonEncode(<String, String>{"email": email, "password": password, "username": username}));
     if (response.statusCode == 409) {
       throw ("Email already exists.");
     }
@@ -110,6 +110,18 @@ class AreaService {
 
     final Map<String, dynamic> decodedBody = jsonDecode(response.body);
     return decodedBody[CONNECT_URL_KEY] ?? (throw ("Couldn't sign you in with this service."));
+  }
+
+  Future<void> handleServiceRedirection(String callbackUrl, Service service) async {
+    if (!callbackUrl.contains("area.app:/auth")) {
+      throw ("Bad redirect URI");
+    }
+
+    Uri uri = Uri.parse("http://" + this._serverIp + service.redirectUri + callbackUrl.split("area.app:/auth")[1]);
+    http.Response response = await http.get(uri.toString());
+    if (response.statusCode != 200) {
+      throw ("Couldn't sign you in with this service.");
+    }
   }
 
   AreaService._internal();

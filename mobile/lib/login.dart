@@ -25,6 +25,7 @@ class _LoginState extends State<Login> {
   String _passwordError;
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
   final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
 
   @override
@@ -87,16 +88,18 @@ class _LoginState extends State<Login> {
                           textAlign: TextAlign.center,
                         ),
                         controller: _btnController,
-                        onPressed: () {
-                          FocusScope.of(context).unfocus();
-                          this.signInWithCredentials(this._emailController.value.text, this._passwordController.value.text);
-                        },
+                        onPressed: this._isLoading
+                            ? null
+                            : () {
+                                FocusScope.of(context).unfocus();
+                                this.signInWithCredentials(this._emailController.value.text, this._passwordController.value.text);
+                              },
                       ),
                     ),
                     Padding(
                         padding: const EdgeInsets.only(top: 10.0),
                         child: TextButton(
-                          onPressed: () => this.openRegisterPage(),
+                          onPressed: this._isLoading ? null : () => this.openRegisterPage(),
                           child: Text(
                             'Don\'t have an account? Sign up',
                             style: TextStyle(color: Colors.blue, fontSize: 15),
@@ -109,9 +112,11 @@ class _LoginState extends State<Login> {
                           style: TextStyle(color: Colors.black54, fontSize: 15),
                         )),
                     IconButton(
-                      onPressed: () async {
-                        await this.signInWithMicrosoft();
-                      },
+                      onPressed: this._isLoading
+                          ? null
+                          : () async {
+                              await this.signInWithMicrosoft();
+                            },
                       icon: Image.asset("assets/images/microsoft.png"),
                       color: Colors.blue,
                     )
@@ -131,16 +136,22 @@ class _LoginState extends State<Login> {
     var pca =
         await PublicClientApplication.createPublicClientApplication(APP_ID, authority: "https://login.microsoftonline.com/" + TENANT_ID);
 
+    this.setState(() {
+      this._isLoading = true;
+    });
     try {
       String token = await pca.acquireToken([SERVER_SCOPE]);
       log(token);
       await this.areaServiceInstance.signInWithAccessToken(token);
-      this.openHomePage();
+      return this.openHomePage();
     } on MsalException {
       this.showToast("Couldn't sign you in with Microsoft.");
     } catch (e) {
       this.showToast(e.toString());
     }
+    this.setState(() {
+      this._isLoading = false;
+    });
   }
 
   void showToast(String message) {
@@ -179,8 +190,14 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> signInWithCredentials(String email, String password) async {
+    this.setState(() {
+      this._isLoading = true;
+    });
     if (this.isFormValid(email, password) == false) {
       this._btnController.reset();
+      this.setState(() {
+        this._isLoading = false;
+      });
       return;
     }
     try {
@@ -192,6 +209,9 @@ class _LoginState extends State<Login> {
       this._btnController.reset();
       this.showToast(e.toString());
     }
+    this.setState(() {
+      this._isLoading = false;
+    });
   }
 
   Future<void> showServerIpAlertDialog(BuildContext context) async {

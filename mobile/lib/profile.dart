@@ -4,6 +4,7 @@ import 'package:area/Models/service.dart';
 import 'package:area/services/area_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'Models/user.dart';
@@ -17,7 +18,7 @@ class MyProfilePage extends StatefulWidget {
 class _MyProfilePageState extends State<MyProfilePage> {
   final AreaService areaServiceInstance = AreaService();
   User _user = User("micheluser", "michel.jean@epitech.eu", false, true, false, true);
-  bool isLoading = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -81,15 +82,20 @@ class _MyProfilePageState extends State<MyProfilePage> {
   }
 
   signInWithService(Service service) async {
+    setState(() {
+      this._isLoading = true;
+    });
     try {
       final String url = await this.areaServiceInstance.getServiceRedirectionUrl(service);
-      log(url);
-      //final String callbackUrl = await FlutterWebAuth.authenticate(url: url, callbackUrlScheme: 'area.app');
-      //log(callbackUrl);
+      final String callbackUrl = await FlutterWebAuth.authenticate(url: url, callbackUrlScheme: 'area.app');
+      await this.areaServiceInstance.handleServiceRedirection(callbackUrl, service);
     } catch (e) {
       log(e.toString());
       this.showToast("Couldn't sign you in with this service.");
     }
+    setState(() {
+      this._isLoading = false;
+    });
   }
 
   getSignInWith(Service service, bool isAuthenticated) {
@@ -116,6 +122,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
     }
     return FlatButton(
         onPressed: () async {
+          if (this._isLoading) {
+            return;
+          }
           await this.signInWithService(service);
         },
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0), side: BorderSide(color: Colors.transparent)),
@@ -124,16 +133,18 @@ class _MyProfilePageState extends State<MyProfilePage> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(service.iconPath),
-            Padding(
-              padding: EdgeInsets.only(left: 10.0),
-              child: Text(
-                'Connect with ' + service.name,
-                style: TextStyle(color: Colors.black),
-              ),
-            )
-          ],
+          children: this._isLoading
+              ? [new CircularProgressIndicator()]
+              : [
+                  Image.asset(service.iconPath),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.0),
+                    child: Text(
+                      'Connect with ' + service.name,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  )
+                ],
         ));
   }
 

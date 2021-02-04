@@ -10,8 +10,8 @@ const String APP_ID = "24ffcb55-7348-48a4-bbe7-c6c5b3763578";
 const String SERVER_SCOPE = "api://a8dcacc9-80da-4a2b-9f8a-6e20221951d0/user.base.read";
 const String CONNECT_URL_KEY = "url";
 const Map<ServiceType, Service> SERVICES_CONNECT_URI = {
-  ServiceType.GITHUB: Service('Github', '/connect/github', 'assets/images/github.png'),
-  ServiceType.GOOGLE: Service('Google', '/connect/google', 'assets/images/google.png'),
-  ServiceType.MICROSOFT: Service('Microsoft', '/connect/microsoft', 'assets/images/microsoft.png'),
-  ServiceType.TWITTER: Service('Twitter', '/connect/twitter', 'assets/images/twitter.png'),
+  ServiceType.GITHUB: Service('Github', '/connect/github', '/connect/github/callback', 'assets/images/github.png'),
+  ServiceType.GOOGLE: Service('Google', '/connect/google', '/connect/google/callback', 'assets/images/google.png'),
+  ServiceType.MICROSOFT: Service('Microsoft', '/connect/microsoft', '/connect/microsoft/callback', 'assets/images/microsoft.png'),
+  ServiceType.TWITTER: Service('Twitter', '/connect/twitter', '/connect/twitter/callback', 'assets/images/twitter.png'),
 };
