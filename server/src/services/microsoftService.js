@@ -2,7 +2,7 @@ const microsoft = require('@microsoft/microsoft-graph-client');
 require('isomorphic-fetch');
 
 const User = require('../models/User');
-const { MONGOOSE_MSAL_KEY } = require('../config/msalConfig');
+const { MSAL_SCOPES, MONGOOSE_MSAL_KEY } = require('../config/msalConfig');
 
 async function getUserAccessToken(user, msalClient) {
     const connectData = user.connectData.get(MONGOOSE_MSAL_KEY);
@@ -14,14 +14,14 @@ async function getUserAccessToken(user, msalClient) {
         const accounts = await msalClient.getTokenCache().getAllAccounts();
         const userAccount = accounts.find(account => account.homeAccountId === connectData.data.homeAccountId);
         const response = await msalClient.acquireTokenSilent({
-            scopes: [ 'profile', 'openid', 'offline_access', 'email', 'Mail.Read', 'Calendars.Read', 'User.Read', 'MailboxSettings.Read' ],
+            scopes: MSAL_SCOPES,
             account: userAccount
         });
 
         user.connectData.set(MONGOOSE_MSAL_KEY, {
             accessToken: response.accessToken,
             ...connectData
-        })
+        });
         await User.findByIdAndUpdate(user._id, user);
         return response.accessToken;
     } catch (err) {

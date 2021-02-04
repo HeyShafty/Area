@@ -1,29 +1,32 @@
 const express = require('express');
 const passport = require('passport');
+const User = require('../models/User');
+const { createConnectSession, extractConnectSession } = require('../utils/connectSessionHelper');
+
 const protectedRequest = require('../passport/protectedRequest');
-const { STRATEGY_GOOGLE } = require('../passport/googleStrategy');
-const { STRATEGY_GITHUB } = require('../passport/githubStrategy');
-const { STRATEGY_DISCORD } = require('../passport/discordStrategy');
-const DiscordOAuth = require('discord-oauth2');
+const { STRATEGY_GOOGLE_WEB, STRATEGY_GOOGLE_MOBILE } = require('../passport/googleStrategy');
+const { STRATEGY_GITHUB_WEB, STRATEGY_GITHUB_MOBILE } = require('../passport/githubStrategy');
+const { STRATEGY_DISCORD_MOBILE, STRATEGY_DISCORD_WEB } = require('../passport/discordStrategy');
 
 const { CLIENT_WEB_URI } = require('../config/config');
-const { MSAL_SCOPES, MSAL_REDIRECT_URI, MONGOOSE_MSAL_KEY } = require('../config/msalConfig');
-const { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET } = require('../config/discordConfig');
-const User = require('../models/User');
-const { createConnectSession, getUserFromSessionId } = require('../utils/connectSessionHelper');
+const { MSAL_SCOPES, MSAL_REDIRECT_URI_WEB, MSAL_REDIRECT_URI_MOBILE, MONGOOSE_MSAL_KEY } = require('../config/msalConfig');
+const { GOOGLE_SCOPES , GOOGLE_PASSPORT_CONFIG_WEB, GOOGLE_PASSPORT_CONFIG_MOBILE } = require('../config/googleConfig');
+const { GITHUB_SCOPES, GITHUB_PASSPORT_CONFIG_WEB, GITHUB_PASSPORT_CONFIG_MOBILE } = require('../config/githubConfig');
+const { DISCORD_SCOPES, DISCORD_PASSPORT_CONFIG_WEB, DISCORD_PASSPORT_CONFIG_MOBILE } = require('../config/discordConfig');
 
 const router = express.Router();
 
-const connectSessionMicrosoft = 'microsoft';
-const connectSessionGoogle = 'google';
-const connectSessionGithub = 'github';
-const connectSessionDiscord = 'discord';
+const CONNECT_SESSION_MICROSOFT = 'microsoft';
+const CONNECT_SESSION_GOOGLE = 'google';
+const CONNECT_SESSION_GITHUB = 'github';
+const CONNECT_SESSION_DISCORD = 'discord';
 
 router.get('/microsoft', protectedRequest, async (req, res) => {
-    const connectSessionId = await createConnectSession(req.user._id, connectSessionMicrosoft);
+    const isMobile = !!req.query.mobile;
+    const connectSessionId = await createConnectSession(req.user._id, CONNECT_SESSION_MICROSOFT, isMobile);
     const urlParameters = {
-        scopes: [ 'profile', 'openid', 'offline_access', 'email', 'Mail.Read', 'Calendars.Read', 'User.Read', 'MailboxSettings.Read' ],
-        redirectUri: 'http://localhost:8080/connect/microsoft/callback',
+        scopes: MSAL_SCOPES,
+        redirectUri: isMobile ? MSAL_REDIRECT_URI_MOBILE : MSAL_REDIRECT_URI_WEB,
         prompt: 'select_account',
         state: connectSessionId
     };
@@ -39,12 +42,12 @@ router.get('/microsoft', protectedRequest, async (req, res) => {
 });
 
 router.get('/microsoft/callback', async (req, res) => {
+    const { user, isMobile } = await extractConnectSession(req.query.state || '', CONNECT_SESSION_MICROSOFT);
     const tokenRequest = {
         code: req.query.code,
-        scopes: [ 'profile', 'openid', 'offline_access', 'email', 'Mail.Read', 'Calendars.Read', 'User.Read', 'MailboxSettings.Read' ],
-        redirectUri: 'http://localhost:8080/connect/microsoft/callback'
+        scopes: MSAL_SCOPES,
+        redirectUri: isMobile ? MSAL_REDIRECT_URI_MOBILE : MSAL_REDIRECT_URI_WEB
     };
-    const user = await getUserFromSessionId(req.query.state || '', connectSessionMicrosoft);
 
     if (!user) {
         return res.status(400).send('Invalid state');
@@ -59,6 +62,9 @@ router.get('/microsoft/callback', async (req, res) => {
         await User.findByIdAndUpdate(user._id, user);
     } catch (err) {
         console.log(err)
+    }
+    if (isMobile) {
+        return res.sendStatus(200);
     }
     return res.redirect(CLIENT_WEB_URI + '/profile');
 });
@@ -77,11 +83,20 @@ router.get('/microsoft/callback', async (req, res) => {
  *       500:
  *         description: Error.
  */
-router.get('/google', protectedRequest, async (req, res, next) => {
-    const connectSessionId = await createConnectSession(req.user._id, connectSessionGoogle);
-    const urlDeGrosChad = `https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fconnect%2Fgoogle%2Fcallback&scope=email%20profile%20openid%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.readonly&state=${connectSessionId}&client_id=355270370316-80n2ips385e7p1pksh60ndl8boq071lk.apps.googleusercontent.com`;
+router.get('/google', protectedRequest, async (req, res) => {
+    const isMobile = !!req.query.mobile;
+    const connectSessionId = await createConnectSession(req.user._id, CONNECT_SESSION_GOOGLE, isMobile);
+    const config = isMobile ? GOOGLE_PASSPORT_CONFIG_MOBILE : GOOGLE_PASSPORT_CONFIG_WEB;
+    const urlDeGrosChad = new URL('https://accounts.google.com/o/oauth2/v2/auth');
 
-    return res.json({url: urlDeGrosChad});
+    urlDeGrosChad.searchParams.append('client_id', config.clientID);
+    urlDeGrosChad.searchParams.append('redirect_uri', config.callbackURL);
+    urlDeGrosChad.searchParams.append('scope', GOOGLE_SCOPES.join(' '));
+    urlDeGrosChad.searchParams.append('access_type', 'offline');
+    urlDeGrosChad.searchParams.append('prompt', 'consent');
+    urlDeGrosChad.searchParams.append('response_type', 'code');
+    urlDeGrosChad.searchParams.append('state', connectSessionId);
+    return res.json({ url: urlDeGrosChad.href });
 });
 
 /**
@@ -98,14 +113,32 @@ router.get('/google', protectedRequest, async (req, res, next) => {
  *       500:
  *         description: Error.
  */
-router.get('/google/callback', (req, res, next) => {
-    passport.authenticate(STRATEGY_GOOGLE, {
-        session: false,
-        scope:
-            [ 'email', 'profile', 'openid', 'https://www.googleapis.com/auth/youtube.readonly' ],
-        accessType: 'offline',
-        successRedirect: CLIENT_WEB_URI + '/home',
-        failureRedirect: CLIENT_WEB_URI + '/yes'
+router.get('/google/callback', async (req, res, next) => {
+    const { user, isMobile } = await extractConnectSession(req.query.state || '', CONNECT_SESSION_GOOGLE);
+
+    if (!user) {
+        return res.status(400).send('Invalid state');
+    }
+    req.user = user;
+    passport.authenticate(isMobile ? STRATEGY_GOOGLE_MOBILE : STRATEGY_GOOGLE_WEB, (err, success) => {
+        if (err || !success) {
+            return res.sendStatus(500);
+        }
+        req.logIn(user, {
+            session: false,
+            scope: GOOGLE_SCOPES,
+            accessType: 'offline',
+            successRedirect: CLIENT_WEB_URI + '/profile',
+            failureRedirect: CLIENT_WEB_URI + '/profile' // TODO: Failure redirect ?
+        }, (err) => {
+            if (err) {
+                return next(err);
+            }
+            if (isMobile) {
+                return res.sendStatus(200);
+            }
+            return res.redirect(CLIENT_WEB_URI + '/profile');
+        });
     })(req, res, next);
 });
 
@@ -123,11 +156,18 @@ router.get('/google/callback', (req, res, next) => {
  *       500:
  *         description: Error.
  */
-router.get('/github', protectedRequest, async (req, res, next) => {
-    const connectSessionId = await createConnectSession(req.user._id, connectSessionGithub);
-    const urlGithub = `https://github.com/login/oauth/authorize?response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fconnect%2Fgithub%2Fcallback&scope=repo%2Cuser&state=${connectSessionId}&client_id=36fd678ea9f580199c89`;
+router.get('/github', protectedRequest, async (req, res) => {
+    const isMobile = !!req.query.mobile;
+    const connectSessionId = await createConnectSession(req.user._id, CONNECT_SESSION_GITHUB, isMobile);
+    const config = isMobile ? GITHUB_PASSPORT_CONFIG_MOBILE : GITHUB_PASSPORT_CONFIG_WEB;
+    const urlDeGrosChad = new URL('https://github.com/login/oauth/authorize');
 
-    return res.json({ url: urlGithub });
+    urlDeGrosChad.searchParams.append('client_id', config.clientID);
+    urlDeGrosChad.searchParams.append('redirect_uri', config.callbackURL);
+    urlDeGrosChad.searchParams.append('scope', GITHUB_SCOPES.join(' '));
+    urlDeGrosChad.searchParams.append('response_type', 'code');
+    urlDeGrosChad.searchParams.append('state', connectSessionId);
+    return res.json({ url: urlDeGrosChad.href });
 });
 
 /**
@@ -144,12 +184,30 @@ router.get('/github', protectedRequest, async (req, res, next) => {
  *       500:
  *         description: Error.
  */
-router.get('/github/callback', (req, res, next) => {
-    passport.authenticate(STRATEGY_GITHUB, {
-        session: false,
-        scope: [ 'repo', 'user' ],
-        successRedirect: CLIENT_WEB_URI + '/home',
-        failureRedirect: CLIENT_WEB_URI + '/home'
+router.get('/github/callback', async (req, res, next) => {
+    const { user, isMobile } = await extractConnectSession(req.query.state || '', CONNECT_SESSION_GITHUB);
+
+    if (!user) {
+        return res.status(400).send('Invalid state');
+    }
+    passport.authenticate(isMobile ? STRATEGY_GITHUB_MOBILE : STRATEGY_GITHUB_WEB, (err, success) => {
+        if (err || !success) {
+            return res.sendStatus(500);
+        }
+        req.logIn(user, {
+            session: false,
+            scope: GITHUB_SCOPES,
+            successRedirect: CLIENT_WEB_URI + '/profile',
+            failureRedirect: CLIENT_WEB_URI + '/profile' // TODO: Failure redirect ?
+        }, (err) => {
+            if (err) {
+                return next(err);
+            }
+            if (isMobile) {
+                return res.sendStatus(200);
+            }
+            return res.redirect(CLIENT_WEB_URI + '/profile');
+        });
     })(req, res, next);
 })
 
@@ -167,11 +225,18 @@ router.get('/github/callback', (req, res, next) => {
  *       500:
  *         description: Error.
  */
-router.get('/discord', protectedRequest, async (req, res, next) => {
-    const connectSessionId = await createConnectSession(req.user._id, connectSessionDiscord);
-    const targetUrl = `https://discord.com/api/oauth2/authorize?client_id=805846126397095956&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fconnect%2Fdiscord%2Fcallback&response_type=code&scope=email%20identify%20guilds%20messages.read&state=${connectSessionId}`;
+router.get('/discord', protectedRequest, async (req, res) => {
+    const isMobile = !!req.query.mobile;
+    const connectSessionId = await createConnectSession(req.user._id, CONNECT_SESSION_DISCORD, isMobile);
+    const config = isMobile ? DISCORD_PASSPORT_CONFIG_MOBILE : DISCORD_PASSPORT_CONFIG_WEB;
+    const urlDeGrosChad = new URL('https://discord.com/api/oauth2/authorize');
 
-    return res.json({ url: targetUrl });
+    urlDeGrosChad.searchParams.append('client_id', config.clientID);
+    urlDeGrosChad.searchParams.append('redirect_uri', config.callbackURL);
+    urlDeGrosChad.searchParams.append('scope', DISCORD_SCOPES.join(' '));
+    urlDeGrosChad.searchParams.append('response_type', 'code');
+    urlDeGrosChad.searchParams.append('state', connectSessionId);
+    return res.json({ url: urlDeGrosChad.href });
 })
 
 /**
@@ -188,13 +253,30 @@ router.get('/discord', protectedRequest, async (req, res, next) => {
  *       500:
  *         description: Error.
  */
-router.get('/discord/callback', (req, res, next) => {
-    console.log(req.query.code);
-    passport.authenticate(STRATEGY_DISCORD, {
-        session: false,
-        scope: [ 'guilds', 'messages.read', 'identify', 'email' ],
-        successRedirect: CLIENT_WEB_URI + '/home',
-        failureRedirect: CLIENT_WEB_URI + '/home'
+router.get('/discord/callback', async (req, res, next) => {
+    const { user, isMobile } = await extractConnectSession(req.query.state || '', CONNECT_SESSION_DISCORD);
+
+    if (!user) {
+        return res.status(400).send('Invalid state');
+    }
+    passport.authenticate(isMobile ? STRATEGY_DISCORD_MOBILE : STRATEGY_DISCORD_WEB, (err, success) => {
+        if (err || !success) {
+            return res.sendStatus(500);
+        }
+        req.logIn(user, {
+            session: false,
+            scope: DISCORD_SCOPES,
+            successRedirect: CLIENT_WEB_URI + '/profile',
+            failureRedirect: CLIENT_WEB_URI + '/profile' // TODO: Failure redirect ?
+        }, (err) => {
+            if (err) {
+                return next(err);
+            }
+            if (isMobile) {
+                return res.sendStatus(200);
+            }
+            return res.redirect(CLIENT_WEB_URI + '/profile');
+        });
     })(req, res, next);
 })
 
