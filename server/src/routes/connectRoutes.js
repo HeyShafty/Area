@@ -4,12 +4,10 @@ const protectedRequest = require('../passport/protectedRequest');
 const { STRATEGY_GOOGLE_WEB, STRATEGY_GOOGLE_MOBILE } = require('../passport/googleStrategy');
 const { STRATEGY_GITHUB } = require('../passport/githubStrategy');
 const { STRATEGY_DISCORD } = require('../passport/discordStrategy');
-const DiscordOAuth = require('discord-oauth2');
 
 const { CLIENT_WEB_URI } = require('../config/config');
 const { MSAL_SCOPES, MSAL_REDIRECT_URI_WEB, MSAL_REDIRECT_URI_MOBILE, MONGOOSE_MSAL_KEY } = require('../config/msalConfig');
-const { GOOGLE_REDIRECT_URI_WEB_ESCAPED, GOOGLE_REDIRECT_URI_MOBILE_ESCAPED } = require('../config/googleConfig');
-const { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET } = require('../config/discordConfig');
+const { GOOGLE_PASSPORT_CONFIG_WEB, GOOGLE_PASSPORT_CONFIG_MOBILE, GOOGLE_SCOPES } = require('../config/googleConfig');
 const User = require('../models/User');
 const { createConnectSession, extractConnectSession } = require('../utils/connectSessionHelper');
 
@@ -85,10 +83,17 @@ router.get('/microsoft/callback', async (req, res) => {
 router.get('/google', protectedRequest, async (req, res) => {
     const isMobile = !!req.query.mobile;
     const connectSessionId = await createConnectSession(req.user._id, connectSessionGoogle, isMobile);
-    const redirectUri = isMobile ? GOOGLE_REDIRECT_URI_MOBILE_ESCAPED : GOOGLE_REDIRECT_URI_WEB_ESCAPED;
-    const urlDeGrosChad = `https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent&response_type=code&redirect_uri=${redirectUri}&scope=email%20profile%20openid%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.readonly&state=${connectSessionId}&client_id=355270370316-80n2ips385e7p1pksh60ndl8boq071lk.apps.googleusercontent.com`;
+    const config = isMobile ? GOOGLE_PASSPORT_CONFIG_MOBILE : GOOGLE_PASSPORT_CONFIG_WEB;
+    const urlDeGrosChad = new URL('https://accounts.google.com/o/oauth2/v2/auth');
 
-    return res.json({ url: urlDeGrosChad });
+    urlDeGrosChad.searchParams.append('access_type', 'offline');
+    urlDeGrosChad.searchParams.append('prompt', 'consent');
+    urlDeGrosChad.searchParams.append('response_type', 'code');
+    urlDeGrosChad.searchParams.append('redirect_uri', config.callbackURL);
+    urlDeGrosChad.searchParams.append('scope', GOOGLE_SCOPES.join(' '));
+    urlDeGrosChad.searchParams.append('state', connectSessionId);
+    urlDeGrosChad.searchParams.append('client_id', config.clientID);
+    return res.json({ url: urlDeGrosChad.href });
 });
 
 /**
@@ -112,17 +117,16 @@ router.get('/google/callback', async (req, res, next) => {
         return res.status(400).send('Invalid state');
     }
     req.user = user;
-    console.log(user);
     passport.authenticate(isMobile ? STRATEGY_GOOGLE_MOBILE : STRATEGY_GOOGLE_WEB, (err, success) => {
         if (err || !success) {
             return res.sendStatus(500);
         }
         req.logIn(user, {
             session: false,
-            scope: [ 'email', 'profile', 'openid', 'https://www.googleapis.com/auth/youtube.readonly' ],
+            scope: GOOGLE_SCOPES,
             accessType: 'offline',
             successRedirect: CLIENT_WEB_URI + '/profile',
-            failureRedirect: CLIENT_WEB_URI + '/profile' // TODO: Failure redirect
+            failureRedirect: CLIENT_WEB_URI + '/profile' // TODO: Failure redirect ?
         }, (err) => {
             if (err) {
                 return next(err);
@@ -175,7 +179,7 @@ router.get('/github/callback', (req, res, next) => {
         session: false,
         scope: [ 'repo', 'user' ],
         successRedirect: CLIENT_WEB_URI + '/profile',
-        failureRedirect: CLIENT_WEB_URI + '/profile' // TODO: Failure redirect
+        failureRedirect: CLIENT_WEB_URI + '/profile' // TODO: Failure redirect ?
     })(req, res, next);
 })
 
@@ -221,7 +225,7 @@ router.get('/discord/callback', (req, res, next) => {
         session: false,
         scope: [ 'guilds', 'messages.read', 'identify', 'email' ],
         successRedirect: CLIENT_WEB_URI + '/profile',
-        failureRedirect: CLIENT_WEB_URI + '/profile' // TODO: Failure redirect
+        failureRedirect: CLIENT_WEB_URI + '/profile' // TODO: Failure redirect ?
     })(req, res, next);
 })
 

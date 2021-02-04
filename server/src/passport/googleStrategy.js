@@ -12,7 +12,6 @@ async function googleStrategy(req, accessToken, refreshToken, profile, cb) {
     try {
         const user = req.user;
 
-        console.log(user);
         user.connectData.set(MONGOOSE_GOOGLE_KEY, { refreshToken: refreshToken });
         await User.findByIdAndUpdate(user._id, user);
         return cb(null, true);
