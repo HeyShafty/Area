@@ -89,12 +89,11 @@ router.get('/google', protectedRequest, async (req, res) => {
     const config = isMobile ? GOOGLE_PASSPORT_CONFIG_MOBILE : GOOGLE_PASSPORT_CONFIG_WEB;
     const urlDeGrosChad = new URL('https://accounts.google.com/o/oauth2/v2/auth');
 
+    urlDeGrosChad.searchParams.append('response_type', 'code');
     urlDeGrosChad.searchParams.append('client_id', config.clientID);
     urlDeGrosChad.searchParams.append('redirect_uri', config.callbackURL);
-    urlDeGrosChad.searchParams.append('scope', GOOGLE_SCOPES.join(' '));
-    urlDeGrosChad.searchParams.append('access_type', 'offline');
     urlDeGrosChad.searchParams.append('prompt', 'consent');
-    urlDeGrosChad.searchParams.append('response_type', 'code');
+    urlDeGrosChad.searchParams.append('scope', GOOGLE_SCOPES.join(' '));
     urlDeGrosChad.searchParams.append('state', connectSessionId);
     return res.json({ url: urlDeGrosChad.href });
 });
@@ -190,6 +189,7 @@ router.get('/github/callback', async (req, res, next) => {
     if (!user) {
         return res.status(400).send('Invalid state');
     }
+    req.user = user;
     passport.authenticate(isMobile ? STRATEGY_GITHUB_MOBILE : STRATEGY_GITHUB_WEB, (err, success) => {
         if (err || !success) {
             return res.sendStatus(500);
@@ -259,6 +259,7 @@ router.get('/discord/callback', async (req, res, next) => {
     if (!user) {
         return res.status(400).send('Invalid state');
     }
+    req.user = user;
     passport.authenticate(isMobile ? STRATEGY_DISCORD_MOBILE : STRATEGY_DISCORD_WEB, (err, success) => {
         if (err || !success) {
             return res.sendStatus(500);

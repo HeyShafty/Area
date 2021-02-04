@@ -11,7 +11,6 @@ const GOOGLE_PASSPORT_CONFIG_WEB = {
 
 const GOOGLE_PASSPORT_CONFIG_MOBILE = {
     clientID: '355270370316-08j5i2no7n1115ilhuelcv60jnd8lptp.apps.googleusercontent.com',
-    clientSecret: GOOGLE_SECRET,
     callbackURL: 'area.app:/auth',
     passReqToCallback: true
 };
