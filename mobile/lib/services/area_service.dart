@@ -2,6 +2,11 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:area/Models/service.dart';
+import 'package:area/Models/user.dart';
+import 'package:area/exceptions/AlreadyExistsException.dart';
+import 'package:area/exceptions/BadResponseException.dart';
+import 'package:area/exceptions/BadTokenException.dart';
+import 'package:area/exceptions/WrongEmailPasswordCombination.dart';
 import 'package:area/services/shared_preferences_service.dart';
 import 'package:http/http.dart' as http;
 
@@ -48,7 +53,7 @@ class AreaService {
     http.Response response = await http.get("http://" + this.serverIp).timeout(const Duration(seconds: 3));
 
     if (response.statusCode != 200) {
-      throw ("Bad ip address.");
+      throw BadResponseException();
     }
   }
 
@@ -56,11 +61,11 @@ class AreaService {
     http.Response response = await http.post("http://" + this.serverIp + "/auth/office-jwt",
         headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': 'Bearer ' + token});
     if (response.statusCode != 200) {
-      throw ("Couldn't sign you in with Microsoft.");
+      throw new BadResponseException();
     }
 
     final Map<String, dynamic> decodedBody = jsonDecode(response.body);
-    this.accessToken = decodedBody[TOKEN_KEY] ?? (throw ("Couldn't sign you in with Microsoft."));
+    this.accessToken = decodedBody[TOKEN_KEY] ?? (throw new BadResponseException(cause: "Wrong response body."));
     await SharedPreferencesService.saveString(TOKEN_KEY, this.accessToken);
   }
 
@@ -71,14 +76,14 @@ class AreaService {
         },
         body: jsonEncode(<String, String>{"email": email, "password": password}));
     if (response.statusCode == 401) {
-      throw ("Wrong email/password combination.");
+      throw new WrongEmailPasswordCombination();
     }
     if (response.statusCode != 200) {
-      throw ("Couldn't sign you in.");
+      throw new BadResponseException();
     }
 
     final Map<String, dynamic> decodedBody = jsonDecode(response.body);
-    this.accessToken = decodedBody[TOKEN_KEY] ?? (throw ("Couldn't sign you in."));
+    this.accessToken = decodedBody[TOKEN_KEY] ?? (throw new BadResponseException(cause: "Wrong response body."));
     await SharedPreferencesService.saveString(TOKEN_KEY, this.accessToken);
   }
 
@@ -89,14 +94,14 @@ class AreaService {
         },
         body: jsonEncode(<String, String>{"email": email, "password": password, "username": username}));
     if (response.statusCode == 409) {
-      throw ("Email already exists.");
+      throw new AlreadyExistsException();
     }
     if (response.statusCode != 200) {
-      throw ("Couldn't sign you up.");
+      throw new BadResponseException();
     }
 
     final Map<String, dynamic> decodedBody = jsonDecode(response.body);
-    this.accessToken = decodedBody[TOKEN_KEY] ?? (throw ("Couldn't sign you up."));
+    this.accessToken = decodedBody[TOKEN_KEY] ?? (throw BadResponseException(cause: "Wrong response body."));
     await SharedPreferencesService.saveString(TOKEN_KEY, this.accessToken);
   }
 
@@ -105,24 +110,39 @@ class AreaService {
     Uri uri = Uri.http(this.serverIp, serviceRedirectUri, {'mobile': 'true'});
     log(uri.toString());
     http.Response response = await http.get(uri, headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken});
+    if (response.statusCode == 401) {
+      throw new BadTokenException();
+    }
     if (response.statusCode != 200) {
-      throw ("Couldn't sign you in with this service.");
+      throw new BadResponseException();
     }
 
     final Map<String, dynamic> decodedBody = jsonDecode(response.body);
-    return decodedBody[CONNECT_URL_KEY] ?? (throw ("Couldn't sign you in with this service."));
+    return decodedBody[CONNECT_URL_KEY] ?? (throw BadResponseException(cause: "Wrong response body."));
   }
 
   Future<void> handleServiceRedirection(String callbackUrl, Service service) async {
     if (!callbackUrl.contains(service.fullCallbackUrl)) {
-      throw ("Bad redirect URI");
+      throw BadResponseException(cause: "Bad redirect URI");
     }
 
     Uri uri = Uri.parse("http://" + this._serverIp + service.serverRedirectUri + callbackUrl.split(service.fullCallbackUrl)[1]);
     http.Response response = await http.get(uri.toString());
     if (response.statusCode != 200) {
-      throw ("Couldn't sign you in with this service.");
+      throw new BadResponseException();
     }
+  }
+
+  Future<User> getUserProfile() async {
+    http.Response response = await http
+        .get("http://" + this._serverIp + "/profile/infos", headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken});
+    if (response.statusCode == 401) {
+      throw new BadTokenException();
+    }
+    if (response.statusCode != 200) {
+      throw new BadResponseException();
+    }
+    return User.fromJson(jsonDecode(response.body));
   }
 
   AreaService._internal();

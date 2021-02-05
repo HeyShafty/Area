@@ -1,9 +1,11 @@
+import 'package:area/exceptions/BadResponseException.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 import 'constants.dart';
+import 'exceptions/AlreadyExistsException.dart';
 import 'main_page.dart';
 import 'services/area_service.dart';
 
@@ -139,11 +141,15 @@ class _RegisterState extends State<Register> {
       this._btnController.start();
       await this.areaServiceInstance.signUp(username, email, password);
       this.openHomePage();
-      this._btnController.success();
+      return this._btnController.success();
+    } on AlreadyExistsException {
+      this.showToast("Email already in use.");
+    } on BadResponseException {
+      this.showToast("Couldn't sign you up.");
     } catch (e) {
-      this._btnController.reset();
       this.showToast(e.toString());
     }
+    this._btnController.reset();
   }
 
   void showToast(String message) {

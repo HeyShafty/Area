@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:area/Models/service.dart';
+import 'package:area/exceptions/BadTokenException.dart';
 import 'package:area/services/area_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,14 +18,13 @@ class MyProfilePage extends StatefulWidget {
 
 class _MyProfilePageState extends State<MyProfilePage> {
   final AreaService areaServiceInstance = AreaService();
-  User _user = User("micheluser", "michel.jean@epitech.eu", false, true, false, true);
+  User _user;
   bool _isLoading = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // TODO: get les infos du profile
+    this.getUserProfile();
   }
 
   @override
@@ -32,54 +32,56 @@ class _MyProfilePageState extends State<MyProfilePage> {
     return Center(
       child: SingleChildScrollView(
         child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(bottom: 60.0),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.person,
-                    size: 100.0,
-                  ),
+          children: this._user == null
+              ? <Widget>[new CircularProgressIndicator()]
+              : <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(bottom: 10.0),
-                    child: Text(
-                      _user.username,
-                      style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+                    padding: const EdgeInsets.only(bottom: 60.0),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.person,
+                          size: 100.0,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 10.0),
+                          child: Text(
+                            _user.displayName,
+                            style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Text(
+                          _user.email,
+                          style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                   ),
-                  Text(
-                    _user.email,
-                    style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 20.0),
+                          child: getSignInWith(SERVICES_CONNECT_URI[ServiceType.DISCORD], false),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 20.0),
+                          child: getSignInWith(SERVICES_CONNECT_URI[ServiceType.GITHUB], false),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 20.0),
+                          child: getSignInWith(SERVICES_CONNECT_URI[ServiceType.GOOGLE], false),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 20.0),
+                          child: getSignInWith(SERVICES_CONNECT_URI[ServiceType.MICROSOFT], false),
+                        ),
+                        getSignInWith(SERVICES_CONNECT_URI[ServiceType.TWITTER], false),
+                      ],
+                    ),
+                  )
                 ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 20.0, right: 20.0),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 20.0),
-                    child: getSignInWith(SERVICES_CONNECT_URI[ServiceType.DISCORD], false),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 20.0),
-                    child: getSignInWith(SERVICES_CONNECT_URI[ServiceType.GITHUB], false),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 20.0),
-                    child: getSignInWith(SERVICES_CONNECT_URI[ServiceType.GOOGLE], false),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 20.0),
-                    child: getSignInWith(SERVICES_CONNECT_URI[ServiceType.MICROSOFT], false),
-                  ),
-                  getSignInWith(SERVICES_CONNECT_URI[ServiceType.TWITTER], false),
-                ],
-              ),
-            )
-          ],
         ),
       ),
     );
@@ -94,6 +96,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
       final String callbackUrl = await FlutterWebAuth.authenticate(url: url.toString(), callbackUrlScheme: service.callbackUrlScheme);
 
       await this.areaServiceInstance.handleServiceRedirection(callbackUrl, service);
+    } on BadTokenException {
+      this.showToast("Invalid token, please sign out.");
     } catch (e) {
       log(e.toString());
       this.showToast("Couldn't sign you in with this service.");
@@ -162,5 +166,19 @@ class _MyProfilePageState extends State<MyProfilePage> {
         backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 16.0);
+  }
+
+  Future<void> getUserProfile() async {
+    try {
+      final User user = await this.areaServiceInstance.getUserProfile();
+      setState(() {
+        this._user = user;
+      });
+    } on BadTokenException {
+      this.showToast("Invalid token, please sign out.");
+    } catch (e) {
+      log(e);
+      this.showToast("Cannot get user profile information.");
+    }
   }
 }

@@ -1,7 +1,8 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
+import 'package:area/exceptions/BadResponseException.dart';
+import 'package:area/exceptions/WrongEmailPasswordCombination.dart';
 import 'package:area/register.dart';
 import 'package:area/services/area_service.dart';
 import 'package:area/services/shared_preferences_service.dart';
@@ -141,10 +142,11 @@ class _LoginState extends State<Login> {
     });
     try {
       String token = await pca.acquireToken([SERVER_SCOPE]);
-      log(token);
       await this.areaServiceInstance.signInWithAccessToken(token);
       return this.openHomePage();
     } on MsalException {
+      this.showToast("Couldn't sign you in with Microsoft.");
+    } on BadResponseException {
       this.showToast("Couldn't sign you in with Microsoft.");
     } catch (e) {
       this.showToast(e.toString());
@@ -204,11 +206,15 @@ class _LoginState extends State<Login> {
       this._btnController.start();
       await this.areaServiceInstance.signInWithCredentials(email, password);
       this._btnController.success();
-      this.openHomePage();
+      return this.openHomePage();
+    } on WrongEmailPasswordCombination {
+      this.showToast("Bad email / password combination.");
+    } on BadResponseException {
+      this.showToast("Couldn't sign you in.");
     } catch (e) {
-      this._btnController.reset();
       this.showToast(e.toString());
     }
+    this._btnController.reset();
     this.setState(() {
       this._isLoading = false;
     });
@@ -256,8 +262,10 @@ class _LoginState extends State<Login> {
                   FocusScope.of(context).unfocus();
                   try {
                     await this.areaServiceInstance.checkIp();
-                  } catch (e) {
+                  } on BadResponseException {
                     return this.showToast("Bad ip address.");
+                  } catch (e) {
+                    return this.showToast("Couldn't check server availability.");
                   }
                   await SharedPreferencesService.saveString(IP_KEY, serverIpController.value.text);
                   Navigator.of(context).pop();
