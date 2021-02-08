@@ -13,7 +13,23 @@ router.get('/me', protectedRequest, async (req, res) => {
     if (!accessToken) {
         return couldNotGetAccessToken(res);
     }
+    console.log(accessToken);
     return res.json(await service.getUserDetails(accessToken));
 });
+
+router.post('/send', protectedRequest, async (req, res) => {
+    const accessToken = await service.getUserAccessToken(req.user, req.app.locals.msalClient);
+
+    if (!accessToken) {
+        return couldNotGetAccessToken(res);
+    }
+    try {
+        const sendMailRequest = await service.sendEmail(accessToken, req.body.receiver, req.body.message);
+        console.log(sendMailRequest);
+    } catch (err) {
+        console.log(err);
+    }
+    return res.json({ status: "Mail sent" });
+})
 
 module.exports = router;

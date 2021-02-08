@@ -14,6 +14,11 @@ const ConnectSessionSchema = new mongoose.Schema({
     isMobile: {
         type: Boolean,
         required: true
+    },
+    data: {
+        type: String,
+        required: false,
+        default: ''
     }
 });
 
