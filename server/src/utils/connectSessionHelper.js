@@ -33,9 +33,7 @@ async function addDataToConnectSession(id, data) {
 
 async function extractConnectSession(id, endpoint) {
     try {
-        console.log(id);
         const connectSession = await ConnectSession.findByIdAndDelete(id);
-        console.log(connectSession);
 
         if (connectSession?.endpoint === endpoint) {
             return {

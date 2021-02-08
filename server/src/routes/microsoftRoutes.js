@@ -13,7 +13,6 @@ router.get('/me', protectedRequest, async (req, res) => {
     if (!accessToken) {
         return couldNotGetAccessToken(res);
     }
-    console.log(accessToken);
     return res.json(await service.getUserDetails(accessToken));
 });
 
@@ -25,7 +24,6 @@ router.post('/send', protectedRequest, async (req, res) => {
     }
     try {
         const sendMailRequest = await service.sendEmail(accessToken, req.body.receiver, req.body.message);
-        console.log(sendMailRequest);
     } catch (err) {
         console.log(err);
     }

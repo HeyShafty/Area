@@ -1,6 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const User = require('../models/User');
+const OAuth = require('oauth').OAuth;
 const { createConnectSession, extractConnectSession, addDataToConnectSession } = require('../utils/connectSessionHelper');
 
 const protectedRequest = require('../passport/protectedRequest');
@@ -24,10 +25,6 @@ const CONNECT_SESSION_GITHUB = 'github';
 const CONNECT_SESSION_DISCORD = 'discord';
 const CONNECT_SESSION_TWITTER = 'twitter';
 
-const OAuth = require('oauth').OAuth;
-const got = require('got');
-const { promisify } = require('util');
-const axios = require('axios');
 
 router.get('/microsoft', protectedRequest, async (req, res) => {
     const isMobile = !!req.query.mobile;
@@ -290,7 +287,6 @@ router.get('/discord/callback', async (req, res, next) => {
 
 router.get('/twitter', protectedRequest, async (req, res) => {
     const isMobile = !!req.query.mobile;
-    console.log(req.user._id);
     const connectSessionId = await createConnectSession(req.user._id, CONNECT_SESSION_TWITTER, isMobile);
     const oauth = new OAuth(
         "https://api.twitter.com/oauth/request_token",
@@ -309,7 +305,6 @@ router.get('/twitter', protectedRequest, async (req, res) => {
             console.log(err);
             res.sendStatus(500);
         } else {
-            console.log(oauthTokenSecret);
             await addDataToConnectSession(connectSessionId, oauthTokenSecret);
             urlDeGrosChad.searchParams.append('oauth_token', oauthToken);
             urlDeGrosChad.searchParams.append('state',  connectSessionId);
@@ -319,7 +314,6 @@ router.get('/twitter', protectedRequest, async (req, res) => {
 })
 
 router.get('/twitter/callback', async (req, res, next) => {
-    console.log(req.query);
     const { user, isMobile, data } = await extractConnectSession(req.query.state || '', CONNECT_SESSION_TWITTER);
     const oauth = new OAuth(
         "https://api.twitter.com/oauth/request_token",
@@ -336,9 +330,6 @@ router.get('/twitter/callback', async (req, res, next) => {
             console.log(err);
             res.sendStatus(500);
         } else {
-            console.log(oauthAccessToken);
-            console.log(oauthAccessTokenSecret);
-            console.log(response);
             if (!user) {
                 return res.status(400).send('Invalid state');
             }

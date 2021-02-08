@@ -10,8 +10,7 @@ async function twitterStrategy(req, accessToken, refreshToken, profile, done) {
     try {
         const user = req.user;
 
-        console.log("yeeeee");
-        user.connectData.set(MONGOOSE_TWITTER_KEY, { accessToken: accessToken });
+        user.connectData.set(MONGOOSE_TWITTER_KEY, { accessToken, refreshToken });
         await User.findByIdAndUpdate(user._id, user);
         return done(null, true);
     } catch (e) {
