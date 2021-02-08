@@ -39,6 +39,30 @@ async function getUserDetails(accessToken) {
         .get();
 }
 
+async function sendEmail(accessToken, receiver, message) {
+    const graphClient = getGraphClient(accessToken);
+    const mail = {
+        message: {
+          subject: message.subject,
+          body: {
+            contentType: "Text",
+            content: message.body
+          },
+          toRecipients: [
+            {
+              emailAddress: {
+                address: receiver
+              }
+            }
+          ]
+        },
+      };
+
+    return await graphClient
+        .api('/me/sendMail')
+        .post(mail);
+}
+
 function getGraphClient(accessToken) {
     return microsoft.Client.init({
         authProvider: done => {
@@ -50,4 +74,5 @@ function getGraphClient(accessToken) {
 module.exports = {
     getUserAccessToken,
     getUserDetails,
+    sendEmail
 };

@@ -20,6 +20,17 @@ async function createConnectSession(userId, endpoint, isMobile) {
     return sessionId;
 }
 
+async function addDataToConnectSession(id, data) {
+    try {
+        await ConnectSession.findByIdAndUpdate(id, { data });
+
+        return true;
+    } catch (err) {
+        console.log(err);
+    }
+    return false;
+}
+
 async function extractConnectSession(id, endpoint) {
     try {
         const connectSession = await ConnectSession.findByIdAndDelete(id);
@@ -27,7 +38,8 @@ async function extractConnectSession(id, endpoint) {
         if (connectSession?.endpoint === endpoint) {
             return {
                 user: await User.findById(connectSession?.userId),
-                isMobile: connectSession?.isMobile
+                isMobile: connectSession?.isMobile,
+                data: connectSession?.data
             };
         }
     } catch (err) {
@@ -39,5 +51,6 @@ async function extractConnectSession(id, endpoint) {
 
 module.exports = {
     createConnectSession,
-    extractConnectSession
+    extractConnectSession,
+    addDataToConnectSession
 };
