@@ -11,7 +11,7 @@ async function discordStrategy(req, accessToken, refreshToken, profile, done) {
     try {
         const user = req.user;
 
-        user.connectData.set(MONGOOSE_DISCORD_KEY, { accessToken: accessToken });
+        user.connectData.set(MONGOOSE_DISCORD_KEY, { accessToken, refreshToken });
         await User.findByIdAndUpdate(user._id, user);
         return done(null, true);
     } catch (e) {

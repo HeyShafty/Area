@@ -209,7 +209,7 @@ router.get('/github/callback', async (req, res, next) => {
             return res.redirect(CLIENT_WEB_URI + '/profile');
         });
     })(req, res, next);
-})
+});
 
 /**
  * @swagger
@@ -237,7 +237,7 @@ router.get('/discord', protectedRequest, async (req, res) => {
     urlDeGrosChad.searchParams.append('response_type', 'code');
     urlDeGrosChad.searchParams.append('state', connectSessionId);
     return res.json({ url: urlDeGrosChad.href });
-})
+});
 
 /**
  * @swagger
@@ -278,6 +278,6 @@ router.get('/discord/callback', async (req, res, next) => {
             return res.redirect(CLIENT_WEB_URI + '/profile');
         });
     })(req, res, next);
-})
+});
 
 module.exports = router;

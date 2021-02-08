@@ -16,6 +16,7 @@ const profileRouter = require('./src/routes/profileRoutes');
 const { ALLOWED_ORIGINS } = require('./src/config/config');
 const { MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PASSWORD } = require('./src/config/mongoConfig');
 const { MSAL_CONFIG } = require('./src/config/msalConfig');
+const AREA_SERVICES = require('./services');
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
@@ -62,7 +63,7 @@ function startServer() {
         res.send('Hello World!');
     });
     app.get('/about.json', (req, res) => {
-        res.json({ client: { host: req.ip }, server: { current_time: moment().unix() } });
+        res.json({ client: { host: req.ip }, server: { current_time: moment().unix(), services: AREA_SERVICES } });
     });
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
