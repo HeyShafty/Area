@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:area/Models/service.dart';
-import 'package:area/exceptions/BadTokenException.dart';
+import 'package:area/exceptions/bad_token_exception.dart';
+import 'package:area/models/service_information.dart';
 import 'package:area/services/area_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,16 +33,15 @@ class _MyProfilePageState extends State<MyProfilePage> {
       child: SingleChildScrollView(
         child: Column(
           children: this._user == null
-              ? <Widget>[new CircularProgressIndicator()]
+              ? <Widget>[CircularProgressIndicator()]
               : <Widget>[
+                  Icon(
+                    Icons.person,
+                    size: 100.0,
+                  ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 60.0),
-                    child: Column(
-                      children: [
-                        Icon(
-                          Icons.person,
-                          size: 100.0,
-                        ),
+                      padding: EdgeInsets.only(bottom: 60.0),
+                      child: Column(children: [
                         Padding(
                           padding: EdgeInsets.only(bottom: 10.0),
                           child: Text(
@@ -52,33 +51,18 @@ class _MyProfilePageState extends State<MyProfilePage> {
                         ),
                         Text(
                           _user.email,
-                          style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
+                          style: TextStyle(color: Colors.black, fontSize: 15),
+                        )
+                      ])),
                   Padding(
                     padding: EdgeInsets.only(left: 20.0, right: 20.0),
                     child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 20.0),
-                          child: getSignInWith(SERVICES_CONNECT_URI[ServiceType.DISCORD], false),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 20.0),
-                          child: getSignInWith(SERVICES_CONNECT_URI[ServiceType.GITHUB], false),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 20.0),
-                          child: getSignInWith(SERVICES_CONNECT_URI[ServiceType.GOOGLE], false),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 20.0),
-                          child: getSignInWith(SERVICES_CONNECT_URI[ServiceType.MICROSOFT], false),
-                        ),
-                        getSignInWith(SERVICES_CONNECT_URI[ServiceType.TWITTER], false),
-                      ],
+                      children: SERVICES_INFORMATION_MAP.entries
+                          .map((e) => Padding(
+                                padding: EdgeInsets.only(top: 20.0),
+                                child: getSignInWith(e.value, this._user.servicesConnectInformation.contains(e.value.name.toLowerCase())),
+                              ))
+                          .toList(),
                     ),
                   )
                 ],
@@ -87,7 +71,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     );
   }
 
-  signInWithService(Service service) async {
+  signInWithService(ServiceInformation service) async {
     setState(() {
       this._isLoading = true;
     });
@@ -107,7 +91,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     });
   }
 
-  getSignInWith(Service service, bool isAuthenticated) {
+  getSignInWith(ServiceInformation service, bool isAuthenticated) {
     if (isAuthenticated) {
       return FlatButton(
           onPressed: null,
@@ -143,7 +127,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: this._isLoading
-              ? [new CircularProgressIndicator()]
+              ? [CircularProgressIndicator()]
               : [
                   Image.asset(service.iconPath),
                   Padding(
@@ -176,6 +160,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
       });
     } on BadTokenException {
       this.showToast("Invalid token, please sign out.");
+    } on Exception {
+      this.showToast("Cannot get user profile information.");
     } catch (e) {
       log(e);
       this.showToast("Cannot get user profile information.");

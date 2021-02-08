@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
-import 'home.dart';
 import 'login.dart';
 
 class MyMainPage extends StatefulWidget {
@@ -16,7 +15,7 @@ class MyMainPage extends StatefulWidget {
 
 class _MyMainPageState extends State<MyMainPage> {
   final AreaService areaServiceInstance = AreaService();
-  final List<Widget> _children = [MyHomePage(), MyDashboardPage(), MyProfilePage()];
+  final List<Widget> _children = [MyDashboardPage(), MyProfilePage()];
   int _selectedIndex = 0;
 
   @override
@@ -24,21 +23,19 @@ class _MyMainPageState extends State<MyMainPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        actions: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(right: 15.0),
-            child: IconButton(onPressed: () => this.signOut(), icon: Icon(Icons.logout)),
-          )
-        ],
+        actions: _selectedIndex == 1
+            ? <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(right: 15.0),
+                  child: IconButton(onPressed: () => this.signOut(), icon: Icon(Icons.logout)),
+                )
+              ]
+            : [],
         title: Text('Area'),
       ),
       body: this._children[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard),
             label: 'Dashboard',

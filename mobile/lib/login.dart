@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:area/exceptions/BadResponseException.dart';
-import 'package:area/exceptions/WrongEmailPasswordCombination.dart';
+import 'package:area/exceptions/bad_response_exception.dart';
+import 'package:area/exceptions/wrong_email_password_combination_exception.dart';
 import 'package:area/register.dart';
 import 'package:area/services/area_service.dart';
 import 'package:area/services/shared_preferences_service.dart';
@@ -207,7 +207,7 @@ class _LoginState extends State<Login> {
       await this.areaServiceInstance.signInWithCredentials(email, password);
       this._btnController.success();
       return this.openHomePage();
-    } on WrongEmailPasswordCombination {
+    } on WrongEmailPasswordCombinationException {
       this.showToast("Bad email / password combination.");
     } on BadResponseException {
       this.showToast("Couldn't sign you in.");

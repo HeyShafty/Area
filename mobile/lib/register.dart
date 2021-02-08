@@ -1,11 +1,11 @@
-import 'package:area/exceptions/BadResponseException.dart';
+import 'package:area/exceptions/bad_response_exception.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 import 'constants.dart';
-import 'exceptions/AlreadyExistsException.dart';
+import 'exceptions/already_exists_exception.dart';
 import 'main_page.dart';
 import 'services/area_service.dart';
 
@@ -23,7 +23,7 @@ class _RegisterState extends State<Register> {
   String _usernameError;
   String _emailError;
   String _passwordError;
-  final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
+  final RoundedLoadingButtonController _btnController = RoundedLoadingButtonController();
 
   @override
   Widget build(BuildContext context) {
