@@ -183,23 +183,23 @@ export default defineComponent({
     checkregisteredServices(ret) {
       console.log(ret.data.services);
       if (ret.data.services) {
-        if (ret.data.services.twitter && ret.data.services.twitter.accessToken)
+        if (ret.data.connectData.twitter)
           this.toggles["twitter"] = true;
         else
           this.toggles["twitter"] = false;
-        if (ret.data.services.github && ret.data.services.github.accessToken)
+        if (ret.data.connectData.github )
           this.toggles["github"] = true;
         else
           this.toggles["github"] = false;
-        if (ret.data.services.discord && ret.data.services.discord.accessToken)
+        if (ret.data.connectData.discord)
           this.toggles["discord"] = true;
         else
           this.toggles["discord"] = false;
-        if (ret.data.services.google && ret.data.services.google.accessToken)
+        if (ret.data.connectData.google)
           this.toggles["youtube"] = true;
         else
           this.toggles["youtube"] = false;
-        if (ret.data.services.microsoft && ret.data.services.microsoft.accessToken)
+        if (ret.data.connectData.microsoft)
           this.toggles["outlook"] = true;
         else
           this.toggles["outlook"] = false;
@@ -217,7 +217,7 @@ export default defineComponent({
             },
           });
           console.log(ret);
-          //window.location.href = ret.data.url
+          window.location.href = ret.data.url
         } catch (error) {
           console.log(error);
         }
@@ -295,7 +295,7 @@ export default defineComponent({
 
   async mounted() {
     try {
-      const ret = await axios.get(baseUri + "/profile/infos", {
+      const ret = await axios.get(baseUri + "/profile", {
         headers: {
           authorization: `Bearer ${currentUser.jwt}`,
         },
