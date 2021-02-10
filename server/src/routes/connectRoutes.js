@@ -1,7 +1,11 @@
 const express = require('express');
 const passport = require('passport');
+const axios = require('axios');
+const uuid = require('uuid');
 const User = require('../models/User');
 const OAuth = require('oauth').OAuth;
+const oauth1a = require('oauth-1.0a');
+const crypto = require('crypto');
 const { createConnectSession, extractConnectSession, addDataToConnectSession } = require('../utils/connectSessionHelper');
 
 const protectedRequest = require('../passport/protectedRequest');
@@ -15,7 +19,7 @@ const { MSAL_SCOPES, MSAL_REDIRECT_URI_WEB, MSAL_REDIRECT_URI_MOBILE, MONGOOSE_M
 const { GOOGLE_SCOPES , GOOGLE_PASSPORT_CONFIG_WEB, GOOGLE_PASSPORT_CONFIG_MOBILE } = require('../config/googleConfig');
 const { GITHUB_SCOPES, GITHUB_PASSPORT_CONFIG_WEB, GITHUB_PASSPORT_CONFIG_MOBILE } = require('../config/githubConfig');
 const { DISCORD_SCOPES, DISCORD_PASSPORT_CONFIG_WEB, DISCORD_PASSPORT_CONFIG_MOBILE } = require('../config/discordConfig');
-const { TWITTER_PASSPORT_CONFIG_WEB, TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, MONGOOSE_TWITTER_KEY, } = require('../config/twitterConfig');
+const { TWITTER_PASSPORT_CONFIG_WEB, TWITTER_PASSPORT_CONFIG_MOBILE, TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, MONGOOSE_TWITTER_KEY, } = require('../config/twitterConfig');
 
 const router = express.Router();
 
@@ -24,7 +28,6 @@ const CONNECT_SESSION_GOOGLE = 'google';
 const CONNECT_SESSION_GITHUB = 'github';
 const CONNECT_SESSION_DISCORD = 'discord';
 const CONNECT_SESSION_TWITTER = 'twitter';
-
 
 router.get('/microsoft', protectedRequest, async (req, res) => {
     const isMobile = !!req.query.mobile;
@@ -288,17 +291,18 @@ router.get('/discord/callback', async (req, res, next) => {
 router.get('/twitter', protectedRequest, async (req, res) => {
     const isMobile = !!req.query.mobile;
     const connectSessionId = await createConnectSession(req.user._id, CONNECT_SESSION_TWITTER, isMobile);
+    const config = isMobile ? TWITTER_PASSPORT_CONFIG_MOBILE : TWITTER_PASSPORT_CONFIG_WEB;
+
     const oauth = new OAuth(
         "https://api.twitter.com/oauth/request_token",
         "https://api.twitter.com/oauth/access_token",
         TWITTER_CONSUMER_KEY,
         TWITTER_CONSUMER_SECRET,
         "1.0",
-        `http://localhost:8080/connect/twitter/callback?state=${connectSessionId}`,
+        `${config.callbackURL}?state=${connectSessionId}`,
         "HMAC-SHA1"
     );
     const urlDeGrosChad = new URL('https://twitter.com/oauth/authenticate');
-    var token = '';
 
     oauth.getOAuthRequestToken( async (err, oauthToken, oauthTokenSecret, response) => {
         if (err) {
@@ -325,6 +329,7 @@ router.get('/twitter/callback', async (req, res, next) => {
         "HMAC-SHA1"
     );
 
+    console.log(`DATA = ${data}`);
     oauth.getOAuthAccessToken(req.query.oauth_token, data, req.query.oauth_verifier, async (err, oauthAccessToken, oauthAccessTokenSecret, response) => {
         if (err) {
             console.log(err);
@@ -336,10 +341,11 @@ router.get('/twitter/callback', async (req, res, next) => {
             try {
                 user.connectData.set(MONGOOSE_TWITTER_KEY, {
                     accessToken: oauthAccessToken,
+                    data: { oauthAccessTokenSecret: oauthAccessTokenSecret }
                 });
                 await User.findByIdAndUpdate(user._id, user);
             } catch (err) {
-                console.log(err)
+                console.log(err);
             }
             if (isMobile) {
                 return res.sendStatus(200);
