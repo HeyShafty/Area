@@ -17,7 +17,7 @@ const Map<ServiceType, ServiceInformation> SERVICES_INFORMATION_MAP = {
       '/connect/google/callback', 'assets/images/google.png', true, false),
   ServiceType.MICROSOFT: ServiceInformation(ServiceType.MICROSOFT, 'Microsoft', '/connect/microsoft', 'msauth.area.app',
       'msauth.area.app://auth', '/connect/microsoft/callback', 'assets/images/microsoft.png', true, true),
-  ServiceType.TWITTER: ServiceInformation(ServiceType.TWITTER, 'Twitter', '/connect/twitter', 'area.app', 'area.app://auth',
+  ServiceType.TWITTER: ServiceInformation(ServiceType.TWITTER, 'Twitter', '/connect/twitter', 'area.app', 'area.app://',
       '/connect/twitter/callback', 'assets/images/twitter.png', true, true),
 };
 const String ACTION_KEY = "action";
