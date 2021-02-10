@@ -329,6 +329,7 @@ router.get('/twitter/callback', async (req, res, next) => {
         "HMAC-SHA1"
     );
 
+    console.log(`DATA = ${data}`);
     oauth.getOAuthAccessToken(req.query.oauth_token, data, req.query.oauth_verifier, async (err, oauthAccessToken, oauthAccessTokenSecret, response) => {
         if (err) {
             console.log(err);
@@ -340,7 +341,7 @@ router.get('/twitter/callback', async (req, res, next) => {
             try {
                 user.connectData.set(MONGOOSE_TWITTER_KEY, {
                     accessToken: oauthAccessToken,
-                    secret: oauthAccessTokenSecret
+                    data: { oauthAccessTokenSecret: oauthAccessTokenSecret }
                 });
                 await User.findByIdAndUpdate(user._id, user);
             } catch (err) {

@@ -12,6 +12,7 @@ function getUserData(user) {
     if (!connectData) {
         return null;
     }
+    console.log(connectData);
     return connectData;
 }
 

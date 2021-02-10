@@ -12,11 +12,6 @@ const ServiceSchema = new Schema({
         type: String,
         default: ''
     },
-    secret: {
-        type: String,
-        default: '',
-        required: false
-    },
     data: {
         type: Object,
         default: {}

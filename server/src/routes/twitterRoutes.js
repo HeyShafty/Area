@@ -10,7 +10,7 @@ router.post('/tweet', protectedRequest, async (req, res) => {
     console.log(data);
 
     try {
-        const postTweet = await service.postTweet(data.accessToken, data.secret, req.body.tweet);
+        const postTweet = await service.postTweet(data.accessToken, data.data.oauthAccessTokenSecret, req.body.tweet);
         if (postTweet === true) {
             return  res.json({ status: 'Tweet sent' });
         } else {
