@@ -147,6 +147,7 @@
           </div>
         </div>
       </div>
+      <img v-if="konami" class="absolute w-128 h-64" src="../assets/bonk.jpg"/>
     </div>
   </div>
 </template>
@@ -176,6 +177,7 @@ export default defineComponent({
       toggles: [],
       username: "",
       email: "",
+      konami: false,
     };
   },
 
@@ -309,6 +311,13 @@ export default defineComponent({
       console.log(error);
       if (error.response.status == 500) console.log("500: Server Error");
     }
+    let cursor = 0;
+    const KONAMI_CODE = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+    document.addEventListener('keydown', (e) => {
+      cursor = (e.keyCode == KONAMI_CODE[cursor]) ? cursor + 1 : 0;
+      if (cursor == KONAMI_CODE.length)
+        this.konami = true;
+    });
   },
 });
 </script>
