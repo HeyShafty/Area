@@ -16,7 +16,7 @@ const profileRouter = require('./src/routes/profileRoutes');
 const { ALLOWED_ORIGINS } = require('./src/config/config');
 const { MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PASSWORD } = require('./src/config/mongoConfig');
 const { MSAL_CONFIG } = require('./src/config/msalConfig');
-const AREA_SERVICES = require('./services');
+const AREA_SERVICES = require('./src/services');
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
