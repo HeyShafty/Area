@@ -36,6 +36,10 @@ const AREA_SERVICES = [
     new Service('discord', [], [
         new Reaction('post_message', 'Posts a message in a specific location')
     ]),
+    new Service('youtube', [
+        new Action('new_video', 'Triggers when a video was uploaded'),
+        new Action('playlist_update', 'Triggers when a video was added to a playlist')
+    ], []),
     new Service('github', [
         new Action('new_issue', 'Triggers when a new issue is added'),
         new Action('new_repository', 'Triggers when a repository is created'),
