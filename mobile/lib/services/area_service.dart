@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:area/Models/user.dart';
 import 'package:area/exceptions/already_exists_exception.dart';
 import 'package:area/exceptions/bad_response_exception.dart';
 import 'package:area/exceptions/bad_token_exception.dart';
 import 'package:area/exceptions/wrong_email_password_combination_exception.dart';
 import 'package:area/models/service_information.dart';
+import 'package:area/models/user.dart';
 import 'package:area/services/shared_preferences_service.dart';
 import 'package:http/http.dart' as http;
 
@@ -143,6 +143,11 @@ class AreaService {
       throw BadResponseException();
     }
     return User.fromJson(jsonDecode(response.body));
+  }
+
+  Future<bool> isConnectedToService(String name) async {
+    User user = await this.getUserProfile();
+    return user.servicesConnectInformation.contains(name.toLowerCase());
   }
 
   AreaService._internal();

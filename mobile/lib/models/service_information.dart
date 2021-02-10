@@ -1,4 +1,4 @@
-import 'package:area/area_services/i_service.dart';
+import 'package:area/area_services/base_page.dart';
 import 'package:area/area_services/service_factory.dart';
 import 'package:area/services/area_service.dart';
 
@@ -10,11 +10,13 @@ class ServiceInformation {
   final String fullCallbackUrl;
   final String serverRedirectUri;
   final String iconPath;
+  final bool hasActions;
+  final bool hasReactions;
 
-  const ServiceInformation(
-      this.serviceType, this.name, this.uri, this.callbackUrlScheme, this.fullCallbackUrl, this.serverRedirectUri, this.iconPath);
+  const ServiceInformation(this.serviceType, this.name, this.uri, this.callbackUrlScheme, this.fullCallbackUrl, this.serverRedirectUri,
+      this.iconPath, this.hasActions, this.hasReactions);
 
-  IService createServiceInstance() {
-    return ServiceFactory.createServiceInstance(serviceType);
+  BasePage createServiceInstance(Map<String, String> params, bool isAction) {
+    return ServiceFactory.createServiceInstance(serviceType, params, isAction);
   }
 }

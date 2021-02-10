@@ -2,13 +2,13 @@ import 'dart:developer';
 
 import 'package:area/exceptions/bad_token_exception.dart';
 import 'package:area/models/service_information.dart';
+import 'package:area/models/user.dart';
 import 'package:area/services/area_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import 'Models/user.dart';
 import 'constants.dart';
 
 class MyProfilePage extends StatefulWidget {
@@ -57,12 +57,15 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   Padding(
                     padding: EdgeInsets.only(left: 20.0, right: 20.0),
                     child: Column(
-                      children: SERVICES_INFORMATION_MAP.entries
-                          .map((e) => Padding(
-                                padding: EdgeInsets.only(top: 20.0),
-                                child: getSignInWith(e.value, this._user.servicesConnectInformation.contains(e.value.name.toLowerCase())),
-                              ))
-                          .toList(),
+                      children: SERVICES_INFORMATION_MAP.entries.map((e) {
+                        if (e.value.uri != null) {
+                          return Padding(
+                            padding: EdgeInsets.only(top: 20.0),
+                            child: getSignInWith(e.value, this._user.servicesConnectInformation.contains(e.value.name.toLowerCase())),
+                          );
+                        }
+                        return Container();
+                      }).toList(),
                     ),
                   )
                 ],
@@ -80,6 +83,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
       final String callbackUrl = await FlutterWebAuth.authenticate(url: url.toString(), callbackUrlScheme: service.callbackUrlScheme);
 
       await this.areaServiceInstance.handleServiceRedirection(callbackUrl, service);
+      await this.getUserProfile();
     } on BadTokenException {
       this.showToast("Invalid token, please sign out.");
     } catch (e) {
