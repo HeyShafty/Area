@@ -57,58 +57,86 @@ class _MyDashboardPageState extends State<MyDashboardPage> {
     return Center(
         child: SingleChildScrollView(
             child: Padding(
-                padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                padding: EdgeInsets.only(left: 45.0, right: 45.0, top: 20.0),
                 child: Column(children: [
-                  Text("ACTION", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
-                  DropdownButton<ServiceInformation>(
-                      value: this._selectedActionServiceInfo,
-                      items: this._actionMenuItems,
-                      onChanged: (value) async {
-                        if (value.uri != null && await this.areaServiceInstance.isConnectedToService(value.name) == false) {
-                          this.setState(() {
-                            this._selectedActionServiceInfo = null;
-                            this._actionService = null;
-                          });
-                          return this.showToast("Please go to profile page and sign in with this service to use it.");
-                        }
-                        this._actionParams.clear();
-                        this.setState(() {
-                          this._selectedActionServiceInfo = value;
-                          this._actionService = value.createServiceInstance(_actionParams, true);
-                        });
-                      }),
-                  if (this._actionService != null) this._actionService,
+                  Container(
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(32.0), color: Colors.grey),
+                      child: Padding(
+                          padding: EdgeInsets.only(top: 10.0, bottom: 10.0, right: 10.0, left: 10.0),
+                          child: Column(children: [
+                            Text("ACTION", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
+                            Padding(
+                                padding: EdgeInsets.only(top: 20.0),
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(32.0),
+                                        color: Colors.white,
+                                        border: Border.all(width: 2.0, color: Colors.grey)),
+                                    padding: const EdgeInsets.only(left: 20.0, right: 10.0),
+                                    width: 200.0,
+                                    child: DropdownButtonHideUnderline(
+                                        child: DropdownButton<ServiceInformation>(
+                                            value: this._selectedActionServiceInfo,
+                                            items: this._actionMenuItems,
+                                            onChanged: (value) async {
+                                              if (value.uri != null &&
+                                                  await this.areaServiceInstance.isConnectedToService(value.name) == false) {
+                                                this.setState(() {
+                                                  this._selectedActionServiceInfo = null;
+                                                  this._actionService = null;
+                                                });
+                                                return this.showToast("Please go to profile page and sign in with this service to use it.");
+                                              }
+                                              this._actionParams.clear();
+                                              this.setState(() {
+                                                this._selectedActionServiceInfo = value;
+                                                this._actionService = value.createServiceInstance(_actionParams, true);
+                                              });
+                                            })))),
+                            if (this._actionService != null) this._actionService
+                          ]))),
+                  Padding(padding: EdgeInsets.only(top: 40.0)),
+                  Container(
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(32.0), color: Colors.grey),
+                      child: Padding(
+                          padding: EdgeInsets.only(top: 10.0, bottom: 10.0, right: 10.0, left: 10.0),
+                          child: Column(children: [
+                            Text("REACTION", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
+                            Padding(
+                                padding: EdgeInsets.only(top: 20.0),
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(32.0),
+                                        color: Colors.white,
+                                        border: Border.all(width: 2.0, color: Colors.grey)),
+                                    padding: const EdgeInsets.only(left: 20.0, right: 10.0),
+                                    width: 200.0,
+                                    child: DropdownButtonHideUnderline(
+                                        child: DropdownButton<ServiceInformation>(
+                                            value: this._selectedReactionServiceInfo,
+                                            items: this._reactionMenuItems,
+                                            onChanged: (value) async {
+                                              if (value.uri != null &&
+                                                  await this.areaServiceInstance.isConnectedToService(value.name) == false) {
+                                                this.setState(() {
+                                                  this._selectedReactionServiceInfo = null;
+                                                  this._reactionService = null;
+                                                });
+                                                return this.showToast("Please go to profile page and sign in with this service to use it.");
+                                              }
+                                              this._reactionParams.clear();
+                                              this.setState(() {
+                                                this._selectedReactionServiceInfo = value;
+                                                this._reactionService = value.createServiceInstance(_reactionParams, false);
+                                              });
+                                            })))),
+                            if (this._reactionService != null) this._reactionService
+                          ]))),
                   Padding(
-                    padding: EdgeInsets.only(top: 20.0),
-                    child: Text("REACTION", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
-                  ),
-                  DropdownButton<ServiceInformation>(
-                      value: this._selectedReactionServiceInfo,
-                      items: this._reactionMenuItems,
-                      onChanged: (value) async {
-                        if (value.uri != null && await this.areaServiceInstance.isConnectedToService(value.name) == false) {
-                          this.setState(() {
-                            this._selectedReactionServiceInfo = null;
-                            this._reactionService = null;
-                          });
-                          return this.showToast("Please go to profile page and sign in with this service to use it.");
-                        }
-                        this._reactionParams.clear();
-                        this.setState(() {
-                          this._selectedReactionServiceInfo = value;
-                          this._reactionService = value.createServiceInstance(_reactionParams, false);
-                        });
-                      }),
-                  if (this._reactionService != null) this._reactionService,
-                  Padding(
-                      padding: EdgeInsets.only(top: 20.0),
+                      padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
                       child: RoundedLoadingButton(
                           controller: this._btnController,
-                          child: Text(
-                            'Submit',
-                            style: TextStyle(color: Colors.white),
-                            textAlign: TextAlign.center,
-                          ),
+                          child: Text('Submit', style: TextStyle(color: Colors.white), textAlign: TextAlign.center),
                           onPressed: this.isButtonActivated() ? this.onButtonPressed : null))
                 ]))));
   }
