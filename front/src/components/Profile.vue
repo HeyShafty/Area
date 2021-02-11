@@ -147,8 +147,11 @@
           </div>
         </div>
       </div>
-      <img v-if="konami" class="absolute w-128 h-64" src="../assets/bonk.jpg"/>
+      <img v-if="konami" class="absolute w-128 h-64" src="../assets/bonk.jpg" />
     </div>
+    <footer>
+      <h6 class="text-sm font-medium -mb-4">© 2021 Chad Corporation</h6>
+    </footer>
   </div>
 </template>
 
@@ -185,29 +188,17 @@ export default defineComponent({
     checkregisteredServices(ret) {
       console.log(ret.data.services);
       if (ret.data.services) {
-        if (ret.data.connectData.twitter)
-          this.toggles["twitter"] = true;
-        else
-          this.toggles["twitter"] = false;
-        if (ret.data.connectData.github )
-          this.toggles["github"] = true;
-        else
-          this.toggles["github"] = false;
-        if (ret.data.connectData.discord)
-          this.toggles["discord"] = true;
-        else
-          this.toggles["discord"] = false;
-        if (ret.data.connectData.google)
-          this.toggles["youtube"] = true;
-        else
-          this.toggles["youtube"] = false;
-        if (ret.data.connectData.microsoft)
-          this.toggles["outlook"] = true;
-        else
-          this.toggles["outlook"] = false;
-      }
-      else
-        this.toggles.fill(false);
+        if (ret.data.connectData.twitter) this.toggles["twitter"] = true;
+        else this.toggles["twitter"] = false;
+        if (ret.data.connectData.github) this.toggles["github"] = true;
+        else this.toggles["github"] = false;
+        if (ret.data.connectData.discord) this.toggles["discord"] = true;
+        else this.toggles["discord"] = false;
+        if (ret.data.connectData.google) this.toggles["youtube"] = true;
+        else this.toggles["youtube"] = false;
+        if (ret.data.connectData.microsoft) this.toggles["outlook"] = true;
+        else this.toggles["outlook"] = false;
+      } else this.toggles.fill(false);
     },
 
     async twitterRegistration() {
@@ -219,7 +210,7 @@ export default defineComponent({
             },
           });
           console.log(ret);
-          window.location.href = ret.data.url
+          window.location.href = ret.data.url;
         } catch (error) {
           console.log(error);
         }
@@ -236,7 +227,7 @@ export default defineComponent({
             },
           });
           console.log(ret);
-          window.location.href = ret.data.url
+          window.location.href = ret.data.url;
         } catch (error) {
           console.log(error);
         }
@@ -253,7 +244,7 @@ export default defineComponent({
             },
           });
           console.log(ret);
-          window.location.href = ret.data.url
+          window.location.href = ret.data.url;
         } catch (error) {
           console.log(error);
         }
@@ -270,7 +261,7 @@ export default defineComponent({
             },
           });
           console.log(ret);
-          window.location.href = ret.data.url
+          window.location.href = ret.data.url;
         } catch (error) {
           console.log(error);
         }
@@ -287,7 +278,7 @@ export default defineComponent({
             },
           });
           console.log(ret);
-          window.location.href = ret.data.url
+          window.location.href = ret.data.url;
         } catch (error) {
           console.log(error);
         }
@@ -306,17 +297,15 @@ export default defineComponent({
       this.$refs.editInfos.email = ret.data.email;
 
       this.checkregisteredServices(ret);
-
     } catch (error) {
       console.log(error);
       if (error.response.status == 500) console.log("500: Server Error");
     }
     let cursor = 0;
     const KONAMI_CODE = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
-    document.addEventListener('keydown', (e) => {
-      cursor = (e.keyCode == KONAMI_CODE[cursor]) ? cursor + 1 : 0;
-      if (cursor == KONAMI_CODE.length)
-        this.konami = true;
+    document.addEventListener("keydown", (e) => {
+      cursor = e.keyCode == KONAMI_CODE[cursor] ? cursor + 1 : 0;
+      if (cursor == KONAMI_CODE.length) this.konami = true;
     });
   },
 });
