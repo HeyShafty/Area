@@ -30,48 +30,43 @@ class _MyProfilePageState extends State<MyProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: SingleChildScrollView(
-        child: Column(
-          children: this._user == null
-              ? <Widget>[CircularProgressIndicator()]
-              : <Widget>[
-                  Icon(
-                    Icons.person,
-                    size: 100.0,
-                  ),
-                  Padding(
-                      padding: EdgeInsets.only(bottom: 60.0),
-                      child: Column(children: [
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 10.0),
-                          child: Text(
-                            _user.displayName,
-                            style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
+        child: SingleChildScrollView(
+            child: Column(
+                children: this._user == null
+                    ? <Widget>[CircularProgressIndicator()]
+                    : <Widget>[
+                        Icon(
+                          Icons.person,
+                          size: 100.0,
                         ),
-                        Text(
-                          _user.email,
-                          style: TextStyle(color: Colors.black, fontSize: 15),
-                        )
-                      ])),
-                  Padding(
-                    padding: EdgeInsets.only(left: 20.0, right: 20.0),
-                    child: Column(
-                      children: SERVICES_INFORMATION_MAP.entries.map((e) {
-                        if (e.value.uri != null) {
-                          return Padding(
-                            padding: EdgeInsets.only(top: 20.0),
-                            child: getSignInWith(e.value, this._user.servicesConnectInformation.contains(e.value.name.toLowerCase())),
-                          );
-                        }
-                        return Container();
-                      }).toList(),
-                    ),
-                  )
-                ],
-        ),
-      ),
-    );
+                        Padding(
+                            padding: EdgeInsets.only(bottom: 60.0),
+                            child: Column(children: [
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 10.0),
+                                child: Text(
+                                  _user.displayName,
+                                  style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Text(
+                                _user.email,
+                                style: TextStyle(color: Colors.black, fontSize: 15),
+                              )
+                            ])),
+                        Padding(
+                            padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                            child: Column(
+                                children: SERVICES_INFORMATION_MAP.entries.map((e) {
+                              if (e.value.uri != null) {
+                                return Padding(
+                                  padding: EdgeInsets.only(top: 20.0),
+                                  child: getSignInWith(e.value, this._user.servicesConnectInformation.contains(e.value.name.toLowerCase())),
+                                );
+                              }
+                              return Container();
+                            }).toList()))
+                      ])));
   }
 
   signInWithService(ServiceInformation service) async {
