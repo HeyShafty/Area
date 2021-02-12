@@ -60,7 +60,8 @@ class _MyDashboardPageState extends State<MyDashboardPage> {
                 padding: EdgeInsets.only(left: 45.0, right: 45.0, top: 20.0),
                 child: Column(children: [
                   Container(
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(32.0), color: Colors.grey),
+                      width: double.infinity,
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(32.0), color: Color(0xffe5e8e8)),
                       child: Padding(
                           padding: EdgeInsets.only(top: 10.0, bottom: 10.0, right: 10.0, left: 10.0),
                           child: Column(children: [
@@ -97,7 +98,8 @@ class _MyDashboardPageState extends State<MyDashboardPage> {
                           ]))),
                   Padding(padding: EdgeInsets.only(top: 40.0)),
                   Container(
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(32.0), color: Colors.grey),
+                      width: double.infinity,
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(32.0), color: Color(0xffe5e8e8)),
                       child: Padding(
                           padding: EdgeInsets.only(top: 10.0, bottom: 10.0, right: 10.0, left: 10.0),
                           child: Column(children: [
