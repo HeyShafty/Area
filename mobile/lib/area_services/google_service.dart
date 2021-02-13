@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -12,20 +14,20 @@ class GoogleService extends BasePage {
   ];
   static const List<Option> REACTIONS = [];
 
-  final Map<String, String> params;
+  final StreamController<Map<String, String>> streamParams;
   final bool isAction;
 
-  GoogleService({Key key, @required this.params, @required this.isAction}) : super(key: key);
+  GoogleService({Key key, @required this.streamParams, @required this.isAction}) : super(key: key);
 
-  static create(Map<String, String> params, bool isAction) {
+  static create(StreamController<Map<String, String>> streamParams, bool isAction) {
     return GoogleService(
-      params: params,
+      streamParams: streamParams,
       isAction: isAction,
     );
   }
 
   @override
-  BaseState createState() => BaseState(params, isAction, ACTIONS, REACTIONS);
+  BaseState createState() => BaseState(streamParams, isAction, ACTIONS, REACTIONS);
 
   @override
   Option getActionOption(String actionValue) {

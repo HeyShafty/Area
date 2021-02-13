@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:area/area_services/input.dart';
 import 'package:area/area_services/option.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,12 +13,12 @@ class DiscordService extends BasePage {
     Option("post_message", [Input("webhook", "Webhook"), Input("message", "Message")])
   ];
 
-  final Map<String, String> params;
+  final StreamController<Map<String, String>> params;
   final bool actionMode;
 
   DiscordService({Key key, @required this.params, @required this.actionMode}) : super(key: key);
 
-  static create(Map<String, String> params, bool isAction) {
+  static create(StreamController<Map<String, String>> params, bool isAction) {
     return DiscordService(
       params: params,
       actionMode: isAction,

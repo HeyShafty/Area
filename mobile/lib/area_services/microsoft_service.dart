@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:area/area_services/input.dart';
 import 'package:area/area_services/option.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,20 +13,20 @@ class MicrosoftService extends BasePage {
     Option("send_mail", [Input("object", "Object"), Input("body", "Body")])
   ];
 
-  final Map<String, String> params;
+  final StreamController<Map<String, String>> streamParams;
   final bool isAction;
 
-  MicrosoftService({Key key, @required this.params, @required this.isAction}) : super(key: key);
+  MicrosoftService({Key key, @required this.streamParams, @required this.isAction}) : super(key: key);
 
-  static create(Map<String, String> params, bool isAction) {
+  static create(StreamController<Map<String, String>> streamParams, bool isAction) {
     return MicrosoftService(
-      params: params,
+      streamParams: streamParams,
       isAction: isAction,
     );
   }
 
   @override
-  BaseState createState() => BaseState(params, isAction, ACTIONS, REACTIONS);
+  BaseState createState() => BaseState(streamParams, isAction, ACTIONS, REACTIONS);
 
   @override
   Option getActionOption(String actionValue) {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:area/area_services/option.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,11 +17,12 @@ abstract class BasePage extends StatefulWidget {
 class BaseState<Page extends BasePage> extends State<Page> {
   final List<Option> actions;
   final List<Option> reactions;
-  final Map<String, String> params;
+  final StreamController<Map<String, String>> streamParams;
+  final Map<String, String> params = Map();
   final bool isAction;
   Option selectedOption;
 
-  BaseState(this.params, this.isAction, this.actions, this.reactions);
+  BaseState(this.streamParams, this.isAction, this.actions, this.reactions);
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +59,7 @@ class BaseState<Page extends BasePage> extends State<Page> {
                     } else {
                       this.params[e.name] = value;
                     }
+                    this.streamParams.add(this.params);
                   })));
     }).toList());
   }
@@ -81,6 +85,7 @@ class BaseState<Page extends BasePage> extends State<Page> {
                       this.setState(() {
                         this.selectedOption = value;
                       });
+                      this.streamParams.add(this.params);
                     }))));
   }
 }

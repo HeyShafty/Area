@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:area/area_services/option.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,20 +17,20 @@ class TwitterService extends BasePage {
     Option("update_bio", [Input("value", "Your new biography")])
   ];
 
-  final Map<String, String> params;
+  final StreamController<Map<String, String>> streamParams;
   final bool isAction;
 
-  TwitterService({Key key, @required this.params, @required this.isAction}) : super(key: key);
+  TwitterService({Key key, @required this.streamParams, @required this.isAction}) : super(key: key);
 
-  static create(Map<String, String> params, bool isAction) {
+  static create(StreamController<Map<String, String>> streamParams, bool isAction) {
     return TwitterService(
-      params: params,
+      streamParams: streamParams,
       isAction: isAction,
     );
   }
 
   @override
-  BaseState createState() => BaseState(params, isAction, ACTIONS, REACTIONS);
+  BaseState createState() => BaseState(streamParams, isAction, ACTIONS, REACTIONS);
 
   @override
   Option getActionOption(String actionValue) {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:area/models/service_information.dart';
 import 'package:area/services/area_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +19,8 @@ class MyDashboardPage extends StatefulWidget {
 class _MyDashboardPageState extends State<MyDashboardPage> {
   final AreaService areaServiceInstance = AreaService();
   final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
+  final StreamController<Map<String, String>> _actionParamsController = StreamController<Map<String, String>>();
+  final StreamController<Map<String, String>> _reactionParamsController = StreamController<Map<String, String>>();
 
   ServiceInformation _selectedActionServiceInfo;
   ServiceInformation _selectedReactionServiceInfo;
@@ -26,12 +30,23 @@ class _MyDashboardPageState extends State<MyDashboardPage> {
   Map<String, String> _reactionParams = Map();
   List<DropdownMenuItem<ServiceInformation>> _actionMenuItems;
   List<DropdownMenuItem<ServiceInformation>> _reactionMenuItems;
+  Stream<Map<String, String>> stream;
 
   @override
   void initState() {
     super.initState();
     this._actionMenuItems = this.buildDropDownMenuItems(true);
     this._reactionMenuItems = this.buildDropDownMenuItems(false);
+    this._actionParamsController.stream.listen((event) {
+      this.setState(() {
+        this._actionParams = event;
+      });
+    });
+    this._reactionParamsController.stream.listen((event) {
+      this.setState(() {
+        this._reactionParams = event;
+      });
+    });
   }
 
   List<DropdownMenuItem<ServiceInformation>> buildDropDownMenuItems(bool actions) {
@@ -91,7 +106,7 @@ class _MyDashboardPageState extends State<MyDashboardPage> {
                                               this._actionParams.clear();
                                               this.setState(() {
                                                 this._selectedActionServiceInfo = value;
-                                                this._actionService = value.createServiceInstance(_actionParams, true);
+                                                this._actionService = value.createServiceInstance(this._actionParamsController, true);
                                               });
                                             })))),
                             if (this._actionService != null) this._actionService
@@ -129,7 +144,7 @@ class _MyDashboardPageState extends State<MyDashboardPage> {
                                               this._reactionParams.clear();
                                               this.setState(() {
                                                 this._selectedReactionServiceInfo = value;
-                                                this._reactionService = value.createServiceInstance(_reactionParams, false);
+                                                this._reactionService = value.createServiceInstance(this._reactionParamsController, false);
                                               });
                                             })))),
                             if (this._reactionService != null) this._reactionService
@@ -145,27 +160,24 @@ class _MyDashboardPageState extends State<MyDashboardPage> {
 
   bool isButtonActivated() {
     if (this._actionService == null || this._reactionService == null) return false;
+
+    Option chooseActionOption = this._actionService.getActionOption(this._actionParams[ACTION_KEY]);
+    Option chooseReactionOption = this._reactionService.getReactionOption(this._reactionParams[REACTION_KEY]);
+    if (chooseActionOption == null) {
+      return false;
+    }
+    if (chooseReactionOption == null) {
+      return false;
+    }
+
+    if (this._actionParams.length != chooseActionOption.inputs.length + 1 ||
+        this._reactionParams.length != chooseReactionOption.inputs.length + 1) {
+      return false;
+    }
     return true;
   }
 
   onButtonPressed() {
-    Option chooseActionOption = this._actionService.getActionOption(this._actionParams[ACTION_KEY]);
-    Option chooseReactionOption = this._reactionService.getReactionOption(this._reactionParams[REACTION_KEY]);
-
-    if (chooseActionOption == null) {
-      this._btnController.reset();
-      return this.showToast("Please choose an action.");
-    }
-    if (chooseReactionOption == null) {
-      this._btnController.reset();
-      return this.showToast("Please choose a reaction.");
-    }
-    if (this._actionParams.length != chooseActionOption.inputs.length + 1 ||
-        this._reactionParams.length != chooseReactionOption.inputs.length + 1) {
-      this._btnController.reset();
-      return this.showToast("Please fill all fields.");
-    }
-    this._btnController.reset();
     return this.showToast("Everything is alright!");
   }
 

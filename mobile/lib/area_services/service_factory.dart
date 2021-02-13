@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:area/area_services/discord_service.dart';
 import 'package:area/area_services/github_service.dart';
 import 'package:area/area_services/google_service.dart';
@@ -16,7 +18,7 @@ class ServiceFactory {
     ServiceType.TWITTER: TwitterService.create,
   };
 
-  static BasePage createServiceInstance(ServiceType serviceType, Map<String, String> params, bool isAction) {
+  static BasePage createServiceInstance(ServiceType serviceType, StreamController<Map<String, String>> params, bool isAction) {
     return SERVICE_FACTORY_MAP[serviceType](params, isAction);
   }
 }
