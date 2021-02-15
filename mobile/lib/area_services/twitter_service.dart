@@ -9,12 +9,12 @@ import 'input.dart';
 
 class TwitterService extends BasePage {
   static const List<Option> ACTIONS = [
-    Option("new_tweet_from", [Input("username", "Username")]),
+    Option("new_tweet_from", [Input("username", "Username", r'(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z]+[A-Za-z0-9-_]+)')]),
     Option("new_follower", [])
   ];
   static const List<Option> REACTIONS = [
-    Option("post_tweet", [Input("value", "Tweet body")]),
-    Option("update_bio", [Input("value", "Your new biography")])
+    Option("post_tweet", [Input("value", "Tweet body", null)]),
+    Option("update_bio", [Input("value", "Your new biography", null)])
   ];
 
   final StreamController<Map<String, String>> streamParams;

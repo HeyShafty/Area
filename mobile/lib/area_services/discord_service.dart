@@ -10,7 +10,10 @@ import 'base_page.dart';
 class DiscordService extends BasePage {
   static const List<Option> ACTIONS = [];
   static const List<Option> REACTIONS = [
-    Option("post_message", [Input("webhook", "Webhook"), Input("message", "Message")])
+    Option("post_message", [
+      Input("webhook", "Webhook", r'^.*(discord|discordapp)\.com\/api\/webhooks\/([\d]+)\/([a-zA-Z0-9_-]+)$'),
+      Input("message", "Message", null)
+    ])
   ];
 
   final StreamController<Map<String, String>> params;

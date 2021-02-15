@@ -19,6 +19,7 @@ const Map<ServiceType, ServiceInformation> SERVICES_INFORMATION_MAP = {
       'msauth.area.app://auth', '/connect/microsoft/callback', 'assets/images/microsoft.png', true, true),
   ServiceType.TWITTER: ServiceInformation(ServiceType.TWITTER, 'Twitter', '/connect/twitter', 'area.app', 'area.app://',
       '/connect/twitter/callback', 'assets/images/twitter.png', true, true),
+  ServiceType.TIMER: ServiceInformation(ServiceType.TIMER, 'Timer', null, null, null, null, null, true, false),
 };
 const String ACTION_KEY = "action";
 const String REACTION_KEY = "reaction";

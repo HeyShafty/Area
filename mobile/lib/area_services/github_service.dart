@@ -9,13 +9,13 @@ import 'option.dart';
 
 class GithubService extends BasePage {
   static const List<Option> ACTIONS = [
-    Option("new_issue", [Input("repo", "Repository")]),
+    Option("new_issue", [Input("repo", "Repository", null)]),
     Option("new_repository", []),
-    Option("new_pull_request", [Input("repo", "Repository")]),
-    Option("issue_closes", [Input("repo", "Repository")])
+    Option("new_pull_request", [Input("repo", "Repository", null)]),
+    Option("issue_closes", [Input("repo", "Repository", null)])
   ];
   static const List<Option> REACTIONS = [
-    Option("open_issue", [Input("title", "Title"), Input("description", "Description")])
+    Option("open_issue", [Input("title", "Title", null), Input("description", "Description", null)])
   ];
 
   final StreamController<Map<String, String>> streamParams;

@@ -4,6 +4,7 @@ import 'package:area/area_services/discord_service.dart';
 import 'package:area/area_services/github_service.dart';
 import 'package:area/area_services/google_service.dart';
 import 'package:area/area_services/microsoft_service.dart';
+import 'package:area/area_services/timer_service.dart';
 import 'package:area/area_services/twitter_service.dart';
 import 'package:area/services/area_service.dart';
 
@@ -16,6 +17,7 @@ class ServiceFactory {
     ServiceType.GOOGLE: GoogleService.create,
     ServiceType.MICROSOFT: MicrosoftService.create,
     ServiceType.TWITTER: TwitterService.create,
+    ServiceType.TIMER: TimerService.create
   };
 
   static BasePage createServiceInstance(ServiceType serviceType, StreamController<Map<String, String>> params, bool isAction) {

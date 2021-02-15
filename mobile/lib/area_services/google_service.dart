@@ -9,8 +9,8 @@ import 'option.dart';
 
 class GoogleService extends BasePage {
   static const List<Option> ACTIONS = [
-    Option("new_video", [Input("channel", "Channel name")]),
-    Option("playlist_update", [Input("playlist", "Playlist name")])
+    Option("new_video", [Input("channel", "Channel name", null)]),
+    Option("playlist_update", [Input("playlist", "Playlist name", null)])
   ];
   static const List<Option> REACTIONS = [];
 

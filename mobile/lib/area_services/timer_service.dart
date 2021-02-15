@@ -1,26 +1,21 @@
 import 'dart:async';
 
-import 'package:area/area_services/input.dart';
-import 'package:area/area_services/option.dart';
-import 'package:area/constants.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 import 'base_page.dart';
+import 'option.dart';
 
-class MicrosoftService extends BasePage {
-  static const List<Option> ACTIONS = [Option("incoming_mail", [])];
-  static const List<Option> REACTIONS = [
-    Option("send_mail", [Input("email", "To", EMAIL_REGEX), Input("object", "Object", null), Input("body", "Body", null)])
-  ];
+class TimerService extends BasePage {
+  static const List<Option> ACTIONS = [Option("every_hour", []), Option("every_day", [])];
+  static const List<Option> REACTIONS = [];
 
   final StreamController<Map<String, String>> streamParams;
   final bool isAction;
 
-  MicrosoftService({Key key, @required this.streamParams, @required this.isAction}) : super(key: key);
+  TimerService({Key key, @required this.streamParams, @required this.isAction}) : super(key: key);
 
   static create(StreamController<Map<String, String>> streamParams, bool isAction) {
-    return MicrosoftService(
+    return TimerService(
       streamParams: streamParams,
       isAction: isAction,
     );

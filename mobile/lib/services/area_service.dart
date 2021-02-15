@@ -12,13 +12,7 @@ import 'package:http/http.dart' as http;
 
 import '../constants.dart';
 
-enum ServiceType {
-  DISCORD,
-  GITHUB,
-  GOOGLE,
-  MICROSOFT,
-  TWITTER,
-}
+enum ServiceType { DISCORD, GITHUB, GOOGLE, MICROSOFT, TWITTER, TIMER }
 
 class AreaService {
   static final AreaService _singleton = AreaService._internal();
