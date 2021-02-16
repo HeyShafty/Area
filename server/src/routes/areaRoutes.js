@@ -35,8 +35,8 @@ router.get('/', protectedRequest, async (req, res) => {
     const { user } = req;
 
     const areas = await Area.find({ userId: user._id });
-    console.log(areas);
     let areasList = [];
+
     for (const area of areas) {
         areasList.push({ actionService: area.action.service, actionName: area.action.name, reactionService: area.reaction.service, reactionName: area.reaction.name });
     }
