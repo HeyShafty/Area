@@ -198,6 +198,7 @@ router.get('/github/callback', async (req, res, next) => {
     if (!user) {
         return res.status(400).send('Invalid state');
     }
+    req.user = user;
     passport.authenticate(isMobile ? STRATEGY_GITHUB_MOBILE : STRATEGY_GITHUB_WEB, (err, success) => {
         if (err || !success) {
             return res.sendStatus(500);
@@ -267,6 +268,7 @@ router.get('/discord/callback', async (req, res, next) => {
     if (!user) {
         return res.status(400).send('Invalid state');
     }
+    req.user = user;
     passport.authenticate(isMobile ? STRATEGY_DISCORD_MOBILE : STRATEGY_DISCORD_WEB, (err, success) => {
         if (err || !success) {
             return res.sendStatus(500);
