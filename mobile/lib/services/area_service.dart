@@ -5,6 +5,7 @@ import 'package:area/exceptions/already_exists_exception.dart';
 import 'package:area/exceptions/bad_response_exception.dart';
 import 'package:area/exceptions/bad_token_exception.dart';
 import 'package:area/exceptions/wrong_email_password_combination_exception.dart';
+import 'package:area/models/Area.dart';
 import 'package:area/models/service_information.dart';
 import 'package:area/models/user.dart';
 import 'package:area/services/shared_preferences_service.dart';
@@ -142,6 +143,19 @@ class AreaService {
   Future<bool> isConnectedToService(String name) async {
     User user = await this.getUserProfile();
     return user.servicesConnectInformation.contains(name.toLowerCase());
+  }
+
+  Future<List<Area>> getAreaList() async {
+    http.Response response =
+        await http.get("http://" + this._serverIp + "/area", headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken});
+    if (response.statusCode == 401) {
+      throw BadTokenException();
+    }
+    if (response.statusCode != 200) {
+      throw BadResponseException();
+    }
+    Iterable l = json.decode(response.body);
+    return List<Area>.from(l.map((e) => Area.fromJson(e)));
   }
 
   AreaService._internal();

@@ -15,7 +15,7 @@ class MyMainPage extends StatefulWidget {
 
 class _MyMainPageState extends State<MyMainPage> {
   final AreaService areaServiceInstance = AreaService();
-  final List<Widget> _children = [MyDashboardPage(), MyProfilePage()];
+  final List<Widget> _children = [DashboardPage(), MyProfilePage()];
   int _selectedIndex = 0;
 
   @override
