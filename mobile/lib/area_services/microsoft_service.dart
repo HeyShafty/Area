@@ -11,16 +11,17 @@ import 'base_page.dart';
 class MicrosoftService extends BasePage {
   static const List<Option> ACTIONS = [Option("incoming_mail", [])];
   static const List<Option> REACTIONS = [
-    Option("send_mail", [Input("email", "To", EMAIL_REGEX), Input("object", "Object", null), Input("body", "Body", null)])
+    Option(
+        "send_mail", [Input("email", "To", EMAIL_REGEX, false), Input("object", "Object", null, false), Input("body", "Body", null, false)])
   ];
 
-  final StreamController<Map<String, String>> streamParamsController;
+  final StreamController<Map<String, dynamic>> streamParamsController;
   final bool isAction;
-  final Map<String, String> params;
+  final Map<String, dynamic> params;
 
   MicrosoftService({Key key, @required this.streamParamsController, @required this.isAction, this.params = const {}}) : super(key: key);
 
-  static create(StreamController<Map<String, String>> streamParamsController, bool isAction, [params = const {}]) {
+  static create(StreamController<Map<String, dynamic>> streamParamsController, bool isAction, [params = const {}]) {
     return MicrosoftService(streamParamsController: streamParamsController, isAction: isAction, params: params);
   }
 

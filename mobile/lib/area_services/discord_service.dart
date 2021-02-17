@@ -11,18 +11,18 @@ class DiscordService extends BasePage {
   static const List<Option> ACTIONS = [];
   static const List<Option> REACTIONS = [
     Option("post_message", [
-      Input("webhook", "Webhook", r'^.*(discord|discordapp)\.com\/api\/webhooks\/([\d]+)\/([a-zA-Z0-9_-]+)$'),
-      Input("message", "Message", null)
+      Input("webhook", "Webhook", r'^.*(discord|discordapp)\.com\/api\/webhooks\/([\d]+)\/([a-zA-Z0-9_-]+)$', false),
+      Input("message", "Message", null, false)
     ])
   ];
 
-  final StreamController<Map<String, String>> streamParamsController;
+  final StreamController<Map<String, dynamic>> streamParamsController;
   final bool isAction;
-  final Map<String, String> params;
+  final Map<String, dynamic> params;
 
   DiscordService({Key key, @required this.streamParamsController, @required this.isAction, this.params = const {}}) : super(key: key);
 
-  static create(StreamController<Map<String, String>> streamParamsController, bool isAction, [params = const {}]) {
+  static create(StreamController<Map<String, dynamic>> streamParamsController, bool isAction, [params = const {}]) {
     return DiscordService(streamParamsController: streamParamsController, isAction: isAction, params: params);
   }
 

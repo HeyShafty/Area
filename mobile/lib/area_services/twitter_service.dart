@@ -9,21 +9,21 @@ import 'input.dart';
 
 class TwitterService extends BasePage {
   static const List<Option> ACTIONS = [
-    Option("new_tweet_from", [Input("username", "Username", r'(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z]+[A-Za-z0-9-_]+)')]),
+    Option("new_tweet_from", [Input("username", "Username", r'(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z]+[A-Za-z0-9-_]+)', false)]),
     Option("new_follower", [])
   ];
   static const List<Option> REACTIONS = [
-    Option("post_tweet", [Input("value", "Tweet body", null)]),
-    Option("update_bio", [Input("value", "Your new biography", null)])
+    Option("post_tweet", [Input("tweet", "Tweet body", null, false)]),
+    Option("update_bio", [Input("description", "Your new biography", null, false)])
   ];
 
-  final StreamController<Map<String, String>> streamParamsController;
+  final StreamController<Map<String, dynamic>> streamParamsController;
   final bool isAction;
-  final Map<String, String> params;
+  final Map<String, dynamic> params;
 
   TwitterService({Key key, @required this.streamParamsController, @required this.isAction, this.params = const {}}) : super(key: key);
 
-  static create(StreamController<Map<String, String>> streamParamsController, bool isAction, [params = const {}]) {
+  static create(StreamController<Map<String, dynamic>> streamParamsController, bool isAction, [params = const {}]) {
     return TwitterService(streamParamsController: streamParamsController, isAction: isAction, params: params);
   }
 

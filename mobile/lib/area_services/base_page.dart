@@ -4,6 +4,7 @@ import 'package:area/area_services/input.dart';
 import 'package:area/area_services/option.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../constants.dart';
 
@@ -18,15 +19,16 @@ abstract class BasePage extends StatefulWidget {
 class BaseState<Page extends BasePage> extends State<Page> {
   final List<Option> actions;
   final List<Option> reactions;
-  final StreamController<Map<String, String>> streamParams;
-  final Map<String, String> _params;
+  final StreamController<Map<String, dynamic>> streamParams;
   final bool isAction;
   final Map<String, TextEditingController> textControllers = Map();
 
   Option _selectedOption;
+  Map<String, dynamic> _params;
 
-  BaseState(this.streamParams, this.isAction, this.actions, this.reactions, [this._params = const {}]) {
-    if (this._params.length == 0) {
+  BaseState(this.streamParams, this.isAction, this.actions, this.reactions, this._params) {
+    if (this._params == null || this._params.length == 0) {
+      this._params = Map();
       return;
     }
     if (this.isAction) {
@@ -73,12 +75,15 @@ class BaseState<Page extends BasePage> extends State<Page> {
                   controller: this.textControllers[input.name],
                   obscureText: false,
                   decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      errorText: this.getErrorText(input, this._params[input.name]),
-                      contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                      hintText: input.hintText,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+                    filled: true,
+                    fillColor: Colors.white,
+                    errorText: this.getErrorText(input, this._params[input.name].toString()),
+                    contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                    hintText: input.hintText,
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+                  ),
+                  keyboardType: input.isTimePicker ? TextInputType.number : TextInputType.text,
+                  inputFormatters: input.isTimePicker ? <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly] : [],
                   onChanged: (value) {
                     if (value.isEmpty) {
                       this.setState(() {
@@ -88,7 +93,7 @@ class BaseState<Page extends BasePage> extends State<Page> {
                       return;
                     } else {
                       this.setState(() {
-                        this._params[input.name] = value;
+                        this._params[input.name] = input.isTimePicker ? int.parse(value) : value;
                       });
                     }
                     if (this.getErrorText(input, value) == null) {

@@ -4,10 +4,10 @@ import 'package:area/exceptions/bad_token_exception.dart';
 import 'package:area/models/service_information.dart';
 import 'package:area/models/user.dart';
 import 'package:area/services/area_service.dart';
+import 'package:area/services/toast_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import 'constants.dart';
 
@@ -80,10 +80,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
       await this.areaServiceInstance.handleServiceRedirection(callbackUrl, service);
       await this.getUserProfile();
     } on BadTokenException {
-      this.showToast("Invalid token, please sign out.");
+      ToastService.showToast("Invalid token, please sign out.");
     } catch (e) {
       log(e.toString());
-      this.showToast("Couldn't sign you in with this service.");
+      ToastService.showToast("Couldn't sign you in with this service.");
     }
     setState(() {
       this._isLoading = false;
@@ -140,17 +140,6 @@ class _MyProfilePageState extends State<MyProfilePage> {
         ));
   }
 
-  void showToast(String message) {
-    Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
-  }
-
   Future<void> getUserProfile() async {
     try {
       final User user = await this.areaServiceInstance.getUserProfile();
@@ -158,12 +147,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
         this._user = user;
       });
     } on BadTokenException {
-      this.showToast("Invalid token, please sign out.");
+      ToastService.showToast("Invalid token, please sign out.");
     } on Exception {
-      this.showToast("Cannot get user profile information.");
+      ToastService.showToast("Cannot get user profile information.");
     } catch (e) {
       log(e);
-      this.showToast("Cannot get user profile information.");
+      ToastService.showToast("Cannot get user profile information.");
     }
   }
 }

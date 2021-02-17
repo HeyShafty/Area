@@ -6,9 +6,9 @@ import 'package:area/exceptions/wrong_email_password_combination_exception.dart'
 import 'package:area/register.dart';
 import 'package:area/services/area_service.dart';
 import 'package:area/services/shared_preferences_service.dart';
+import 'package:area/services/toast_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:msal_flutter/msal_flutter.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
@@ -145,26 +145,17 @@ class _LoginState extends State<Login> {
       await this.areaServiceInstance.signInWithAccessToken(token);
       return this.openHomePage();
     } on MsalException {
-      this.showToast("Couldn't sign you in with Microsoft.");
+      ToastService.showToast("Couldn't sign you in with Microsoft.");
     } on BadResponseException {
-      this.showToast("Couldn't sign you in with Microsoft.");
+      ToastService.showToast("Couldn't sign you in with Microsoft.");
+    } on Exception {
+      ToastService.showToast("Couldn't sign you in with Microsoft.");
     } catch (e) {
-      this.showToast(e.toString());
+      ToastService.showToast(e.toString());
     }
     this.setState(() {
       this._isLoading = false;
     });
-  }
-
-  void showToast(String message) {
-    Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
   }
 
   bool isFormValid(String email, String password) {
@@ -208,11 +199,11 @@ class _LoginState extends State<Login> {
       this._btnController.success();
       return this.openHomePage();
     } on WrongEmailPasswordCombinationException {
-      this.showToast("Bad email / password combination.");
+      ToastService.showToast("Bad email / password combination.");
     } on BadResponseException {
-      this.showToast("Couldn't sign you in.");
+      ToastService.showToast("Couldn't sign you in.");
     } catch (e) {
-      this.showToast(e.toString());
+      ToastService.showToast(e.toString());
     }
     this._btnController.reset();
     this.setState(() {
@@ -263,9 +254,9 @@ class _LoginState extends State<Login> {
                   try {
                     await this.areaServiceInstance.checkIp();
                   } on BadResponseException {
-                    return this.showToast("Bad ip address.");
+                    return ToastService.showToast("Bad ip address.");
                   } catch (e) {
-                    return this.showToast("Couldn't check server availability.");
+                    return ToastService.showToast("Couldn't check server availability.");
                   }
                   await SharedPreferencesService.saveString(IP_KEY, serverIpController.value.text);
                   Navigator.of(context).pop();

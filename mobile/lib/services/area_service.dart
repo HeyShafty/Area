@@ -5,7 +5,7 @@ import 'package:area/exceptions/already_exists_exception.dart';
 import 'package:area/exceptions/bad_response_exception.dart';
 import 'package:area/exceptions/bad_token_exception.dart';
 import 'package:area/exceptions/wrong_email_password_combination_exception.dart';
-import 'package:area/models/Area.dart';
+import 'package:area/models/area.dart';
 import 'package:area/models/service_information.dart';
 import 'package:area/models/user.dart';
 import 'package:area/services/shared_preferences_service.dart';
@@ -165,6 +165,17 @@ class AreaService {
     }
     Iterable l = json.decode(response.body);
     return List<Area>.from(l.map((e) => Area.fromJson(e)));
+  }
+
+  Future<void> addArea(final Area area) async {
+    http.Response response = await http.post("http://" + this._serverIp + "/area",
+        headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken}, body: area.toJson());
+    if (response.statusCode == 401) {
+      throw BadTokenException();
+    }
+    if (response.statusCode != 201) {
+      throw BadResponseException();
+    }
   }
 
   AreaService._internal();

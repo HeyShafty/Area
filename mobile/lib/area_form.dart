@@ -2,15 +2,16 @@ import 'dart:async';
 
 import 'package:area/models/service_information.dart';
 import 'package:area/services/area_service.dart';
+import 'package:area/services/toast_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 import 'area_services/base_page.dart';
 import 'area_services/option.dart';
 import 'constants.dart';
-import 'models/Area.dart';
+import 'exceptions/bad_token_exception.dart';
+import 'models/area.dart';
 
 class AreaFormPage extends StatefulWidget {
   final Area area;
@@ -24,16 +25,16 @@ class AreaFormPage extends StatefulWidget {
 class _AreaFormPageState extends State<AreaFormPage> {
   final AreaService _areaServiceInstance = AreaService();
   final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
-  final StreamController<Map<String, String>> _actionParamsController = StreamController<Map<String, String>>();
-  final StreamController<Map<String, String>> _reactionParamsController = StreamController<Map<String, String>>();
+  final StreamController<Map<String, dynamic>> _actionParamsController = StreamController<Map<String, dynamic>>();
+  final StreamController<Map<String, dynamic>> _reactionParamsController = StreamController<Map<String, dynamic>>();
   final bool _isUpdateForm;
 
   ServiceInformation _selectedActionServiceInfo;
   ServiceInformation _selectedReactionServiceInfo;
   BasePage _actionService;
   BasePage _reactionService;
-  Map<String, String> _actionParams = Map();
-  Map<String, String> _reactionParams = Map();
+  Map<String, dynamic> _actionParams = Map();
+  Map<String, dynamic> _reactionParams = Map();
   List<DropdownMenuItem<ServiceInformation>> _actionMenuItems;
   List<DropdownMenuItem<ServiceInformation>> _reactionMenuItems;
 
@@ -42,22 +43,22 @@ class _AreaFormPageState extends State<AreaFormPage> {
       return;
     }
     SERVICES_INFORMATION_MAP.forEach((key, value) {
-      if (area.action.service.toLowerCase() == value.name.toLowerCase()) {
-        Map<String, String> params = Map();
+      if (area.action.actionService.toLowerCase() == value.name.toLowerCase()) {
+        Map<String, dynamic> params = Map();
 
-        params[ACTION_KEY] = area.action.name;
+        params[ACTION_KEY] = area.action.actionName;
         if (area.action.data != null) {
-          params.addAll(area.action.data.cast<String, String>());
+          params.addAll(area.action.data);
         }
         this._selectedActionServiceInfo = value;
         this._actionService = value.createServiceInstance(this._actionParamsController, true, params);
       }
-      if (area.reaction.service.toLowerCase() == value.name.toLowerCase()) {
-        Map<String, String> params = Map();
+      if (area.reaction.reactionService.toLowerCase() == value.name.toLowerCase()) {
+        Map<String, dynamic> params = Map();
 
-        params[REACTION_KEY] = area.reaction.name;
+        params[REACTION_KEY] = area.reaction.reactionName;
         if (area.reaction.data != null) {
-          params.addAll(Map<String, String>.of(area.reaction.data.cast<String, String>()));
+          params.addAll(area.reaction.data);
         }
         this._selectedReactionServiceInfo = value;
         this._reactionService = value.createServiceInstance(this._reactionParamsController, false, params);
@@ -139,8 +140,8 @@ class _AreaFormPageState extends State<AreaFormPage> {
                                                       this._selectedActionServiceInfo = null;
                                                       this._actionService = null;
                                                     });
-                                                    return this
-                                                        .showToast("Please go to profile page and sign in with this service to use it.");
+                                                    return ToastService.showToast(
+                                                        "Please go to profile page and sign in with this service to use it.");
                                                   }
                                                   this._actionParams.clear();
                                                   this.setState(() {
@@ -178,8 +179,8 @@ class _AreaFormPageState extends State<AreaFormPage> {
                                                       this._selectedReactionServiceInfo = null;
                                                       this._reactionService = null;
                                                     });
-                                                    return this
-                                                        .showToast("Please go to profile page and sign in with this service to use it.");
+                                                    return ToastService.showToast(
+                                                        "Please go to profile page and sign in with this service to use it.");
                                                   }
                                                   this._reactionParams.clear();
                                                   this.setState(() {
@@ -218,18 +219,19 @@ class _AreaFormPageState extends State<AreaFormPage> {
     return true;
   }
 
-  onButtonPressed() {
-    return this.showToast("Everything is alright!");
-  }
+  onButtonPressed() async {
+    Area area = Area(AreaAction(this._selectedActionServiceInfo.name.toLowerCase(), this._actionParams[ACTION_KEY], this._actionParams),
+        AreaReaction(this._selectedReactionServiceInfo.name.toLowerCase(), this._reactionParams[REACTION_KEY], this._reactionParams));
 
-  void showToast(String message) {
-    Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
+    try {
+      await this._areaServiceInstance.addArea(area);
+      return ToastService.showToast("Area added successfully!", Colors.green);
+    } on BadTokenException {
+      ToastService.showToast("Invalid token, please sign out.");
+    } on Exception {
+      ToastService.showToast("Couldn't add a new AREA.");
+    } catch (e) {
+      ToastService.showToast("Couldn't add a new AREA.");
+    }
   }
 }

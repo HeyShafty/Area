@@ -21,8 +21,8 @@ class ServiceFactory {
   };
 
   static BasePage createServiceInstance(
-      ServiceType serviceType, StreamController<Map<String, String>> streamParamsController, bool isAction,
-      [Map<String, String> params = const {}]) {
+      ServiceType serviceType, StreamController<Map<String, dynamic>> streamParamsController, bool isAction,
+      [Map<String, dynamic> params = const {}]) {
     return SERVICE_FACTORY_MAP[serviceType](streamParamsController, isAction, params);
   }
 }

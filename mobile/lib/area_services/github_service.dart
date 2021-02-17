@@ -9,22 +9,22 @@ import 'option.dart';
 
 class GithubService extends BasePage {
   static const List<Option> ACTIONS = [
-    Option("new_issue", [Input("repo", "Repository", null)]),
-    Option("new_repository", []),
-    Option("new_pull_request", [Input("repo", "Repository", null)]),
-    Option("issue_closes", [Input("repo", "Repository", null)])
+    Option("new_issue", [Input("owner", "EliottPal", null, false), Input("repo", "Dashboard_2020", null, false)]),
+    Option("new_repository", [Input("owner", "EliottPal", null, false)]),
+    Option("new_pull_request", [Input("owner", "EliottPal", null, false), Input("repo", "Dashboard_2020", null, false)]),
+    Option("issue_closes", [Input("owner", "EliottPal", null, false), Input("repo", "Dashboard_2020", null, false)])
   ];
   static const List<Option> REACTIONS = [
-    Option("open_issue", [Input("title", "Title", null), Input("description", "Description", null)])
+    Option("open_issue", [Input("title", "Title", null, false), Input("description", "Description", null, false)])
   ];
 
-  final StreamController<Map<String, String>> streamParamsController;
+  final StreamController<Map<String, dynamic>> streamParamsController;
   final bool isAction;
-  final Map<String, String> params;
+  final Map<String, dynamic> params;
 
   GithubService({Key key, @required this.streamParamsController, @required this.isAction, this.params = const {}}) : super(key: key);
 
-  static create(StreamController<Map<String, String>> streamParamsController, bool isAction, [params = const {}]) {
+  static create(StreamController<Map<String, dynamic>> streamParamsController, bool isAction, [params = const {}]) {
     return GithubService(streamParamsController: streamParamsController, isAction: isAction, params: params);
   }
 
