@@ -78,7 +78,7 @@ function startServer() {
 
     setInterval(() => {
         checkupTriggers();
-    }, 3000);
+    }, 5000);
 }
 
 function connectToDb() {
