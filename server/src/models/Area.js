@@ -11,7 +11,7 @@ const ActionSchema = new mongoose.Schema({
     },
     data: {
         type: Object,
-        default: {},
+        required: true
     }
 });
 
