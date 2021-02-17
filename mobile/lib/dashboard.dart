@@ -1,10 +1,7 @@
-import 'dart:developer';
-
 import 'package:area/area_form.dart';
 import 'package:area/models/Area.dart';
 import 'package:area/models/service_information.dart';
 import 'package:area/services/area_service.dart';
-import 'package:area/update_area_form.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -74,7 +71,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                                     icon: Icon(Icons.edit, color: Colors.black),
                                                     onPressed: () {
                                                       Navigator.push(
-                                                          context, MaterialPageRoute(builder: (context) => UpdateAreaForm(item)));
+                                                          context, MaterialPageRoute(builder: (context) => AreaFormPage(area: item)));
                                                     }),
                                                 IconButton(icon: Icon(Icons.delete_outline, color: Colors.red), onPressed: () {})
                                               ]))));
@@ -92,7 +89,6 @@ class _DashboardPageState extends State<DashboardPage> {
     });
     this.setState(() {
       this._isLoading = false;
-      log(Map<String, String>.from({"repo": "repo"}).toString());
       this._areaList = [
         Area(AreaAction('github', 'new_issue', Map<String, dynamic>.from({"repo": "repo"})), AreaReaction('github', 'open_issue', Map())),
         Area(AreaAction('github', 'new_issue', Map<String, dynamic>.from({"repo": "repo"})), AreaReaction('github', 'open_issue', Map())),
