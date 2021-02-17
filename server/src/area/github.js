@@ -1,11 +1,10 @@
-const axios = require('axios');
 const { graphql } = require("@octokit/graphql");
 
 const Area = require('../models/Area');
 const User = require('../models/User');
 const { MONGOOSE_GITHUB_KEY } = require('../config/githubConfig');
 
-const graphqlRepositoryCount = (owner, name) => `{
+const graphqlRepositoryCount = (owner, _) => `{
     user(login:"${owner}") {
         repositories {
             totalCount
@@ -54,10 +53,10 @@ async function execQuery(area, user, graphQuery, react) {
         });
 
         /* data be like
-            { repository: { issues: { totalCount: number } } }
-            { repository: { issues: { totalCount: number } } }
-            { repository: { pullRequests: { totalCount: number } } }
-            { user: { repositories: { totalCount: number } } }
+            { repository: { issues:       { totalCount: number } } } new_issue
+            { repository: { issues:       { totalCount: number } } } issue_closes
+            { repository: { pullRequests: { totalCount: number } } } new_pull_request
+            { user:       { repositories: { totalCount: number } } } new_repository
             du coup je fais un trick pour ne pas à faire des ifs or something
         */
         for (const obj in graphResult) {
@@ -96,14 +95,11 @@ async function githubTriggers(area, react) {
     console.log(area.action.name);
     if (area.action.name === 'new_repository') {
         await execQuery(area, user, graphqlRepositoryCount, react);
-    }
-    if (area.action.name === 'new_issue') {
+    } else if (area.action.name === 'new_issue') {
         await execQuery(area, user, graphqlOpenedIssues, react);
-    }
-    if (area.action.name === 'issue_closes') {
+    } else if (area.action.name === 'issue_closes') {
         await execQuery(area, user, graphqlClosedIssues, react);
-    }
-    if (area.action.name === 'new_pull_request') {
+    } else if (area.action.name === 'new_pull_request') {
         await execQuery(area, user, graphqlPullRequests, react);
     }
 }
