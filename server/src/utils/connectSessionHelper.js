@@ -1,13 +1,14 @@
 const ConnectSession = require('../models/ConnectSession');
 const User = require('../models/User');
 
-async function createConnectSession(userId, endpoint) {
+async function createConnectSession(userId, endpoint, isMobile) {
     let sessionId = '';
 
     try {
         const createdSession = await ConnectSession.create({
             userId,
-            endpoint
+            endpoint,
+            isMobile
         });
 
         sessionId = createdSession._id;
@@ -19,12 +20,27 @@ async function createConnectSession(userId, endpoint) {
     return sessionId;
 }
 
-async function getUserFromSessionId(id, endpoint) {
+async function addDataToConnectSession(id, data) {
+    try {
+        await ConnectSession.findByIdAndUpdate(id, { data });
+
+        return true;
+    } catch (err) {
+        console.log(err);
+    }
+    return false;
+}
+
+async function extractConnectSession(id, endpoint) {
     try {
         const connectSession = await ConnectSession.findByIdAndDelete(id);
 
         if (connectSession?.endpoint === endpoint) {
-            return User.findById(connectSession?.userId);
+            return {
+                user: await User.findById(connectSession?.userId),
+                isMobile: connectSession?.isMobile,
+                data: connectSession?.data
+            };
         }
     } catch (err) {
         console.log('Could not verify ConnectSession for some reason...');
@@ -35,5 +51,6 @@ async function getUserFromSessionId(id, endpoint) {
 
 module.exports = {
     createConnectSession,
-    getUserFromSessionId
+    extractConnectSession,
+    addDataToConnectSession
 };

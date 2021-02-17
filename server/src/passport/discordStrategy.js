@@ -1,30 +1,28 @@
 const passport = require('passport');
 const DiscordStrategy = require('passport-discord').Strategy;
 const User = require('../models/User');
-const { DISCORD_PASSPORT_CONFIG, MONGOOSE_DISCORD_KEY } = require('../config/discordConfig');
-const { getUserFromSessionId } = require('../utils/connectSessionHelper');
 
-const STRATEGY_DISCORD = 'discord';
+const { DISCORD_PASSPORT_CONFIG_WEB, DISCORD_PASSPORT_CONFIG_MOBILE, MONGOOSE_DISCORD_KEY } = require('../config/discordConfig');
 
-passport.use(new DiscordStrategy(DISCORD_PASSPORT_CONFIG,
-    async function (req, accessToken, refreshToken, profile, done) {
-        const user = await getUserFromSessionId(req.query.state || '', 'discord');
+const STRATEGY_DISCORD_WEB = 'discord-web';
+const STRATEGY_DISCORD_MOBILE = 'discord-mobile';
 
-        if (!user) {
-            return done(null, false);
-        }
+async function discordStrategy(req, accessToken, refreshToken, profile, done) {
+    try {
+        const user = req.user;
 
-        try {
-            user.connectData.set(MONGOOSE_DISCORD_KEY, { accessToken: accessToken });
-            await User.findByIdAndUpdate(user._id, user);
-
-            return done(null, user);
-        } catch (e) {
-            return done(null, false);
-        }
+        user.connectData.set(MONGOOSE_DISCORD_KEY, { accessToken, refreshToken });
+        await User.findByIdAndUpdate(user._id, user);
+        return done(null, true);
+    } catch (e) {
+        return done(null, false);
     }
-));
+}
+
+passport.use(STRATEGY_DISCORD_WEB, new DiscordStrategy(DISCORD_PASSPORT_CONFIG_WEB, discordStrategy));
+passport.use(STRATEGY_DISCORD_MOBILE, new DiscordStrategy(DISCORD_PASSPORT_CONFIG_MOBILE, discordStrategy));
 
 module.exports = {
-    STRATEGY_DISCORD
+    STRATEGY_DISCORD_WEB,
+    STRATEGY_DISCORD_MOBILE
 }

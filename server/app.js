@@ -8,14 +8,18 @@ const morgan = require('morgan');
 const moment = require('moment');
 const msal = require('@azure/msal-node');
 
+const areaRouter = require('./src/routes/areaRoutes');
 const authRouter = require('./src/routes/authRoutes');
 const connectRouter = require('./src/routes/connectRoutes');
 const microsoftRouter = require('./src/routes/microsoftRoutes');
 const profileRouter = require('./src/routes/profileRoutes');
+const twitterRouter = require('./src/routes/twitterRoutes');
 
 const { ALLOWED_ORIGINS } = require('./src/config/config');
 const { MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PASSWORD } = require('./src/config/mongoConfig');
 const { MSAL_CONFIG } = require('./src/config/msalConfig');
+const AREA_SERVICES = require('./src/services');
+const checkupTriggers = require('./src/area');
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
@@ -53,22 +57,28 @@ function startServer() {
     }));
     app.use(passport.initialize({}));
 
+    app.use('/area', areaRouter);
     app.use('/auth', authRouter);
     app.use('/connect', connectRouter);
     app.use('/microsoft', microsoftRouter);
     app.use('/profile', profileRouter);
+    app.use('/twitter', twitterRouter);
 
     app.get('/', (req, res) => {
         res.send('Hello World!');
     });
     app.get('/about.json', (req, res) => {
-        res.json({ client: { host: req.ip }, server: { current_time: moment().unix() } });
+        res.json({ client: { host: req.ip }, server: { current_time: moment().unix(), services: AREA_SERVICES } });
     });
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
     app.listen(port, () => {
         console.log(`Example app listening at http://localhost:${port}`);
     });
+
+    setInterval(() => {
+        checkupTriggers();
+    }, 5000);
 }
 
 function connectToDb() {

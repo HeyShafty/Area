@@ -1,30 +1,28 @@
 const passport = require('passport');
 const GithubStrategy = require('passport-github2').Strategy;
 const User = require('../models/User');
-const { GITHUB_PASSPORT_CONFIG, MONGOOSE_GITHUB_KEY } = require('../config/githubConfig');
-const { getUserFromSessionId } = require('../utils/connectSessionHelper');
 
-const STRATEGY_GITHUB = 'github';
+const { GITHUB_PASSPORT_CONFIG_WEB, GITHUB_PASSPORT_CONFIG_MOBILE, MONGOOSE_GITHUB_KEY } = require('../config/githubConfig');
 
-passport.use(new GithubStrategy(GITHUB_PASSPORT_CONFIG,
-    async function (req, accessToken, refreshToken, profile, done) {
-        const user = await getUserFromSessionId(req.query.state || '', 'github');
+const STRATEGY_GITHUB_WEB = 'github-web';
+const STRATEGY_GITHUB_MOBILE = 'github-mobile';
 
-        if (!user) {
-            return done(null, false);
-        }
+async function githubStrategy(req, accessToken, refreshToken, profile, done) {
+    try {
+        const user = req.user;
 
-        try {
-            user.connectData.set(MONGOOSE_GITHUB_KEY, { refreshToken: refreshToken, accessToken: accessToken });
-            await User.findByIdAndUpdate(user._id, user);
-
-            return done(null, user);
-        } catch (e) {
-            return done(null, false);
-        }
+        user.connectData.set(MONGOOSE_GITHUB_KEY, { accessToken, refreshToken });
+        await User.findByIdAndUpdate(user._id, user);
+        return done(null, true);
+    } catch (e) {
+        return done(null, false);
     }
-));
+}
+
+passport.use(STRATEGY_GITHUB_WEB, new GithubStrategy(GITHUB_PASSPORT_CONFIG_WEB, githubStrategy));
+passport.use(STRATEGY_GITHUB_MOBILE, new GithubStrategy(GITHUB_PASSPORT_CONFIG_MOBILE, githubStrategy));
 
 module.exports = {
-    STRATEGY_GITHUB
+    STRATEGY_GITHUB_WEB,
+    STRATEGY_GITHUB_MOBILE
 }

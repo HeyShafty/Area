@@ -21,8 +21,7 @@ const ServiceSchema = new Schema({
 const UserSchema = new Schema({
     email: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     password: {
         type: String,
@@ -45,7 +44,6 @@ const UserSchema = new Schema({
 });
 
 UserSchema.pre('save', async function (next) {
-    console.log(this.password);
     this.password = await bcrypt.hash(this.password, 10);
     next();
 });

@@ -15,7 +15,7 @@ passport.use(STRATEGY_JWT, new JWTStrategy(
     },
     async (token, done) => {
         try {
-            let user = await User.findOne({ email: token.user.email });
+            let user = await User.findOne({ email: token.user.email, isMicrosoftAuthed: token.user.office });
 
             if (!user) {
                 return done(null);
@@ -24,8 +24,9 @@ passport.use(STRATEGY_JWT, new JWTStrategy(
         } catch (error) {
             return done(error);
         }
-    }))
+    })
+);
 
 module.exports = {
     STRATEGY_JWT
-}
+};
