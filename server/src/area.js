@@ -1,10 +1,25 @@
 const Area = require('./models/Area');
+const User = require('./models/User');
 const timerTriggers = require('./area/timer');
 const githubTriggers = require('./area/github');
 
-function doReaction(area) {
+const serviceGithub = require('./services/githubService');
+
+async function doReaction(area) {
+    const user = await User.findById(area.userId);
     console.log('doReaction');
     console.log(area.reaction);
+
+    if (area.reaction.service === "github") {
+        if (area.reaction.name === "open_issue") {
+            const data = serviceGithub.getUserData(user);
+            try {
+                const newIssue = await serviceGithub.postNewIssue(area.reaction.data.repo, area.reaction.data.infos, data.accessToken);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
 }
 
 async function checkupTriggers() {
