@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:area/models/service_information.dart';
+import 'package:area/models/Area.dart';
 import 'package:area/services/area_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,13 +10,18 @@ import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'area_services/base_page.dart';
 import 'area_services/option.dart';
 import 'constants.dart';
+import 'models/service_information.dart';
 
-class AreaFormPage extends StatefulWidget {
+class UpdateAreaForm extends StatefulWidget {
+  final Area _area;
+
+  UpdateAreaForm(this._area);
+
   @override
-  _AreaFormPageState createState() => _AreaFormPageState();
+  _UpdateAreaFormState createState() => _UpdateAreaFormState(this._area);
 }
 
-class _AreaFormPageState extends State<AreaFormPage> {
+class _UpdateAreaFormState extends State<UpdateAreaForm> {
   final AreaService _areaServiceInstance = AreaService();
   final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
   final StreamController<Map<String, String>> _actionParamsController = StreamController<Map<String, String>>();
@@ -30,6 +35,31 @@ class _AreaFormPageState extends State<AreaFormPage> {
   Map<String, String> _reactionParams = Map();
   List<DropdownMenuItem<ServiceInformation>> _actionMenuItems;
   List<DropdownMenuItem<ServiceInformation>> _reactionMenuItems;
+
+  _UpdateAreaFormState(Area area) {
+    SERVICES_INFORMATION_MAP.forEach((key, value) {
+      if (area.action.service.toLowerCase() == value.name.toLowerCase()) {
+        Map<String, String> params = Map();
+
+        params[ACTION_KEY] = area.action.name;
+        if (area.action.data != null) {
+          params.addAll(area.action.data.cast<String, String>());
+        }
+        this._selectedActionServiceInfo = value;
+        this._actionService = value.createServiceInstance(this._actionParamsController, true, params);
+      }
+      if (area.reaction.service.toLowerCase() == value.name.toLowerCase()) {
+        Map<String, String> params = Map();
+
+        params[REACTION_KEY] = area.reaction.name;
+        if (area.reaction.data != null) {
+          params.addAll(Map<String, String>.of(area.reaction.data.cast<String, String>()));
+        }
+        this._selectedReactionServiceInfo = value;
+        this._reactionService = value.createServiceInstance(this._reactionParamsController, false, params);
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -71,7 +101,7 @@ class _AreaFormPageState extends State<AreaFormPage> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('Add Area'),
+          title: Text('Update Area'),
         ),
         body: Center(
             child: SingleChildScrollView(
@@ -168,7 +198,7 @@ class _AreaFormPageState extends State<AreaFormPage> {
   bool isButtonActivated() {
     if (this._actionService == null || this._reactionService == null) return false;
 
-    Option chooseActionOption = this._actionService.getActionOption(this._actionParams[ACTION_KEY]);
+    var chooseActionOption = this._actionService.getActionOption(this._actionParams[ACTION_KEY]);
     Option chooseReactionOption = this._reactionService.getReactionOption(this._reactionParams[REACTION_KEY]);
     if (chooseActionOption == null) {
       return false;

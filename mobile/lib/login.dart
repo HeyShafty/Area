@@ -270,7 +270,12 @@ class _LoginState extends State<Login> {
                   await SharedPreferencesService.saveString(IP_KEY, serverIpController.value.text);
                   Navigator.of(context).pop();
                   if (await this.areaServiceInstance.getStoredAccessToken() == true) {
-                    this.openHomePage();
+                    try {
+                      await this.areaServiceInstance.isTokenValid();
+                      this.openHomePage();
+                    } catch (e) {
+                      return;
+                    }
                   }
                 },
                 child: Text('OK')),

@@ -18,7 +18,8 @@ class ServiceInformation {
   const ServiceInformation(this.serviceType, this.name, this.uri, this.callbackUrlScheme, this.fullCallbackUrl, this.serverRedirectUri,
       this.iconPath, this.hasActions, this.hasReactions);
 
-  BasePage createServiceInstance(StreamController<Map<String, String>> params, bool isAction) {
-    return ServiceFactory.createServiceInstance(serviceType, params, isAction);
+  BasePage createServiceInstance(StreamController<Map<String, String>> streamParamsController, bool isAction,
+      [Map<String, String> params = const {}]) {
+    return ServiceFactory.createServiceInstance(serviceType, streamParamsController, isAction, params);
   }
 }

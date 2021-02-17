@@ -20,7 +20,9 @@ class ServiceFactory {
     ServiceType.TIMER: TimerService.create
   };
 
-  static BasePage createServiceInstance(ServiceType serviceType, StreamController<Map<String, String>> params, bool isAction) {
-    return SERVICE_FACTORY_MAP[serviceType](params, isAction);
+  static BasePage createServiceInstance(
+      ServiceType serviceType, StreamController<Map<String, String>> streamParamsController, bool isAction,
+      [Map<String, String> params = const {}]) {
+    return SERVICE_FACTORY_MAP[serviceType](streamParamsController, isAction, params);
   }
 }

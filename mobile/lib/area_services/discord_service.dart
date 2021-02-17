@@ -16,20 +16,18 @@ class DiscordService extends BasePage {
     ])
   ];
 
-  final StreamController<Map<String, String>> params;
-  final bool actionMode;
+  final StreamController<Map<String, String>> streamParamsController;
+  final bool isAction;
+  final Map<String, String> params;
 
-  DiscordService({Key key, @required this.params, @required this.actionMode}) : super(key: key);
+  DiscordService({Key key, @required this.streamParamsController, @required this.isAction, this.params = const {}}) : super(key: key);
 
-  static create(StreamController<Map<String, String>> params, bool isAction) {
-    return DiscordService(
-      params: params,
-      actionMode: isAction,
-    );
+  static create(StreamController<Map<String, String>> streamParamsController, bool isAction, [params = const {}]) {
+    return DiscordService(streamParamsController: streamParamsController, isAction: isAction, params: params);
   }
 
   @override
-  BaseState createState() => BaseState(params, actionMode, ACTIONS, REACTIONS);
+  BaseState createState() => BaseState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
 
   @override
   Option getActionOption(String actionValue) {

@@ -19,11 +19,34 @@ class BaseState<Page extends BasePage> extends State<Page> {
   final List<Option> actions;
   final List<Option> reactions;
   final StreamController<Map<String, String>> streamParams;
-  final Map<String, String> _params = Map();
+  final Map<String, String> _params;
   final bool isAction;
+  final Map<String, TextEditingController> textControllers = Map();
+
   Option _selectedOption;
 
-  BaseState(this.streamParams, this.isAction, this.actions, this.reactions);
+  BaseState(this.streamParams, this.isAction, this.actions, this.reactions, [this._params = const {}]) {
+    if (this._params.length == 0) {
+      return;
+    }
+    if (this.isAction) {
+      this.actions.forEach((element) {
+        if (this._params[ACTION_KEY] == element.name) {
+          this._selectedOption = element;
+        }
+      });
+    } else {
+      this.reactions.forEach((element) {
+        if (this._params[REACTION_KEY] == element.name) {
+          this._selectedOption = element;
+        }
+      });
+    }
+    this._selectedOption.inputs.forEach((element) {
+      this.textControllers[element.name] = TextEditingController();
+      this.textControllers[element.name].text = this._params[element.name];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +70,7 @@ class BaseState<Page extends BasePage> extends State<Page> {
           child: Container(
               width: double.infinity,
               child: TextField(
+                  controller: this.textControllers[input.name],
                   obscureText: false,
                   decoration: InputDecoration(
                       filled: true,
@@ -104,6 +128,10 @@ class BaseState<Page extends BasePage> extends State<Page> {
                       }
                       this.setState(() {
                         this._selectedOption = value;
+                        this.textControllers.clear();
+                        this._selectedOption.inputs.forEach((element) {
+                          this.textControllers[element.name] = TextEditingController();
+                        });
                       });
                       this.streamParams.add(this._params);
                     }))));

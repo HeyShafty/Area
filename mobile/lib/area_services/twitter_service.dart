@@ -17,20 +17,18 @@ class TwitterService extends BasePage {
     Option("update_bio", [Input("value", "Your new biography", null)])
   ];
 
-  final StreamController<Map<String, String>> streamParams;
+  final StreamController<Map<String, String>> streamParamsController;
   final bool isAction;
+  final Map<String, String> params;
 
-  TwitterService({Key key, @required this.streamParams, @required this.isAction}) : super(key: key);
+  TwitterService({Key key, @required this.streamParamsController, @required this.isAction, this.params = const {}}) : super(key: key);
 
-  static create(StreamController<Map<String, String>> streamParams, bool isAction) {
-    return TwitterService(
-      streamParams: streamParams,
-      isAction: isAction,
-    );
+  static create(StreamController<Map<String, String>> streamParamsController, bool isAction, [params = const {}]) {
+    return TwitterService(streamParamsController: streamParamsController, isAction: isAction, params: params);
   }
 
   @override
-  BaseState createState() => BaseState(streamParams, isAction, ACTIONS, REACTIONS);
+  BaseState createState() => BaseState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
 
   @override
   Option getActionOption(String actionValue) {
