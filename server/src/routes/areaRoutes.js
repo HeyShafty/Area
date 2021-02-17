@@ -29,12 +29,16 @@ router.post('/', protectedRequest, async(req, res) => {
         return res.status(400).send('Reaction does not exist');
     }
 
-    const newArea = await Area.create({
-        userId: user._id,
-        action: req.body.action,
-        reaction: req.body.reaction
-    });
-    console.log(newArea);
+    try {
+        const newArea = await Area.create({
+            userId: user._id,
+            action: req.body.action,
+            reaction: req.body.reaction
+        });
+    } catch(err) {
+        console.log(err);
+        return res.status(400).send('Area creation failed');
+    }
     return res.sendStatus(200);
 })
 
