@@ -4,39 +4,24 @@ const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 
 const ServiceSchema = new Schema({
-    access_token: {
+    accessToken: {
         type: String,
         default: ''
     },
-    refresh_token: {
+    refreshToken: {
         type: String,
         default: ''
+    },
+    data: {
+        type: Object,
+        default: {}
     }
 });
-
-const MicrosoftConnectSchema = new Schema({
-    isConnected: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
-    homeAccountId: {
-        type: String,
-        default: ''
-    },
-    timeZone: {
-        type: String,
-        default: ''
-    }
-});
-
-const MicrosoftConnect = mongoose.model('microsoftConnect', MicrosoftConnectSchema);
 
 const UserSchema = new Schema({
     email: {
         type: String,
-        required: true,
-        unique: false
+        required: true
     },
     password: {
         type: String,
@@ -51,10 +36,6 @@ const UserSchema = new Schema({
         required: true,
         default: false
     },
-    microsoftConnectData: {
-        type: MicrosoftConnectSchema,
-        default: MicrosoftConnect.create()
-    },
     connectData: {
         type: Map,
         of: ServiceSchema,
@@ -63,7 +44,6 @@ const UserSchema = new Schema({
 });
 
 UserSchema.pre('save', async function (next) {
-    console.log(this.password);
     this.password = await bcrypt.hash(this.password, 10);
     next();
 });

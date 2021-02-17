@@ -1,6 +1,7 @@
 const passport = require('passport');
 const passportJWT = require('passport-jwt');
 const JWTStrategy = passportJWT.Strategy;
+const ExtractJWT = require('passport-jwt').ExtractJwt;
 const User = require('../models/User');
 
 const { JWT_SECRET_KEY } = require('../config/jwtConfig');
@@ -9,22 +10,23 @@ const STRATEGY_JWT = 'jwt';
 
 passport.use(STRATEGY_JWT, new JWTStrategy(
     {
-        jwtFromRequest: req => req.headers.authorization,
+        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
         secretOrKey: JWT_SECRET_KEY
     },
     async (token, done) => {
         try {
-            let user = await User.findOne({ email: token.user.email });
+            let user = await User.findOne({ email: token.user.email, isMicrosoftAuthed: token.user.office });
 
             if (!user) {
                 return done(null);
             }
             return done(null, user);
-        } catch(error) {
-            done(error);
+        } catch (error) {
+            return done(error);
         }
-    }))
+    })
+);
 
 module.exports = {
     STRATEGY_JWT
-}
+};
