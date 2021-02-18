@@ -39,7 +39,7 @@ router.post('/', protectedRequest, async(req, res) => {
         console.log(err);
         return res.status(400).send('Area creation failed');
     }
-    return res.sendStatus(200);
+    return res.sendStatus(201);
 })
 
 router.get('/', protectedRequest, async (req, res) => {
@@ -49,7 +49,7 @@ router.get('/', protectedRequest, async (req, res) => {
     let areasList = [];
 
     for (const area of areas) {
-        areasList.push({ action: area.action, reaction: area.reaction });
+        areasList.push({ id: area.id, action: area.action, reaction: area.reaction });
     }
     return res.send(areasList);
 })
