@@ -1,18 +1,13 @@
 const express = require('express');
 const passport = require('passport');
-const axios = require('axios');
-const uuid = require('uuid');
 const User = require('../models/User');
 const OAuth = require('oauth').OAuth;
-const oauth1a = require('oauth-1.0a');
-const crypto = require('crypto');
 const { createConnectSession, extractConnectSession, addDataToConnectSession } = require('../utils/connectSessionHelper');
 
 const protectedRequest = require('../passport/protectedRequest');
 const { STRATEGY_GOOGLE_WEB, STRATEGY_GOOGLE_MOBILE } = require('../passport/googleStrategy');
 const { STRATEGY_GITHUB_WEB, STRATEGY_GITHUB_MOBILE } = require('../passport/githubStrategy');
 const { STRATEGY_DISCORD_MOBILE, STRATEGY_DISCORD_WEB } = require('../passport/discordStrategy');
-const { STRATEGY_TWITTER_WEB } = require('../passport/twitterStrategy');
 
 const { CLIENT_WEB_URI } = require('../config/config');
 const { MSAL_SCOPES, MSAL_REDIRECT_URI_WEB, MSAL_REDIRECT_URI_MOBILE, MONGOOSE_MSAL_KEY } = require('../config/msalConfig');

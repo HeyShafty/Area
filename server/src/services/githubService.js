@@ -12,8 +12,8 @@ function getUserData(user) {
     return connectData;
 }
 
-async function postNewIssue(repo, data, accessToken) {
-    const request = await axios.post(`https://api.github.com/repos/${repo.owner}/${repo.name}/issues`,
+async function postNewIssue(data, accessToken) {
+    const request = await axios.post(`https://api.github.com/repos/${data.owner}/${data.repo}/issues`,
         {
                 title: data.title,
                 body: data.body

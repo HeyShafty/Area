@@ -14,7 +14,7 @@ async function doReaction(area) {
         if (area.reaction.name === "open_issue") {
             const data = serviceGithub.getUserData(user);
             try {
-                const newIssue = await serviceGithub.postNewIssue(area.reaction.data.repo, area.reaction.data.infos, data.accessToken);
+                const newIssue = await serviceGithub.postNewIssue(area.reaction.data, data.accessToken);
             } catch (err) {
                 console.log(err);
             }
