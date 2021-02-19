@@ -54,4 +54,51 @@ router.get('/', protectedRequest, async (req, res) => {
     return res.send(areasList);
 })
 
+// const axios = require('axios');
+// const { MONGOOSE_GITHUB_KEY } = require('../config/githubConfig');
+
+// const result = await axios.get('https://api.github.com/repos/HeyShafty/Corewar/hooks', {
+//     headers: {
+//         'Accept': 'application/vnd.github.v3+json',
+//         'Authorization': `Bearer ${accessToken}`
+//     }
+// });
+
+// router.get('/testGithub', protectedRequest, async (req, res) => {
+//     const connectData = req.user.connectData.get(MONGOOSE_GITHUB_KEY);
+//     let ip = '';
+//
+//     if (!connectData) {
+//         return res.sendStatus(500);
+//     }
+//     try {
+//         const ipRes = await axios.get('http://ipv4bot.whatismyipaddress.com/');
+//
+//         ip = ipRes.data;
+//     } catch (e) {
+//         console.log(e);
+//         return res.sendStatus(500);
+//     }
+//     const result = await axios.post('https://api.github.com/repos/EpitechIT2020/B-YEP-500-REN-5-1-area-eliott.palueau/hooks', {
+//         config: {
+//             url: `http://${ip}:8080/area/calais`,
+//             insecure_ssl: 1
+//         },
+//         events: [ 'repository', 'issues' ]
+//     }, {
+//         headers: {
+//             'Accept': 'application/vnd.github.v3+json',
+//             'Authorization': `Bearer ${connectData.accessToken}`
+//         }
+//     });
+//     console.log(result.status);
+//     console.log(result.data);
+//     return res.sendStatus(200);
+// });
+//
+// router.post('/calais', async (req, res) => {
+//     console.log(req.body);
+//     res.sendStatus(200);
+// });
+
 module.exports = router;
