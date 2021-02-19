@@ -168,14 +168,44 @@ class AreaService {
   }
 
   Future<void> addArea(final Area area) async {
+    String body = jsonEncode(area.toJson());
     http.Response response = await http.post("http://" + this._serverIp + "/area",
-        headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken}, body: area.toJson());
+        headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken, 'Content-Type': 'application/json; charset=UTF-8'},
+        body: body);
     if (response.statusCode == 401) {
       throw BadTokenException();
     }
     if (response.statusCode != 201) {
       throw BadResponseException();
     }
+  }
+
+  Future<void> updateArea(final Area area) async {
+    String body = jsonEncode(area.toJson());
+    http.Response response = await http.put("http://" + this._serverIp + "/area/" + area.id,
+        headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken, 'Content-Type': 'application/json; charset=UTF-8'},
+        body: body);
+    if (response.statusCode == 401) {
+      throw BadTokenException();
+    }
+    if (response.statusCode != 201) {
+      throw BadResponseException();
+    }
+  }
+
+  Future<void> deleteArea(final Area area) async {
+    http.Response response = await http
+        .delete("http://" + this._serverIp + "/area/" + area.id, headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken});
+    if (response.statusCode == 401) {
+      throw BadTokenException();
+    }
+    if (response.statusCode != 200) {
+      throw BadResponseException();
+    }
+  }
+
+  Future<void> updateUserEmail() {
+    throw UnimplementedError();
   }
 
   AreaService._internal();

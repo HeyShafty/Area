@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'base_page.dart';
+import 'area_service_base.dart';
 import 'input.dart';
 import 'option.dart';
 
-class GoogleService extends BasePage {
+class GoogleService extends AreaServiceBase {
   static const List<Option> ACTIONS = [
-    Option("new_video", [Input("channel", "Channel name", null, false)]),
+    Option("new_video", [Input("url", "Channel url", r'^(https?:\/\/)?(www\.)?youtube\.com\/(channel|user)\/[\w-]+$', false)]),
     Option("playlist_update", [Input("playlist", "Playlist name", null, false)])
   ];
   static const List<Option> REACTIONS = [];
@@ -25,7 +25,7 @@ class GoogleService extends BasePage {
   }
 
   @override
-  BaseState createState() => BaseState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
+  AreaServiceBaseState createState() => AreaServiceBaseState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
 
   @override
   Option getActionOption(String actionValue) {

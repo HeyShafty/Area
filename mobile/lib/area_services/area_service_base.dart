@@ -8,15 +8,15 @@ import 'package:flutter/services.dart';
 
 import '../constants.dart';
 
-abstract class BasePage extends StatefulWidget {
-  BasePage({Key key}) : super(key: key);
+abstract class AreaServiceBase extends StatefulWidget {
+  AreaServiceBase({Key key}) : super(key: key);
 
   Option getActionOption(String actionValue);
 
   Option getReactionOption(String reactionValue);
 }
 
-class BaseState<Page extends BasePage> extends State<Page> {
+class AreaServiceBaseState<Page extends AreaServiceBase> extends State<Page> {
   final List<Option> actions;
   final List<Option> reactions;
   final StreamController<Map<String, dynamic>> streamParams;
@@ -24,29 +24,39 @@ class BaseState<Page extends BasePage> extends State<Page> {
   final Map<String, TextEditingController> textControllers = Map();
 
   Option _selectedOption;
-  Map<String, dynamic> _params;
+  Map<String, dynamic> _params = Map();
 
-  BaseState(this.streamParams, this.isAction, this.actions, this.reactions, this._params) {
-    if (this._params == null || this._params.length == 0) {
-      this._params = Map();
+  AreaServiceBaseState(this.streamParams, this.isAction, this.actions, this.reactions, Map<String, dynamic> params) {
+    if (params == null || params.length == 0) {
       return;
     }
     if (this.isAction) {
+      this._params[ACTION_KEY] = params[ACTION_KEY];
       this.actions.forEach((element) {
         if (this._params[ACTION_KEY] == element.name) {
           this._selectedOption = element;
         }
       });
     } else {
+      this._params[REACTION_KEY] = params[REACTION_KEY];
       this.reactions.forEach((element) {
         if (this._params[REACTION_KEY] == element.name) {
           this._selectedOption = element;
         }
       });
     }
+    if (this._selectedOption == null) {
+      return;
+    }
+    params.forEach((key, value) {
+      if (this._selectedOption.inputs.any((element) => key == element.name)) {
+        this._params[key] = value;
+      }
+    });
+    this.streamParams.add(this._params);
     this._selectedOption.inputs.forEach((element) {
       this.textControllers[element.name] = TextEditingController();
-      this.textControllers[element.name].text = this._params[element.name];
+      this.textControllers[element.name].text = this._params[element.name].toString();
     });
   }
 

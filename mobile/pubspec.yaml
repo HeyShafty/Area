@@ -31,6 +31,7 @@ dependencies:
   fluttertoast: ^7.1.6
   flutter_web_auth: ^0.2.4
   http: 0.12.2
+  meta: ^1.2.4
   msal_flutter: ^1.0.0+3
   oauth2_client: ^1.5.0
   rounded_loading_button: ^1.0.0

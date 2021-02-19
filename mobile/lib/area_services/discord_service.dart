@@ -5,9 +5,9 @@ import 'package:area/area_services/option.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'base_page.dart';
+import 'area_service_base.dart';
 
-class DiscordService extends BasePage {
+class DiscordService extends AreaServiceBase {
   static const List<Option> ACTIONS = [];
   static const List<Option> REACTIONS = [
     Option("post_message", [
@@ -27,7 +27,7 @@ class DiscordService extends BasePage {
   }
 
   @override
-  BaseState createState() => BaseState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
+  AreaServiceBaseState createState() => AreaServiceBaseState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
 
   @override
   Option getActionOption(String actionValue) {

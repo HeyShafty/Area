@@ -21,13 +21,13 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final AreaService areaServiceInstance = AreaService();
+  final AreaService _areaServiceInstance = AreaService();
   String _emailError;
   String _passwordError;
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
-  final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
+  final RoundedLoadingButtonController _buttonController = new RoundedLoadingButtonController();
 
   @override
   void initState() {
@@ -88,7 +88,7 @@ class _LoginState extends State<Login> {
                           style: TextStyle(color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
-                        controller: _btnController,
+                        controller: _buttonController,
                         onPressed: this._isLoading
                             ? null
                             : () {
@@ -142,7 +142,7 @@ class _LoginState extends State<Login> {
     });
     try {
       String token = await pca.acquireToken([SERVER_SCOPE]);
-      await this.areaServiceInstance.signInWithAccessToken(token);
+      await this._areaServiceInstance.signInWithAccessToken(token);
       return this.openHomePage();
     } on MsalException {
       ToastService.showToast("Couldn't sign you in with Microsoft.");
@@ -187,16 +187,16 @@ class _LoginState extends State<Login> {
       this._isLoading = true;
     });
     if (this.isFormValid(email, password) == false) {
-      this._btnController.reset();
+      this._buttonController.reset();
       this.setState(() {
         this._isLoading = false;
       });
       return;
     }
     try {
-      this._btnController.start();
-      await this.areaServiceInstance.signInWithCredentials(email, password);
-      this._btnController.success();
+      this._buttonController.start();
+      await this._areaServiceInstance.signInWithCredentials(email, password);
+      this._buttonController.success();
       return this.openHomePage();
     } on WrongEmailPasswordCombinationException {
       ToastService.showToast("Bad email / password combination.");
@@ -205,7 +205,7 @@ class _LoginState extends State<Login> {
     } catch (e) {
       ToastService.showToast(e.toString());
     }
-    this._btnController.reset();
+    this._buttonController.reset();
     this.setState(() {
       this._isLoading = false;
     });
@@ -249,10 +249,10 @@ class _LoginState extends State<Login> {
                     return;
                   }
 
-                  this.areaServiceInstance.serverIp = serverIpController.value.text;
+                  this._areaServiceInstance.serverIp = serverIpController.value.text;
                   FocusScope.of(context).unfocus();
                   try {
-                    await this.areaServiceInstance.checkIp();
+                    await this._areaServiceInstance.checkIp();
                   } on BadResponseException {
                     return ToastService.showToast("Bad ip address.");
                   } catch (e) {
@@ -260,9 +260,9 @@ class _LoginState extends State<Login> {
                   }
                   await SharedPreferencesService.saveString(IP_KEY, serverIpController.value.text);
                   Navigator.of(context).pop();
-                  if (await this.areaServiceInstance.getStoredAccessToken() == true) {
+                  if (await this._areaServiceInstance.getStoredAccessToken() == true) {
                     try {
-                      await this.areaServiceInstance.isTokenValid();
+                      await this._areaServiceInstance.isTokenValid();
                       this.openHomePage();
                     } catch (e) {
                       return;

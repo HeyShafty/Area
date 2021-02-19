@@ -92,7 +92,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
   getSignInWith(ServiceInformation service, bool isAuthenticated) {
     if (isAuthenticated) {
-      return FlatButton(
+      return MaterialButton(
           onPressed: null,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0), side: BorderSide(color: Colors.blue)),
           height: 50.0,
@@ -112,7 +112,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
             ],
           ));
     }
-    return FlatButton(
+    return MaterialButton(
         onPressed: () async {
           if (this._isLoading) {
             return;

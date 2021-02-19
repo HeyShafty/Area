@@ -4,10 +4,10 @@ import 'package:area/area_services/input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'base_page.dart';
+import 'area_service_base.dart';
 import 'option.dart';
 
-class GithubService extends BasePage {
+class GithubService extends AreaServiceBase {
   static const List<Option> ACTIONS = [
     Option("new_issue", [Input("owner", "EliottPal", null, false), Input("repo", "Dashboard_2020", null, false)]),
     Option("new_repository", [Input("owner", "EliottPal", null, false)]),
@@ -15,7 +15,12 @@ class GithubService extends BasePage {
     Option("issue_closes", [Input("owner", "EliottPal", null, false), Input("repo", "Dashboard_2020", null, false)])
   ];
   static const List<Option> REACTIONS = [
-    Option("open_issue", [Input("title", "Title", null, false), Input("description", "Description", null, false)])
+    Option("open_issue", [
+      Input("owner", "EliottPal", null, false),
+      Input("repo", "Dashboard_2020", null, false),
+      Input("title", "Title", null, false),
+      Input("body", "Description", null, false)
+    ])
   ];
 
   final StreamController<Map<String, dynamic>> streamParamsController;
@@ -29,7 +34,7 @@ class GithubService extends BasePage {
   }
 
   @override
-  BaseState createState() => BaseState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
+  AreaServiceBaseState createState() => AreaServiceBaseState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
 
   @override
   Option getActionOption(String actionValue) {

@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:area/area_services/input.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'base_page.dart';
+import 'area_service_base.dart';
 import 'option.dart';
 
-class TimerService extends BasePage {
+class TimerService extends AreaServiceBase {
   static const List<Option> ACTIONS = [
-    Option("every_hour", [Input('minute', '42', r'[0-5]?[0-9]$', true)]),
+    Option("every_hour", [Input('minute', '42', r'^[0-5]?[0-9]$', true)]),
     Option("every_day", [Input('hour', '10', r'^([0-1]?[0-9]|2[0-3])$', true)])
   ];
   static const List<Option> REACTIONS = [];
@@ -24,7 +24,7 @@ class TimerService extends BasePage {
   }
 
   @override
-  BaseState createState() => BaseState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
+  AreaServiceBaseState createState() => AreaServiceBaseState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
 
   @override
   Option getActionOption(String actionValue) {

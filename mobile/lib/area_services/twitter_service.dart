@@ -4,10 +4,10 @@ import 'package:area/area_services/option.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'base_page.dart';
+import 'area_service_base.dart';
 import 'input.dart';
 
-class TwitterService extends BasePage {
+class TwitterService extends AreaServiceBase {
   static const List<Option> ACTIONS = [
     Option("new_tweet_from", [Input("username", "Username", r'(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z]+[A-Za-z0-9-_]+)', false)]),
     Option("new_follower", [])
@@ -28,7 +28,7 @@ class TwitterService extends BasePage {
   }
 
   @override
-  BaseState createState() => BaseState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
+  AreaServiceBaseState createState() => AreaServiceBaseState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
 
   @override
   Option getActionOption(String actionValue) {

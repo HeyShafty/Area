@@ -6,13 +6,12 @@ import 'package:area/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'base_page.dart';
+import 'area_service_base.dart';
 
-class MicrosoftService extends BasePage {
+class MicrosoftService extends AreaServiceBase {
   static const List<Option> ACTIONS = [Option("incoming_mail", [])];
   static const List<Option> REACTIONS = [
-    Option(
-        "send_mail", [Input("email", "To", EMAIL_REGEX, false), Input("object", "Object", null, false), Input("body", "Body", null, false)])
+    Option("send_mail", [Input("to", "To", EMAIL_REGEX, false), Input("object", "Object", null, false), Input("body", "Body", null, false)])
   ];
 
   final StreamController<Map<String, dynamic>> streamParamsController;
@@ -26,7 +25,7 @@ class MicrosoftService extends BasePage {
   }
 
   @override
-  BaseState createState() => BaseState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
+  AreaServiceBaseState createState() => AreaServiceBaseState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
 
   @override
   Option getActionOption(String actionValue) {

@@ -1,10 +1,12 @@
 import 'dart:developer';
 
 import 'package:area/area_form.dart';
+import 'package:area/exceptions/bad_response_exception.dart';
 import 'package:area/models/area.dart';
 import 'package:area/models/service_information.dart';
 import 'package:area/services/area_service.dart';
 import 'package:area/services/toast_service.dart';
+import 'package:area/update_area_form.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +27,13 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
+    this.setState(() {
+      this._isLoading = true;
+    });
     this.getAreaList();
+    this.setState(() {
+      this._isLoading = false;
+    });
   }
 
   @override
@@ -39,7 +47,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 children: this._isLoading
                     ? [CircularProgressIndicator()]
                     : (this._areaList == null || this._areaList.length == 0)
-                        ? [Text("Nothing to display")]
+                        ? [Text("Nothing to display", style: TextStyle(fontSize: 20.0))]
                         : [
                             Expanded(
                                 child: ListView.builder(
@@ -50,10 +58,10 @@ class _DashboardPageState extends State<DashboardPage> {
                                       ServiceInformation reactionService;
 
                                       SERVICES_INFORMATION_MAP.forEach((key, value) {
-                                        if (item.action.actionService.toLowerCase() == value.name.toLowerCase()) {
+                                        if (item.action.service.toLowerCase() == value.name.toLowerCase()) {
                                           actionService = value;
                                         }
-                                        if (item.reaction.reactionService.toLowerCase() == value.name.toLowerCase()) {
+                                        if (item.reaction.service.toLowerCase() == value.name.toLowerCase()) {
                                           reactionService = value;
                                         }
                                       });
@@ -70,53 +78,78 @@ class _DashboardPageState extends State<DashboardPage> {
                                                     Text(reactionService.name, style: TextStyle(color: Colors.black, fontSize: 20.0))
                                                   ]),
                                                   subtitle: Row(children: [
-                                                    Text(item.action.actionName),
+                                                    Text(item.action.name),
                                                     Icon(Icons.arrow_forward, color: Colors.grey),
-                                                    Text(item.reaction.reactionName)
+                                                    Text(item.reaction.name)
                                                   ]),
                                                   trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
                                                     IconButton(
                                                         icon: Icon(Icons.edit, color: Colors.black),
                                                         onPressed: () {
-                                                          Navigator.push(
-                                                              context, MaterialPageRoute(builder: (context) => AreaFormPage(area: item)));
+                                                          Navigator.push(context,
+                                                              MaterialPageRoute(builder: (context) => UpdateAreaFormPage(area: item)));
                                                         }),
-                                                    IconButton(icon: Icon(Icons.delete_outline, color: Colors.red), onPressed: () {})
+                                                    IconButton(
+                                                        icon: Icon(Icons.delete_outline, color: Colors.red),
+                                                        onPressed: () async {
+                                                          this.setState(() {
+                                                            this._isLoading = true;
+                                                          });
+                                                          await this.deleteArea(item);
+                                                          await this.getAreaList();
+                                                          this.setState(() {
+                                                            this._isLoading = false;
+                                                          });
+                                                        })
                                                   ]))));
                                     }))
                           ])));
   }
 
   navigateToForm() {
-    return Navigator.push(context, MaterialPageRoute(builder: (context) => AreaFormPage())).then((value) => this.getAreaList());
+    return Navigator.push(context, MaterialPageRoute(builder: (context) => AreaFormPage())).then((value) async {
+      this.setState(() {
+        this._isLoading = true;
+      });
+      await this.getAreaList();
+      this.setState(() {
+        this._isLoading = false;
+      });
+    });
+  }
+
+  deleteArea(Area area) async {
+    try {
+      await this.areaServiceInstance.deleteArea(area);
+      return ToastService.showToast("Area deleted successfully!", Colors.green);
+    } on BadTokenException catch (e) {
+      ToastService.showToast("Invalid token, please sign out.");
+    } on Exception catch (e) {
+      ToastService.showToast("Couldn't delete area.");
+    } catch (e) {
+      log(e);
+      ToastService.showToast("Couldn't delete area.");
+    }
   }
 
   Future<void> getAreaList() async {
-    this.setState(() {
-      this._isLoading = true;
-    });
-/*    this.setState(() {
-      this._isLoading = false;
-      this._areaList = [
-        Area(AreaAction('github', 'new_issue', Map<String, dynamic>.from({"repo": "repo"})), AreaReaction('github', 'open_issue', Map())),
-        Area(AreaAction('github', 'new_issue', Map<String, dynamic>.from({"repo": "repo"})), AreaReaction('github', 'open_issue', Map())),
-        Area(AreaAction('github', 'new_issue', Map<String, dynamic>.from({"repo": "repo"})), AreaReaction('github', 'open_issue', Map())),
-        Area(AreaAction('github', 'new_issue', Map<String, dynamic>.from({"repo": "repo"})), AreaReaction('github', 'open_issue', Map())),
-      ];
-    });*/
     try {
       List<Area> areaList = await areaServiceInstance.getAreaList();
-      this.setState(() {
-        this._isLoading = false;
+      return this.setState(() {
         this._areaList = areaList;
       });
     } on BadTokenException {
       ToastService.showToast("Invalid token, please sign out.");
+    } on BadResponseException {
+      ToastService.showToast("Cannot get area list.");
     } on Exception {
-      ToastService.showToast("Cannot get user profile information.");
+      ToastService.showToast("Cannot get area list.");
     } catch (e) {
       log(e);
-      ToastService.showToast("Cannot get user profile information.");
+      ToastService.showToast("Cannot get area list.");
     }
+    this.setState(() {
+      this._areaList = null;
+    });
   }
 }
