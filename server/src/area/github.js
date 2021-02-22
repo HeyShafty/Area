@@ -37,8 +37,8 @@ const graphqlPullRequests = (owner, name) => `{
 }`;
 
 async function execQuery(area, user, graphQuery, react) {
-    const { data } = area.action;
     const connectData = user.connectData.get(MONGOOSE_GITHUB_KEY);
+    const { data } = area.action;
     let count = undefined;
 
     if (!connectData) {
@@ -73,17 +73,17 @@ async function execQuery(area, user, graphQuery, react) {
         return;
     }
     if (count === undefined) {
-        console.log('tfuck');
+        console.log('tfuck'); // TODO: est-ce que y'a besoin de faire une gestion d'erreur en mode le repo a été supprimé donc il faut del l'AREA
         return;
     }
-    console.log({ count, data: data.issueCount });
-    if (count !== data.issueCount) {
-        if (count > data.issueCount) { // TODO: devrait proc plusieures fois si jamais il y a plusieurs issues en même temps
-            area.action.data.issueCount = count;
+    console.log({ count, data: data.currentCount });
+    if (count !== data.currentCount) {
+        if (count > data.currentCount) { // TODO: devrait proc plusieures fois si jamais il y a plusieurs issues en même temps
+            area.action.data.currentCount = count;
             await Area.findByIdAndUpdate(area._id, area);
             react(area);
         } else {
-            area.action.data.issueCount = count;
+            area.action.data.currentCount = count;
             await Area.findByIdAndUpdate(area._id, area);
         }
     }

@@ -40,7 +40,7 @@ router.post('/', protectedRequest, async(req, res) => {
         return res.status(400).send('Area creation failed');
     }
     return res.sendStatus(201);
-})
+});
 
 router.get('/', protectedRequest, async (req, res) => {
     const { user } = req;
@@ -52,6 +52,6 @@ router.get('/', protectedRequest, async (req, res) => {
         areasList.push({ id: area.id, action: area.action, reaction: area.reaction });
     }
     return res.send(areasList);
-})
+});
 
 module.exports = router;

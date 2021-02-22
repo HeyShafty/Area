@@ -11,7 +11,7 @@ async function googleStrategy(req, accessToken, refreshToken, profile, done) {
     try {
         const user = req.user;
 
-        user.connectData.set(MONGOOSE_GOOGLE_KEY, { accessToken, refreshToken });
+        user.connectData.set(MONGOOSE_GOOGLE_KEY, { accessToken, refreshToken, data: { isMobile: req.isMobile } });
         await User.findByIdAndUpdate(user._id, user);
         return done(null, true);
     } catch (e) {
