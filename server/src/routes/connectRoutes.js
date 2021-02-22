@@ -123,7 +123,7 @@ router.get('/google/callback', async (req, res, next) => {
         return res.status(400).send('Invalid state');
     }
     req.user = user;
-    res.isMobile = isMobile;
+    req.isMobile = isMobile;
     passport.authenticate(isMobile ? STRATEGY_GOOGLE_MOBILE : STRATEGY_GOOGLE_WEB, (err, success) => {
         if (err || !success) {
             return res.sendStatus(500);
