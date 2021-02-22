@@ -1,9 +1,5 @@
-const uuid = require('uuid');
-const axios = require('axios');
-const crypto = require('crypto');
 const Twitter = require('twitter');
 
-const User = require('../models/User');
 const { MONGOOSE_TWITTER_KEY, TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET } = require('../config/twitterConfig');
 
 function getUserData(user) {
@@ -15,7 +11,7 @@ function getUserData(user) {
     return connectData;
 }
 
-async function postTweet(accessToken, accessTokenSecret, tweet) {
+function postTweet(accessToken, accessTokenSecret, tweet) {
     const client = new Twitter({
         consumer_key: TWITTER_CONSUMER_KEY,
         consumer_secret: TWITTER_CONSUMER_SECRET,

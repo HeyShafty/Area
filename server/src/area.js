@@ -36,14 +36,14 @@ async function doReaction(area, msalClient) {
         const data = await serviceTwitter.getUserData(user);
         if (area.reaction.name === "post_tweet") {
             try {
-                const postTweet = await serviceTwitter.postTweet(data.accessToken, data.data.oauthAccessTokenSecret, area.reaction.data.body);
+                const postTweet = serviceTwitter.postTweet(data.accessToken, data.data.oauthAccessTokenSecret, area.reaction.data.body);
             } catch (err) {
                 console.log(err);
             }
         }
         if (area.reaction.name === "update_bio") {
             try {
-                const updateDescription = await serviceTwitter.updateDescription(data.accessToken, data.data.oauthAccessTokenSecret, area.reaction.data.body);
+                const updateDescription = serviceTwitter.updateDescription(data.accessToken, data.data.oauthAccessTokenSecret, area.reaction.data.body);
             } catch (err) {
                 console.log(err);
             }
