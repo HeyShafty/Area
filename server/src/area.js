@@ -4,6 +4,8 @@ const timerTriggers = require('./area/timer');
 const githubTriggers = require('./area/github');
 
 const serviceGithub = require('./services/githubService');
+const serviceTwitter = require('./services/twitterService');
+const serviceMicrosoft = require('./services/microsoftService');
 
 async function doReaction(area, msalClient) {
     const user = await User.findById(area.userId);
@@ -15,6 +17,33 @@ async function doReaction(area, msalClient) {
             const data = serviceGithub.getUserData(user);
             try {
                 const newIssue = await serviceGithub.postNewIssue(area.reaction.data, data.accessToken);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
+    if (area.reaction.service === "microsoft") {
+        if (area.reaction.name === "send_mail") {
+            const accessToken = await serviceMicrosoft.getUserAccessToken(user, msalClient);
+            try {
+                const sendMailRequest = await serviceMicrosoft.sendEmail(accessToken, area.reaction.data.to, area.reaction.data);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
+    if (area.reaction.service === "twitter") {
+        const data = await serviceTwitter.getUserData(user);
+        if (area.reaction.name === "post_tweet") {
+            try {
+                const postTweet = await serviceTwitter.postTweet(data.accessToken, data.data.oauthAccessTokenSecret, area.reaction.data.body);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        if (area.reaction.name === "update_bio") {
+            try {
+                const updateDescription = await serviceTwitter.updateDescription(data.accessToken, data.data.oauthAccessTokenSecret, area.reaction.data.body);
             } catch (err) {
                 console.log(err);
             }
