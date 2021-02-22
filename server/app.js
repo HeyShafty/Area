@@ -77,7 +77,7 @@ function startServer() {
     });
 
     setInterval(() => {
-        checkupTriggers();
+        checkupTriggers(app.locals.msalClient);
     }, 5000);
 }
 

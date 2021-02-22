@@ -5,7 +5,7 @@ const githubTriggers = require('./area/github');
 
 const serviceGithub = require('./services/githubService');
 
-async function doReaction(area) {
+async function doReaction(area, msalClient) {
     const user = await User.findById(area.userId);
     console.log('doReaction');
     console.log(area.reaction);
@@ -22,16 +22,17 @@ async function doReaction(area) {
     }
 }
 
-async function checkupTriggers() {
+async function checkupTriggers(msalClient) {
     const areas = await Area.find({});
+    const react = (_area) => doReaction(_area, msalClient);
 
     // console.log(areas);
     for (const area of areas) {
         if (area.action.service === 'github') {
-            await githubTriggers(area, doReaction);
+            await githubTriggers(area, react);
         }
         if (area.action.service === 'timer') {
-            await timerTriggers(area, doReaction);
+            await timerTriggers(area, react);
         }
     }
 }
