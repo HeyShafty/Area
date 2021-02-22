@@ -42,6 +42,26 @@ router.post('/', protectedRequest, async(req, res) => {
     return res.sendStatus(201);
 });
 
+router.put('/:id', protectedRequest, async (req, res) => {
+    try {
+        await Area.findByIdAndUpdate(req.params.id, { action: req.body.action, reaction: req.body.reaction });
+    } catch (err) {
+        console.log(err);
+        return res.status(400).send('Could not update Area');
+    }
+    return res.sendStatus(200);
+})
+
+router.delete('/:id', protectedRequest, async (req, res) => {
+    try {
+        await Area.findByIdAndDelete(req.params.id);
+    } catch (err) {
+        console.log(err);
+        return res.status(400).send('Could not delete Area');
+    }
+    return res.sendStatus(204);
+})
+
 router.get('/', protectedRequest, async (req, res) => {
     const { user } = req;
 
