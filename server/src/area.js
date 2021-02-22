@@ -7,6 +7,12 @@ const serviceGithub = require('./services/githubService');
 const serviceTwitter = require('./services/twitterService');
 const serviceMicrosoft = require('./services/microsoftService');
 
+const botToken = 'ODEzMzU1Nzc1ODI1MTQ5OTYy.YDOGmA.Ee-nvgFu2v0FHo_7c6XBDd0WsgI';
+const Discord = require('discord.js');
+const client = new Discord.Client();
+
+client.login(botToken);
+
 async function doReaction(area, msalClient) {
     const user = await User.findById(area.userId);
     console.log('doReaction');
@@ -44,6 +50,15 @@ async function doReaction(area, msalClient) {
         if (area.reaction.name === "update_bio") {
             try {
                 const updateDescription = serviceTwitter.updateDescription(data.accessToken, data.data.oauthAccessTokenSecret, area.reaction.data.body);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
+    if (area.reaction.service === "discord") {
+        if (area.reaction.name === "post_message") {
+            try {
+                client.channels.cache.get(area.reaction.data.id).send(area.reaction.data.body);
             } catch (err) {
                 console.log(err);
             }
