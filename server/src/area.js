@@ -9,6 +9,7 @@ const serviceGithub = require('./services/githubService');
 async function doReaction(area, msalClient) {
     const user = await User.findById(area.userId);
     console.log('doReaction');
+    console.log(area.action);
     console.log(area.reaction);
 
     if (area.reaction.service === "github") {

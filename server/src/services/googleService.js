@@ -21,10 +21,10 @@ async function getUserClient(user) {
         refresh_token: connectData.refreshToken
     });
     try {
-        const accessToken = await oauth2Client.getAccessToken();
+        const accessToken = await oauth2Client.getAccessToken(); // TODO: check ceu parce que c'est un peu dégeu le fonctionnement
         const credentials = oauth2Client.credentials;
 
-        console.log(credentials, accessToken);
+        // console.log(credentials, accessToken);
         user.connectData.set(MONGOOSE_GOOGLE_KEY, {
             accessToken: credentials.access_token,
             refreshToken: credentials.refresh_token,

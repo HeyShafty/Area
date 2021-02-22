@@ -4,12 +4,12 @@ const User = require('../models/User');
 const getUserClient = require('../services/googleService');
 
 async function newVideo(area, user, react) {
-    const oauth2Client = getUserClient(user);
+    const oauth2Client = await getUserClient(user);
     const { data } = area.action;
     let count = undefined;
 
     if (oauth2Client == null) {
-        // delete area ?
+        console.log("delete area ?");
         return;
     }
     try {
@@ -18,14 +18,15 @@ async function newVideo(area, user, react) {
             part: [
                 'statistics'
             ],
-            forUsername: area.action.data.username
+            // forUsername: area.action.data.username
+            id: [ data.id ]
         });
 
         if (!googleRes.data.items || googleRes.data.items.length === 0) {
             // no items found -> delete area ?
             return;
         }
-        count = googleRes.data.items[0].statistics.videoCount;
+        count = parseInt(googleRes.data.items[0].statistics.videoCount);
     } catch (err) {
         console.log(err);
         return;
@@ -41,13 +42,47 @@ async function newVideo(area, user, react) {
             await Area.findByIdAndUpdate(area._id, area);
         }
     }
-    react(area);
 }
 
-async function playlistUpdate(area, react) {
-    console.log(area);
+async function playlistUpdate(area, user, react) {
+    const oauth2Client = await getUserClient(user);
+    const { data } = area.action;
+    let count = undefined;
 
-    react(area);
+    if (oauth2Client == null) {
+        console.log("delete area ?");
+        return;
+    }
+    try {
+        const googleRes = await google.youtube('v3').playlists.list({
+            auth: oauth2Client,
+            part: [
+                'contentDetails'
+            ],
+            // forUsername: area.action.data.username
+            id: [ data.id ]
+        });
+
+        if (!googleRes.data.items || googleRes.data.items.length === 0) {
+            // no items found -> delete area ?
+            return;
+        }
+        count = googleRes.data.items[0].contentDetails.itemCount;
+    } catch (err) {
+        console.log(err);
+        return;
+    }
+    console.log({ count, data: data.currentCount });
+    if (count !== data.currentCount) {
+        if (count > data.currentCount) { // TODO: devrait proc plusieures fois si jamais il y a plusieurs vidéos en même temps
+            area.action.data.currentCount = count;
+            await Area.findByIdAndUpdate(area._id, area);
+            react(area);
+        } else {
+            area.action.data.currentCount = count;
+            await Area.findByIdAndUpdate(area._id, area);
+        }
+    }
 }
 
 async function youtubeTriggers(area, react) {
