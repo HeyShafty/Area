@@ -8,7 +8,7 @@ const morgan = require('morgan');
 const moment = require('moment');
 const msal = require('@azure/msal-node');
 
-const areaRouter = require('./src/routes/areaRoutes');
+const areaRouter = require('./src/routes/areasRoutes');
 const authRouter = require('./src/routes/authRoutes');
 const connectRouter = require('./src/routes/connectRoutes');
 const microsoftRouter = require('./src/routes/microsoftRoutes');
@@ -57,7 +57,7 @@ function startServer() {
     }));
     app.use(passport.initialize({}));
 
-    app.use('/area', areaRouter);
+    app.use('/areas', areaRouter);
     app.use('/auth', authRouter);
     app.use('/connect', connectRouter);
     app.use('/microsoft', microsoftRouter);
@@ -77,7 +77,7 @@ function startServer() {
     });
 
     setInterval(() => {
-        checkupTriggers();
+        checkupTriggers(app.locals.msalClient);
     }, 5000);
 }
 

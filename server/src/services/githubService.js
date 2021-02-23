@@ -13,7 +13,7 @@ function getUserData(user) {
 }
 
 async function postNewIssue(data, accessToken) {
-    const request = await axios.post(`https://api.github.com/repos/${data.owner}/${data.repo}/issues`,
+    await axios.post(`https://api.github.com/repos/${data.owner}/${data.repo}/issues`,
         {
                 title: data.title,
                 body: data.body
