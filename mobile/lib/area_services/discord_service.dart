@@ -2,18 +2,18 @@ import 'dart:async';
 
 import 'package:area/area_services/input.dart';
 import 'package:area/area_services/option.dart';
+import 'package:area/services/toast_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
+import '../constants.dart';
 import 'area_service_base.dart';
 
 class DiscordService extends AreaServiceBase {
   static const List<Option> ACTIONS = [];
   static const List<Option> REACTIONS = [
-    Option("post_message", [
-      Input("webhook", "Webhook", r'^.*(discord|discordapp)\.com\/api\/webhooks\/([\d]+)\/([a-zA-Z0-9_-]+)$', false),
-      Input("message", "Message", null, false)
-    ])
+    Option("post_message", [Input("id", "Channel id", null, false), Input("body", "Body of the message", null, false)])
   ];
 
   final StreamController<Map<String, dynamic>> streamParamsController;
@@ -27,7 +27,7 @@ class DiscordService extends AreaServiceBase {
   }
 
   @override
-  AreaServiceBaseState createState() => AreaServiceBaseState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
+  AreaServiceBaseState createState() => _DiscordServiceState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
 
   @override
   Option getActionOption(String actionValue) {
@@ -42,5 +42,41 @@ class DiscordService extends AreaServiceBase {
       }
     }
     return null;
+  }
+}
+
+class _DiscordServiceState extends AreaServiceBaseState<DiscordService> {
+  _DiscordServiceState(StreamController<Map<String, dynamic>> streamParams, bool isAction, List<Option> actions, List<Option> reactions,
+      Map<String, dynamic> params)
+      : super(streamParams, isAction, actions, reactions, params);
+
+  @override
+  void initState() {
+    super.initState();
+    Timer.run(() => this.showDiscordAlert());
+  }
+
+  showDiscordAlert() {
+    return showDialog(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: Text('Discord bot'),
+              content: SingleChildScrollView(
+                  child: Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: <Widget>[
+                Text('Type on the button bellow to copy the link that enables you to invite our bot.', textAlign: TextAlign.center),
+                SizedBox(height: 10),
+                MaterialButton(
+                    onPressed: () {
+                      Clipboard.setData(new ClipboardData(text: DISCORD_BOT_LINK));
+                      ToastService.showToast("Copied to clipboard", Colors.grey);
+                    },
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0), side: BorderSide(color: Colors.black)),
+                    color: Color(0xFFd5d8dc),
+                    child: Text("COPY"))
+              ])),
+              actions: <Widget>[TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('OK'))]);
+        });
   }
 }

@@ -221,58 +221,49 @@ class _LoginState extends State<Login> {
       serverIpController = TextEditingController(text: storedIp);
     }
     return showDialog(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Server ip'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: Text('Server ip'),
+              content: SingleChildScrollView(
+                  child: ListBody(children: <Widget>[
                 Text('Please enter the server ip address and port bellow.'),
                 TextField(
-                  obscureText: false,
-                  controller: serverIpController,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                    hintText: "10.0.2.2:8080",
-                  ),
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(onPressed: () => exit(0), child: Text('Cancel')),
-            TextButton(
-                onPressed: () async {
-                  if (serverIpController.value.text == "") {
-                    return;
-                  }
+                    obscureText: false,
+                    controller: serverIpController,
+                    decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0), hintText: "10.0.2.2:8080")),
+              ])),
+              actions: <Widget>[
+                TextButton(onPressed: () => exit(0), child: Text('Cancel')),
+                TextButton(
+                    onPressed: () async {
+                      if (serverIpController.value.text == "") {
+                        return;
+                      }
 
-                  this._areaServiceInstance.serverIp = serverIpController.value.text;
-                  FocusScope.of(context).unfocus();
-                  try {
-                    await this._areaServiceInstance.checkIp();
-                  } on BadResponseException {
-                    return ToastService.showToast("Bad ip address.");
-                  } catch (e) {
-                    return ToastService.showToast("Couldn't check server availability.");
-                  }
-                  await SharedPreferencesService.saveString(IP_KEY, serverIpController.value.text);
-                  Navigator.of(context).pop();
-                  if (await this._areaServiceInstance.getStoredAccessToken() == true) {
-                    try {
-                      await this._areaServiceInstance.isTokenValid();
-                      this.openHomePage();
-                    } catch (e) {
-                      return;
-                    }
-                  }
-                },
-                child: Text('OK')),
-          ],
-        );
-      },
-    );
+                      this._areaServiceInstance.serverIp = serverIpController.value.text;
+                      FocusScope.of(context).unfocus();
+                      try {
+                        await this._areaServiceInstance.checkIp();
+                      } on BadResponseException {
+                        return ToastService.showToast("Bad ip address.");
+                      } catch (e) {
+                        return ToastService.showToast("Couldn't check server availability.");
+                      }
+                      await SharedPreferencesService.saveString(IP_KEY, serverIpController.value.text);
+                      Navigator.of(context).pop();
+                      if (await this._areaServiceInstance.getStoredAccessToken() == true) {
+                        try {
+                          await this._areaServiceInstance.isTokenValid();
+                          this.openHomePage();
+                        } catch (e) {
+                          return;
+                        }
+                      }
+                    },
+                    child: Text('OK'))
+              ]);
+        });
   }
 }

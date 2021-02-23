@@ -13,8 +13,8 @@ class TwitterService extends AreaServiceBase {
     Option("new_follower", [])
   ];
   static const List<Option> REACTIONS = [
-    Option("post_tweet", [Input("tweet", "Tweet body", null, false)]),
-    Option("update_bio", [Input("description", "Your new biography", null, false)])
+    Option("post_tweet", [Input("body", "Tweet body", null, false)]),
+    Option("update_bio", [Input("body", "Your new biography", null, false)])
   ];
 
   final StreamController<Map<String, dynamic>> streamParamsController;

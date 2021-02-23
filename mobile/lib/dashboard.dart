@@ -145,7 +145,7 @@ class _DashboardPageState extends State<DashboardPage> {
     } on Exception {
       ToastService.showToast("Cannot get area list.");
     } catch (e) {
-      log(e);
+      log(e.toString());
       ToastService.showToast("Cannot get area list.");
     }
     this.setState(() {

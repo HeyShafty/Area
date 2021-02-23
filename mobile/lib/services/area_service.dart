@@ -156,7 +156,7 @@ class AreaService {
 
   Future<List<Area>> getAreaList() async {
     http.Response response =
-        await http.get("http://" + this._serverIp + "/area", headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken});
+        await http.get("http://" + this._serverIp + "/areas", headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken});
     if (response.statusCode == 401) {
       throw BadTokenException();
     }
@@ -169,7 +169,7 @@ class AreaService {
 
   Future<void> addArea(final Area area) async {
     String body = jsonEncode(area.toJson());
-    http.Response response = await http.post("http://" + this._serverIp + "/area",
+    http.Response response = await http.post("http://" + this._serverIp + "/areas",
         headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken, 'Content-Type': 'application/json; charset=UTF-8'},
         body: body);
     if (response.statusCode == 401) {
@@ -182,7 +182,7 @@ class AreaService {
 
   Future<void> updateArea(final Area area) async {
     String body = jsonEncode(area.toJson());
-    http.Response response = await http.put("http://" + this._serverIp + "/area/" + area.id,
+    http.Response response = await http.put("http://" + this._serverIp + "/areas/" + area.id,
         headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken, 'Content-Type': 'application/json; charset=UTF-8'},
         body: body);
     if (response.statusCode == 401) {
@@ -195,7 +195,7 @@ class AreaService {
 
   Future<void> deleteArea(final Area area) async {
     http.Response response = await http
-        .delete("http://" + this._serverIp + "/area/" + area.id, headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken});
+        .delete("http://" + this._serverIp + "/areas/" + area.id, headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken});
     if (response.statusCode == 401) {
       throw BadTokenException();
     }

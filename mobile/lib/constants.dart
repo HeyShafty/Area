@@ -23,3 +23,4 @@ const Map<ServiceType, ServiceInformation> SERVICES_INFORMATION_MAP = {
 };
 const String ACTION_KEY = "action";
 const String REACTION_KEY = "reaction";
+const String DISCORD_BOT_LINK = "https://discord.com/api/oauth2/authorize?client_id=813355775825149962&permissions=2048&scope=bot";

@@ -11,7 +11,8 @@ import 'area_service_base.dart';
 class MicrosoftService extends AreaServiceBase {
   static const List<Option> ACTIONS = [Option("incoming_mail", [])];
   static const List<Option> REACTIONS = [
-    Option("send_mail", [Input("to", "To", EMAIL_REGEX, false), Input("object", "Object", null, false), Input("body", "Body", null, false)])
+    Option(
+        "send_mail", [Input("to", "To", EMAIL_REGEX, false), Input("subject", "Subject", null, false), Input("body", "Body", null, false)])
   ];
 
   final StreamController<Map<String, dynamic>> streamParamsController;
