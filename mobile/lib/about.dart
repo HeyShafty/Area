@@ -1,18 +1,5 @@
-import 'dart:async';
-import 'dart:developer';
-
-import 'package:area/models/service_information.dart';
-import 'package:area/services/area_service.dart';
-import 'package:area/services/toast_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:rounded_loading_button/rounded_loading_button.dart';
-
-import 'area_services/area_service_base.dart';
-import 'area_services/option.dart';
-import 'constants.dart';
-import 'exceptions/bad_token_exception.dart';
-import 'models/area.dart';
 
 class AboutPage extends StatefulWidget {
   @override
@@ -27,14 +14,54 @@ class _AboutPageState<Page extends AboutPage> extends State<Page> {
           centerTitle: true,
           title: this.getFormTitle(),
         ),
-        body: Center(
-            child: SingleChildScrollView(
-                child: Column(children: [
-          Text("Nothing to display", style: TextStyle(fontSize: 20.0))
-        ]))));
+        body: SingleChildScrollView(
+            child: Column(children: [DescriptionCard()])));
   }
 
   Widget getFormTitle() {
-    return Text('About Page');
+    return Text('About ChadArea');
+  }
+}
+
+class DescriptionCard extends StatelessWidget {
+  DescriptionCard({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Card(
+        margin: EdgeInsets.all(24.0),
+        elevation: 5,
+        child: Column(
+          children: <Widget>[
+            Padding(padding: EdgeInsets.only(top: 10.0)),
+            Text(' Project Overview',
+                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center),
+            Padding(padding: EdgeInsets.only(bottom: 15.0)),
+            Text('Epitech 3rd year final project.',
+                style: TextStyle(fontSize: 18.0), textAlign: TextAlign.center),
+            Text('(20/01/21 - 07/03/21).',
+                style: TextStyle(fontSize: 18.0), textAlign: TextAlign.center),
+            Padding(padding: EdgeInsets.only(top: 10.0)),
+            Text(
+                'This project consists in the creation of a software suite that functions similarly to IFTTT / Zapier.',
+                style: TextStyle(fontSize: 18.0),
+                textAlign: TextAlign.center),
+            Padding(padding: EdgeInsets.only(top: 10.0)),
+            Text(
+                'You are using the mobile version of ChadArea, which was developed in Flutter and uses our server created using NodeJs & MongoDb.',
+                style: TextStyle(fontSize: 18.0),
+                textAlign: TextAlign.center),
+            Padding(padding: EdgeInsets.only(top: 5.0)),
+            Text(
+                'For more detailed information about the project, please refer to the documentation provided in the official Github page of the project.',
+                style: TextStyle(fontSize: 18.0),
+                textAlign: TextAlign.center),
+            Padding(padding: EdgeInsets.only(top: 10.0)),
+          ],
+        ),
+      ),
+    );
   }
 }
