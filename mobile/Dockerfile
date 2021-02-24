@@ -22,6 +22,6 @@ RUN flutter doctor
 
 WORKDIR /app
 COPY . .
-RUN flutter pub get && flutter analyze . && flutter build apk
+RUN flutter pub get && flutter analyze . && flutter test --verbose && flutter build apk
 
 ENTRYPOINT cp /app/build/app/outputs/apk/release/app-release.apk /apk/client.apk

@@ -122,9 +122,9 @@ class _DashboardPageState extends State<DashboardPage> {
     try {
       await this.areaServiceInstance.deleteArea(area);
       return ToastService.showToast("Area deleted successfully!", Colors.green);
-    } on BadTokenException catch (e) {
+    } on BadTokenException {
       ToastService.showToast("Invalid token, please sign out.");
-    } on Exception catch (e) {
+    } on Exception {
       ToastService.showToast("Couldn't delete area.");
     } catch (e) {
       log(e);
@@ -135,6 +135,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Future<void> getAreaList() async {
     try {
       List<Area> areaList = await areaServiceInstance.getAreaList();
+
       return this.setState(() {
         this._areaList = areaList;
       });

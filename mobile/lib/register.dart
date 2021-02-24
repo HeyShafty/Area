@@ -10,12 +10,17 @@ import 'main_page.dart';
 import 'services/area_service.dart';
 
 class Register extends StatefulWidget {
+  final AreaService _areaServiceInstance;
+
+  Register([AreaService areaService]) : this._areaServiceInstance = areaService ?? AreaService();
+
   @override
-  _RegisterState createState() => _RegisterState();
+  _RegisterState createState() => _RegisterState(this._areaServiceInstance);
 }
 
 class _RegisterState extends State<Register> {
-  final AreaService areaServiceInstance = AreaService();
+  final AreaService _areaServiceInstance;
+  final RoundedLoadingButtonController _btnController = RoundedLoadingButtonController();
 
   TextEditingController _emailController = TextEditingController();
   TextEditingController _usernameController = TextEditingController();
@@ -23,7 +28,8 @@ class _RegisterState extends State<Register> {
   String _usernameError;
   String _emailError;
   String _passwordError;
-  final RoundedLoadingButtonController _btnController = RoundedLoadingButtonController();
+
+  _RegisterState(AreaService areaService) : this._areaServiceInstance = areaService;
 
   @override
   Widget build(BuildContext context) {
@@ -36,64 +42,57 @@ class _RegisterState extends State<Register> {
                   padding: const EdgeInsets.only(left: 25.0, right: 25.0),
                   child: Column(children: <Widget>[
                     SizedBox(
-                      height: 200.0,
-                      child: Image.asset(
-                        'assets/images/AREALOGO.png',
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: TextField(
-                          autofocus: true,
-                          obscureText: false,
-                          controller: _usernameController,
-                          decoration: InputDecoration(
-                              contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                              errorText: this._usernameError,
-                              hintText: "Username",
-                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+                        height: 200.0,
+                        child: Image.asset(
+                          'assets/images/AREALOGO.png',
+                          fit: BoxFit.contain,
                         )),
                     Padding(
                         padding: const EdgeInsets.only(top: 25.0),
                         child: TextField(
-                          obscureText: false,
-                          controller: _emailController,
-                          decoration: InputDecoration(
-                              contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                              errorText: this._emailError,
-                              hintText: "Email",
-                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-                          keyboardType: TextInputType.emailAddress,
-                        )),
+                            autofocus: true,
+                            obscureText: false,
+                            controller: _usernameController,
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                                errorText: this._usernameError,
+                                hintText: "Username",
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))))),
                     Padding(
-                      padding: const EdgeInsets.only(top: 25.0),
-                      child: TextField(
-                        obscureText: true,
-                        controller: _passwordController,
-                        decoration: InputDecoration(
-                            contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                            errorText: this._passwordError,
-                            hintText: "Password",
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-                      ),
-                    ),
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: TextField(
+                            obscureText: false,
+                            controller: _emailController,
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                                errorText: this._emailError,
+                                hintText: "Email",
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+                            keyboardType: TextInputType.emailAddress)),
                     Padding(
-                      padding: const EdgeInsets.only(top: 25.0),
-                      child: RoundedLoadingButton(
-                        child: Text(
-                          'Sign up',
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
-                        controller: _btnController,
-                        onPressed: () {
-                          FocusScope.of(context).unfocus();
-                          this.signUp(
-                              this._usernameController.value.text, this._emailController.value.text, this._passwordController.value.text);
-                        },
-                      ),
-                    )
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: TextField(
+                            obscureText: true,
+                            controller: _passwordController,
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                                errorText: this._passwordError,
+                                hintText: "Password",
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))))),
+                    Padding(
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: RoundedLoadingButton(
+                            child: Text(
+                              'Sign up',
+                              style: TextStyle(color: Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
+                            controller: _btnController,
+                            onPressed: () {
+                              FocusScope.of(context).unfocus();
+                              this.signUp(this._usernameController.value.text, this._emailController.value.text,
+                                  this._passwordController.value.text);
+                            }))
                   ]))),
         ));
   }
@@ -137,9 +136,10 @@ class _RegisterState extends State<Register> {
       this._btnController.reset();
       return;
     }
+
     try {
       this._btnController.start();
-      await this.areaServiceInstance.signUp(username, email, password);
+      await this._areaServiceInstance.signUp(username, email, password);
       this.openHomePage();
       return this._btnController.success();
     } on AlreadyExistsException {

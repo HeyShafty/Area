@@ -66,8 +66,8 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
 
   @override
   void dispose() {
-    this.actionParamsController.close();
-    this.reactionParamsController.close();
+    actionParamsController.close();
+    reactionParamsController.close();
     super.dispose();
   }
 

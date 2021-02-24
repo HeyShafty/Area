@@ -36,6 +36,7 @@ dependencies:
   oauth2_client: ^1.5.0
   rounded_loading_button: ^1.0.0
   shared_preferences: ^0.5.12+4
+  mockito: ^4.1.4
 
 dev_dependencies:
   flutter_test:

@@ -18,6 +18,7 @@ class MyProfilePage extends StatefulWidget {
 
 class _MyProfilePageState extends State<MyProfilePage> {
   final AreaService areaServiceInstance = AreaService();
+
   User _user;
   bool _isLoading = false;
 
@@ -35,38 +36,32 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 children: this._user == null
                     ? <Widget>[CircularProgressIndicator()]
                     : <Widget>[
-                        Icon(
-                          Icons.person,
-                          size: 100.0,
-                        ),
+                  Icon(
+                    Icons.person,
+                    size: 100.0,
+                  ),
+                  Padding(
+                      padding: EdgeInsets.only(bottom: 60.0),
+                      child: Column(children: [
                         Padding(
-                            padding: EdgeInsets.only(bottom: 60.0),
-                            child: Column(children: [
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 10.0),
-                                child: Text(
-                                  _user.displayName,
-                                  style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Text(
-                                _user.email,
-                                style: TextStyle(color: Colors.black, fontSize: 15),
-                              )
-                            ])),
-                        Padding(
-                            padding: EdgeInsets.only(left: 20.0, right: 20.0),
-                            child: Column(
-                                children: SERVICES_INFORMATION_MAP.entries.map((e) {
-                              if (e.value.uri != null) {
-                                return Padding(
+                            padding: EdgeInsets.only(bottom: 10.0),
+                            child: Text(_user.displayName,
+                                style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold))),
+                        Text(_user.email, style: TextStyle(color: Colors.black, fontSize: 15))
+                      ])),
+                  Padding(
+                      padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                      child: Column(
+                          children: SERVICES_INFORMATION_MAP.entries.map((e) {
+                            if (e.value.uri != null) {
+                              return Padding(
                                   padding: EdgeInsets.only(top: 20.0),
-                                  child: getSignInWith(e.value, this._user.servicesConnectInformation.contains(e.value.name.toLowerCase())),
-                                );
-                              }
-                              return Container();
-                            }).toList()))
-                      ])));
+                                  child:
+                                  getSignInWith(e.value, this._user.servicesConnectInformation.contains(e.value.name.toLowerCase())));
+                            }
+                            return Container();
+                          }).toList()))
+                ])));
   }
 
   signInWithService(ServiceInformation service) async {
@@ -97,20 +92,15 @@ class _MyProfilePageState extends State<MyProfilePage> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0), side: BorderSide(color: Colors.blue)),
           height: 50.0,
           color: Colors.white,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(service.iconPath),
-              Padding(
+          child: Row(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
+            Image.asset(service.iconPath),
+            Padding(
                 padding: EdgeInsets.only(left: 10.0),
                 child: Text(
                   'You\'re connected with ' + service.name,
                   style: TextStyle(color: Colors.black),
-                ),
-              )
-            ],
-          ));
+                ))
+          ]));
     }
     return MaterialButton(
         onPressed: () async {
@@ -123,26 +113,22 @@ class _MyProfilePageState extends State<MyProfilePage> {
         height: 50.0,
         color: Color(0xFFd5d8dc),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: this._isLoading
-              ? [CircularProgressIndicator()]
-              : [
-                  Image.asset(service.iconPath),
-                  Padding(
-                    padding: EdgeInsets.only(left: 10.0),
-                    child: Text(
-                      'Connect with ' + service.name,
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  )
-                ],
-        ));
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: this._isLoading
+                ? [CircularProgressIndicator()]
+                : [
+              Image.asset(service.iconPath),
+              Padding(
+                  padding: EdgeInsets.only(left: 10.0),
+                  child: Text('Connect with ' + service.name, style: TextStyle(color: Colors.black)))
+            ]));
   }
 
   Future<void> getUserProfile() async {
     try {
       final User user = await this.areaServiceInstance.getUserProfile();
+
       setState(() {
         this._user = user;
       });
