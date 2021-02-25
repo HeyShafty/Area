@@ -15,7 +15,8 @@ RUN cd Android/sdk/tools/bin && yes | ./sdkmanager --licenses
 RUN cd Android/sdk/tools/bin && ./sdkmanager "build-tools;29.0.2" "patcher;v4" "platform-tools" "platforms;android-29" "sources;android-29" >/dev/null
 ENV PATH "$PATH:/home/developer/Android/sdk/platform-tools"
 
-RUN git clone https://github.com/flutter/flutter.git
+RUN wget -q https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_1.22.6-stable.tar.xz
+RUN tar -xJf flutter_linux_1.22.6-stable.tar.xz
 ENV PATH "$PATH:/home/developer/flutter/bin"
 
 RUN flutter doctor
