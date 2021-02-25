@@ -8,6 +8,8 @@
 import 'package:area/exceptions/bad_response_exception.dart';
 import 'package:area/exceptions/wrong_email_password_combination_exception.dart';
 import 'package:area/login.dart';
+import 'package:area/main_page.dart';
+import 'package:area/register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -18,8 +20,13 @@ import 'mock_navigator_observer.dart';
 
 void main() {
   group("Login page", () {
-    NavigatorObserver mockObserver = MockNavigatorObserver();
-    MockAreaService mockAreaService = MockAreaService();
+    NavigatorObserver mockObserver;
+    MockAreaService mockAreaService;
+
+    setUp(() {
+      mockObserver = MockNavigatorObserver();
+      mockAreaService = MockAreaService();
+    });
 
     _loadWidget(WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
@@ -31,8 +38,8 @@ void main() {
 
     Future<Null> _signIn(WidgetTester tester) async {
       final signInButton = find.widgetWithText(RoundedLoadingButton, "Sign in");
-      var emailTextField = find.byWidgetPredicate((widget) => widget is TextField && widget.decoration.hintText == "Email");
-      var passwordTextField =
+      final emailTextField = find.byWidgetPredicate((widget) => widget is TextField && widget.decoration.hintText == "Email");
+      final passwordTextField =
           find.byWidgetPredicate((widget) => widget is TextField && widget.decoration.hintText == "Password" && widget.obscureText == true);
       expect(signInButton, findsOneWidget);
       expect(emailTextField, findsOneWidget);
@@ -45,15 +52,14 @@ void main() {
       await tester.pumpAndSettle();
 
       verify(mockAreaService.signInWithCredentials("kylian.balan@epitech.eu", "heinnnn")).called(1);
-      verify(mockObserver.didPush(any, any));
-      expect(find.byWidgetPredicate((widget) => widget is TextField && widget.decoration.hintText == "Email"), findsNothing);
-      expect(find.byType(BottomNavigationBar), findsOneWidget);
+      verify(mockObserver.didPush(any, any)).called(2);
+      expect(find.byType(MyMainPage), findsOneWidget);
     }
 
     Future<Null> _formError(WidgetTester tester) async {
       final signUpButton = find.widgetWithText(RoundedLoadingButton, "Sign in");
-      var emailTextField = find.byWidgetPredicate((widget) => widget is TextField && widget.decoration.hintText == "Email");
-      var passwordTextField =
+      final emailTextField = find.byWidgetPredicate((widget) => widget is TextField && widget.decoration.hintText == "Email");
+      final passwordTextField =
           find.byWidgetPredicate((widget) => widget is TextField && widget.decoration.hintText == "Password" && widget.obscureText == true);
       expect(signUpButton, findsOneWidget);
       expect(emailTextField, findsOneWidget);
@@ -65,17 +71,8 @@ void main() {
       await tester.tap(signUpButton);
       await tester.pumpAndSettle();
 
-      emailTextField = find.byWidgetPredicate(
-          (widget) => widget is TextField && widget.decoration.hintText == "Email" && widget.decoration.errorText != null);
-      passwordTextField = find.byWidgetPredicate((widget) =>
-          widget is TextField &&
-          widget.decoration.hintText == "Password" &&
-          widget.obscureText == true &&
-          widget.decoration.errorText != null);
-
       verifyNever(mockAreaService.signInWithCredentials("kylian.balanepitech.eu", "hein"));
-      expect(emailTextField, findsOneWidget);
-      expect(passwordTextField, findsOneWidget);
+      expect(find.byType(Login), findsOneWidget);
     }
 
     Future<Null> _goToRegisterPage(WidgetTester tester) async {
@@ -85,17 +82,16 @@ void main() {
       await tester.tap(goToSignUpPageButton);
       await tester.pumpAndSettle();
 
-      verify(mockObserver.didPush(any, any));
-      expect(find.widgetWithText(TextButton, "Don't have an account? Sign up"), findsNothing);
-      expect(find.widgetWithText(RoundedLoadingButton, "Sign up"), findsOneWidget);
+      verify(mockObserver.didPush(any, any)).called(2);
+      expect(find.byType(Register), findsOneWidget);
     }
 
     Future<Null> _wrongEmailPasswordCombinationError(WidgetTester tester) async {
       when(mockAreaService.signInWithCredentials("kylian.balan@epitech.eu", "heinnnn")).thenThrow(WrongEmailPasswordCombinationException);
 
       final signInButton = find.widgetWithText(RoundedLoadingButton, "Sign in");
-      var emailTextField = find.byWidgetPredicate((widget) => widget is TextField && widget.decoration.hintText == "Email");
-      var passwordTextField =
+      final emailTextField = find.byWidgetPredicate((widget) => widget is TextField && widget.decoration.hintText == "Email");
+      final passwordTextField =
           find.byWidgetPredicate((widget) => widget is TextField && widget.decoration.hintText == "Password" && widget.obscureText == true);
       expect(signInButton, findsOneWidget);
       expect(emailTextField, findsOneWidget);
@@ -108,15 +104,15 @@ void main() {
       await tester.pumpAndSettle();
 
       verify(mockAreaService.signInWithCredentials("kylian.balan@epitech.eu", "heinnnn")).called(1);
-      expect(find.widgetWithText(RoundedLoadingButton, "Sign in"), findsOneWidget);
+      expect(find.byType(Login), findsOneWidget);
     }
 
     Future<Null> _badResponseError(WidgetTester tester) async {
       when(mockAreaService.signInWithCredentials("kylian.balan@epitech.eu", "heinnnn")).thenThrow(BadResponseException);
 
       final signInButton = find.widgetWithText(RoundedLoadingButton, "Sign in");
-      var emailTextField = find.byWidgetPredicate((widget) => widget is TextField && widget.decoration.hintText == "Email");
-      var passwordTextField =
+      final emailTextField = find.byWidgetPredicate((widget) => widget is TextField && widget.decoration.hintText == "Email");
+      final passwordTextField =
           find.byWidgetPredicate((widget) => widget is TextField && widget.decoration.hintText == "Password" && widget.obscureText == true);
       expect(signInButton, findsOneWidget);
       expect(emailTextField, findsOneWidget);
@@ -129,7 +125,7 @@ void main() {
       await tester.pumpAndSettle();
 
       verify(mockAreaService.signInWithCredentials("kylian.balan@epitech.eu", "heinnnn")).called(1);
-      expect(find.widgetWithText(RoundedLoadingButton, "Sign in"), findsOneWidget);
+      expect(find.byType(Login), findsOneWidget);
     }
 
     testWidgets("Simple sign in", (WidgetTester tester) async {
