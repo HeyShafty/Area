@@ -9,7 +9,7 @@ import 'input.dart';
 
 class TwitterService extends AreaServiceBase {
   static const List<Option> ACTIONS = [
-    Option("new_tweet_from", [Input("username", "Username", r'(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z]+[A-Za-z0-9-_]+)', false)]),
+    Option("new_tweet_from", [Input("username", "Username", r'^[A-Za-z0-9_]{1,15}$', false)]),
     Option("new_follower", [])
   ];
   static const List<Option> REACTIONS = [

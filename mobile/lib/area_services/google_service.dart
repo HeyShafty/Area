@@ -9,8 +9,8 @@ import 'option.dart';
 
 class GoogleService extends AreaServiceBase {
   static const List<Option> ACTIONS = [
-    Option("new_video", [Input("url", "Channel url", r'^(https?:\/\/)?(www\.)?youtube\.com\/(channel|user)\/[\w-]+$', false)]),
-    Option("playlist_update", [Input("playlist", "Playlist name", null, false)])
+    Option("new_video", [Input("id", "Channel id", null, false)]),
+    Option("playlist_update", [Input("id", "Playlist id", null, false)])
   ];
   static const List<Option> REACTIONS = [];
 
