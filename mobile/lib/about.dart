@@ -15,7 +15,23 @@ class _AboutPageState<Page extends AboutPage> extends State<Page> {
           title: this.getFormTitle(),
         ),
         body: SingleChildScrollView(
-            child: Column(children: [DescriptionCard()])));
+            child: Column(children: [
+          DescriptionCard(),
+          Padding(padding: EdgeInsets.only(top: 32.0)),
+          Text(' Our Team',
+              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center),
+          NathanCard(),
+          GhassaneCard(),
+          KylianCard(),
+          RodoCard(),
+          EliottCard(),
+          BearCard(),
+          Text('© 2021 Chad Corporation',
+              style: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
+              textAlign: TextAlign.center),
+          Padding(padding: EdgeInsets.only(top: 8.0)),
+        ])));
   }
 
   Widget getFormTitle() {
@@ -24,8 +40,6 @@ class _AboutPageState<Page extends AboutPage> extends State<Page> {
 }
 
 class DescriptionCard extends StatelessWidget {
-  DescriptionCard({Key key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -59,6 +73,162 @@ class DescriptionCard extends StatelessWidget {
                 style: TextStyle(fontSize: 18.0),
                 textAlign: TextAlign.center),
             Padding(padding: EdgeInsets.only(top: 10.0)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class NathanCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Card(
+        margin: EdgeInsets.all(24.0),
+        elevation: 5,
+        child: Column(
+          children: <Widget>[
+            Image.asset(
+              'assets/images/team/watermelon.png',
+            ),
+            Padding(padding: EdgeInsets.only(top: 10.0)),
+            Text('Nathan LECORCHET',
+                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center),
+            Text('Back Developper',
+                style: TextStyle(fontSize: 18.0), textAlign: TextAlign.center),
+            Padding(padding: EdgeInsets.only(top: 14.0)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class GhassaneCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Card(
+        margin: EdgeInsets.all(24.0),
+        elevation: 5,
+        child: Column(
+          children: <Widget>[
+            Image.asset(
+              'assets/images/team/bubz.png',
+            ),
+            Padding(padding: EdgeInsets.only(top: 10.0)),
+            Text('Ghassane SEBAÏ',
+                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center),
+            Text('Web developper & Designer',
+                style: TextStyle(fontSize: 18.0), textAlign: TextAlign.center),
+            Padding(padding: EdgeInsets.only(top: 14.0)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class KylianCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Card(
+        margin: EdgeInsets.all(24.0),
+        elevation: 5,
+        child: Column(
+          children: <Widget>[
+            Image.asset(
+              'assets/images/team/sock.png',
+            ),
+            Padding(padding: EdgeInsets.only(top: 10.0)),
+            Text('Kylian BALAN',
+                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center),
+            Text('Mobile Developper',
+                style: TextStyle(fontSize: 18.0), textAlign: TextAlign.center),
+            Padding(padding: EdgeInsets.only(top: 14.0)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class RodoCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Card(
+        margin: EdgeInsets.all(24.0),
+        elevation: 5,
+        child: Column(
+          children: <Widget>[
+            Image.asset(
+              'assets/images/team/muscle.png',
+            ),
+            Padding(padding: EdgeInsets.only(top: 10.0)),
+            Text('Rodolphe DUPUIS',
+                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center),
+            Text('Back Developper',
+                style: TextStyle(fontSize: 18.0), textAlign: TextAlign.center),
+            Padding(padding: EdgeInsets.only(top: 14.0)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class EliottCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Card(
+        margin: EdgeInsets.all(24.0),
+        elevation: 5,
+        child: Column(
+          children: <Widget>[
+            Image.asset(
+              'assets/images/team/ouaf.png',
+            ),
+            Padding(padding: EdgeInsets.only(top: 10.0)),
+            Text('Eliott PALUEAU',
+                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center),
+            Text('Web developper & Doc redactor',
+                style: TextStyle(fontSize: 18.0), textAlign: TextAlign.center),
+            Padding(padding: EdgeInsets.only(top: 14.0)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class BearCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Card(
+        margin: EdgeInsets.all(24.0),
+        elevation: 5,
+        child: Column(
+          children: <Widget>[
+            Image.asset(
+              'assets/images/team/bear.png',
+            ),
+            Padding(padding: EdgeInsets.only(top: 10.0)),
+            Text('CHAD BEAR',
+                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center),
+            Text('Mascott',
+                style: TextStyle(fontSize: 18.0), textAlign: TextAlign.center),
+            Padding(padding: EdgeInsets.only(top: 14.0)),
           ],
         ),
       ),
