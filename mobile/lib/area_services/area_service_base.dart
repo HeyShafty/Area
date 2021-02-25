@@ -132,6 +132,7 @@ class AreaServiceBaseState<Page extends AreaServiceBase> extends State<Page> {
             width: 200.0,
             child: DropdownButtonHideUnderline(
                 child: DropdownButton<Option>(
+                    isExpanded: true,
                     value: this._selectedOption,
                     items: options.map((e) => DropdownMenuItem(child: Text(e.name), value: e)).toList(),
                     onChanged: (value) {

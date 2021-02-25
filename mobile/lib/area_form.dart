@@ -44,8 +44,8 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
   @protected
   Map<String, dynamic> reactionParams = Map();
 
-  List<DropdownMenuItem<ServiceInformation>> _actionMenuItems;
-  List<DropdownMenuItem<ServiceInformation>> _reactionMenuItems;
+  List<DropdownMenuItem<ServiceInformation>> _actionMenuItems = [];
+  List<DropdownMenuItem<ServiceInformation>> _reactionMenuItems = [];
 
   @override
   void initState() {
@@ -73,7 +73,8 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
 
   List<DropdownMenuItem<ServiceInformation>> buildDropDownMenuItems(bool actions) {
     List<DropdownMenuItem<ServiceInformation>> items = [];
-    for (MapEntry<ServiceType, ServiceInformation> serviceMapEntry in SERVICES_INFORMATION_MAP.entries) {
+
+    for (MapEntry<String, ServiceInformation> serviceMapEntry in SERVICES_INFORMATION_MAP.entries) {
       if (actions && serviceMapEntry.value.hasActions) {
         items.add(DropdownMenuItem(
           child: Text(serviceMapEntry.value.name),
@@ -125,6 +126,7 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
                                                 width: 200.0,
                                                 child: DropdownButtonHideUnderline(
                                                     child: DropdownButton<ServiceInformation>(
+                                                        isExpanded: true,
                                                         value: this.selectedActionServiceInfo,
                                                         items: this._actionMenuItems,
                                                         onChanged: (value) async {
@@ -165,6 +167,7 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
                                                 width: 200.0,
                                                 child: DropdownButtonHideUnderline(
                                                     child: DropdownButton<ServiceInformation>(
+                                                        isExpanded: true,
                                                         value: this.selectedReactionServiceInfo,
                                                         items: this._reactionMenuItems,
                                                         onChanged: (value) async {

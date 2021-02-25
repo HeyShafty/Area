@@ -199,7 +199,7 @@ class AreaService {
     if (response.statusCode == 401) {
       throw BadTokenException();
     }
-    if (response.statusCode != 200) {
+    if (response.statusCode != 204) {
       throw BadResponseException();
     }
   }

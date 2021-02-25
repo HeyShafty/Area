@@ -6,23 +6,22 @@ import 'package:area/area_services/google_service.dart';
 import 'package:area/area_services/microsoft_service.dart';
 import 'package:area/area_services/timer_service.dart';
 import 'package:area/area_services/twitter_service.dart';
-import 'package:area/services/area_service.dart';
 
 import 'area_service_base.dart';
 
 class ServiceFactory {
-  static const Map<ServiceType, Function> SERVICE_FACTORY_MAP = {
-    ServiceType.DISCORD: DiscordService.create,
-    ServiceType.GITHUB: GithubService.create,
-    ServiceType.GOOGLE: GoogleService.create,
-    ServiceType.MICROSOFT: MicrosoftService.create,
-    ServiceType.TIMER: TimerService.create,
-    ServiceType.TWITTER: TwitterService.create
+  static const Map<String, Function> SERVICE_FACTORY_MAP = {
+    "discord": DiscordService.create,
+    "github": GithubService.create,
+    "google": GoogleService.create,
+    "microsoft": MicrosoftService.create,
+    "timer": TimerService.create,
+    "twitter": TwitterService.create
   };
 
   static AreaServiceBase createServiceInstance(
-      ServiceType serviceType, StreamController<Map<String, dynamic>> streamParamsController, bool isAction,
+      String serviceName, StreamController<Map<String, dynamic>> streamParamsController, bool isAction,
       [Map<String, dynamic> params = const {}]) {
-    return SERVICE_FACTORY_MAP[serviceType](streamParamsController, isAction, params);
+    return SERVICE_FACTORY_MAP[serviceName](streamParamsController, isAction, params);
   }
 }

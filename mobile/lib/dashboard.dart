@@ -14,15 +14,21 @@ import 'constants.dart';
 import 'exceptions/bad_token_exception.dart';
 
 class DashboardPage extends StatefulWidget {
+  final AreaService _areaServiceInstance;
+
+  DashboardPage([AreaService areaService]) : this._areaServiceInstance = areaService ?? AreaService();
+
   @override
-  _DashboardPageState createState() => _DashboardPageState();
+  _DashboardPageState createState() => _DashboardPageState(this._areaServiceInstance);
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  final AreaService areaServiceInstance = AreaService();
+  final AreaService _areaServiceInstance;
 
   bool _isLoading = true;
   List<Area> _areaList;
+
+  _DashboardPageState(AreaService areaService) : this._areaServiceInstance = areaService;
 
   @override
   void initState() {
@@ -68,6 +74,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                       return Padding(
                                           padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 15.0),
                                           child: Card(
+                                              key: Key(
+                                                  'card_' + actionService.name.toLowerCase() + '_' + reactionService.name.toLowerCase()),
                                               shape: RoundedRectangleBorder(
                                                   side: BorderSide(color: Colors.black, width: 1.5),
                                                   borderRadius: BorderRadius.circular(4.0)),
@@ -120,7 +128,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   deleteArea(Area area) async {
     try {
-      await this.areaServiceInstance.deleteArea(area);
+      await this._areaServiceInstance.deleteArea(area);
       return ToastService.showToast("Area deleted successfully!", Colors.green);
     } on BadTokenException {
       ToastService.showToast("Invalid token, please sign out.");
@@ -132,9 +140,22 @@ class _DashboardPageState extends State<DashboardPage> {
     }
   }
 
+  List<Area> checkAreaList(List<Area> areaList) {
+    List<Area> finalAreaList = areaList;
+
+    areaList.asMap().forEach((idx, element) {
+      if (!SERVICES_INFORMATION_MAP.containsKey(element.action.service.toLowerCase()) ||
+          !SERVICES_INFORMATION_MAP.containsKey(element.reaction.service.toLowerCase())) {
+        finalAreaList.removeAt(idx);
+      }
+    });
+    return finalAreaList;
+  }
+
   Future<void> getAreaList() async {
     try {
-      List<Area> areaList = await areaServiceInstance.getAreaList();
+      List<Area> areaList = await _areaServiceInstance.getAreaList();
+      areaList = this.checkAreaList(areaList);
 
       return this.setState(() {
         this._areaList = areaList;
