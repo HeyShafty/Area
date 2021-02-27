@@ -22,7 +22,7 @@ class Service {
 
 const AREA_SERVICES = [
     new Service('microsoft', [
-        new Action('incoming_mail', 'Triggers when receiving an email')
+        new Action('incoming_mail', 'Triggers when an email is added into your inbox')
     ], [
         new Reaction('send_mail', 'Sends an email')
     ]),

@@ -8,6 +8,7 @@ async function getUserAccessToken(user, msalClient) {
     const connectData = user.connectData.get(MONGOOSE_MSAL_KEY);
 
     if (!connectData) {
+        console.log("Oh sa mère");
         return null;
     }
     try {
@@ -25,6 +26,7 @@ async function getUserAccessToken(user, msalClient) {
         await User.findByIdAndUpdate(user._id, user);
         return response.accessToken;
     } catch (err) {
+        console.log(err);
         user.connectData.delete(MONGOOSE_MSAL_KEY);
         await User.findByIdAndUpdate(user._id, user);
         return null;
@@ -58,9 +60,19 @@ async function sendEmail(accessToken, receiver, message) {
         },
       };
 
+    console.log(mail);
     return await graphClient
         .api('/me/sendMail')
         .post(mail);
+}
+
+async function getInboxItemCount(accessToken) {
+    const graphClient = getGraphClient(accessToken);
+    const result = await graphClient
+        .api('/me/mailFolders/inbox')
+        .get();
+
+    return result.totalItemCount;
 }
 
 function getGraphClient(accessToken) {
@@ -74,5 +86,6 @@ function getGraphClient(accessToken) {
 module.exports = {
     getUserAccessToken,
     getUserDetails,
-    sendEmail
+    sendEmail,
+    getInboxItemCount
 };

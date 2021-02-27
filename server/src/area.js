@@ -1,8 +1,10 @@
 const Area = require('./models/Area');
 const User = require('./models/User');
+
 const timerTriggers = require('./area/timer');
 const githubTriggers = require('./area/github');
 const youtubeTriggers = require('./area/youtube');
+const microsoftTriggers = require('./area/microsoft');
 
 const serviceGithub = require('./services/githubService');
 const serviceTwitter = require('./services/twitterService');
@@ -32,7 +34,10 @@ async function doReaction(area, msalClient) {
     }
     if (area.reaction.service === "microsoft") {
         if (area.reaction.name === "send_mail") {
+            console.log(area.reaction.data);
             const accessToken = await serviceMicrosoft.getUserAccessToken(user, msalClient);
+
+            console.log(accessToken);
             try {
                 const sendMailRequest = await serviceMicrosoft.sendEmail(accessToken, area.reaction.data.to, area.reaction.data);
             } catch (err) {
@@ -74,6 +79,9 @@ async function checkupTriggers(msalClient) {
 
     // console.log(areas);
     for (const area of areas) {
+        if (area.action.service === 'microsoft') {
+            await microsoftTriggers(area, doReaction, msalClient);
+        }
         if (area.action.service === 'youtube') {
             await youtubeTriggers(area, doReaction);
         }
