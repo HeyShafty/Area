@@ -79,14 +79,11 @@ async function checkupTriggers(msalClient) {
     for (const area of areas) {
         if (area.action.service === 'microsoft') {
             await microsoftTriggers(area, react, msalClient);
-        }
-        if (area.action.service === 'youtube') {
+        } else if (area.action.service === 'youtube') {
             await youtubeTriggers(area, react);
-        }
-        if (area.action.service === 'github') {
+        } else if (area.action.service === 'github') {
             await githubTriggers(area, react);
-        }
-        if (area.action.service === 'timer') {
+        } else if (area.action.service === 'timer') {
             await timerTriggers(area, react);
         }
     }
