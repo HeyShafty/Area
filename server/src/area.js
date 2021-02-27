@@ -34,12 +34,10 @@ async function doReaction(area, msalClient) {
     }
     if (area.reaction.service === "microsoft") {
         if (area.reaction.name === "send_mail") {
-            console.log(area.reaction.data);
             const accessToken = await serviceMicrosoft.getUserAccessToken(user, msalClient);
 
-            console.log(accessToken);
             try {
-                const sendMailRequest = await serviceMicrosoft.sendEmail(accessToken, area.reaction.data.to, area.reaction.data);
+                await serviceMicrosoft.sendEmail(accessToken, area.reaction.data.to, area.reaction.data);
             } catch (err) {
                 console.log(err);
             }
@@ -49,14 +47,14 @@ async function doReaction(area, msalClient) {
         const data = await serviceTwitter.getUserData(user);
         if (area.reaction.name === "post_tweet") {
             try {
-                const postTweet = serviceTwitter.postTweet(data.accessToken, data.data.oauthAccessTokenSecret, area.reaction.data.body);
+                serviceTwitter.postTweet(data.accessToken, data.data.oauthAccessTokenSecret, area.reaction.data.body);
             } catch (err) {
                 console.log(err);
             }
         }
         if (area.reaction.name === "update_bio") {
             try {
-                const updateDescription = serviceTwitter.updateDescription(data.accessToken, data.data.oauthAccessTokenSecret, area.reaction.data.body);
+                serviceTwitter.updateDescription(data.accessToken, data.data.oauthAccessTokenSecret, area.reaction.data.body);
             } catch (err) {
                 console.log(err);
             }
@@ -80,10 +78,10 @@ async function checkupTriggers(msalClient) {
     // console.log(areas);
     for (const area of areas) {
         if (area.action.service === 'microsoft') {
-            await microsoftTriggers(area, doReaction, msalClient);
+            await microsoftTriggers(area, react, msalClient);
         }
         if (area.action.service === 'youtube') {
-            await youtubeTriggers(area, doReaction);
+            await youtubeTriggers(area, react);
         }
         if (area.action.service === 'github') {
             await githubTriggers(area, react);

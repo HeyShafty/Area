@@ -8,7 +8,6 @@ async function getUserAccessToken(user, msalClient) {
     const connectData = user.connectData.get(MONGOOSE_MSAL_KEY);
 
     if (!connectData) {
-        console.log("Oh sa mère");
         return null;
     }
     try {
@@ -60,7 +59,6 @@ async function sendEmail(accessToken, receiver, message) {
         },
       };
 
-    console.log(mail);
     return await graphClient
         .api('/me/sendMail')
         .post(mail);
