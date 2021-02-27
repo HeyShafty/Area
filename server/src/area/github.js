@@ -36,6 +36,22 @@ const graphqlPullRequests = (owner, name) => `{
     }
 }`;
 
+const graphqlRefsCount = (owner, name) => `{
+    repository(owner:"${owner}", name:"${name}") { 
+        refs(refPrefix: "refs/heads/") {
+            totalCount
+        }
+    }
+}`;
+
+const graphqlTagCount = (owner, name) => `{
+    repository(owner:"${owner}", name:"${name}") { 
+        refs(refPrefix: "refs/tags/") {
+            totalCount
+        }
+    }
+}`;
+
 async function execQuery(area, user, graphQuery, react) {
     const connectData = user.connectData.get(MONGOOSE_GITHUB_KEY);
     const { data } = area.action;
@@ -101,6 +117,10 @@ async function githubTriggers(area, react) {
         await execQuery(area, user, graphqlClosedIssues, react);
     } else if (area.action.name === 'new_pull_request') {
         await execQuery(area, user, graphqlPullRequests, react);
+    } else if (area.action.name === 'new_ref') {
+        await execQuery(area, user, graphqlRefsCount, react);
+    } else if (area.action.name === 'new_tag') {
+        await execQuery(area, user, graphqlTagCount, react);
     }
 }
 
