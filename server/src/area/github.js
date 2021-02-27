@@ -5,7 +5,7 @@ const User = require('../models/User');
 const { MONGOOSE_GITHUB_KEY } = require('../config/githubConfig');
 
 const graphqlRepositoryCount = (owner, _) => `{
-    user(login:"${owner}") {
+    repositoryOwner(login:"${owner}") {
         repositories {
             totalCount
         }
