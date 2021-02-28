@@ -42,11 +42,12 @@ async function extractConnectSession(id, endpoint) {
                 data: connectSession?.data
             };
         }
+        console.log('Invalid ConnectSession.');
     } catch (err) {
         console.log('Could not verify ConnectSession for some reason...');
         console.log(err);
     }
-    return null;
+    return { user: null, isMobile: null, data: null };
 }
 
 module.exports = {

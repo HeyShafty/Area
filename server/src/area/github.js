@@ -5,7 +5,7 @@ const User = require('../models/User');
 const { MONGOOSE_GITHUB_KEY } = require('../config/githubConfig');
 
 const graphqlRepositoryCount = (owner, _) => `{
-    user(login:"${owner}") {
+    repositoryOwner(login:"${owner}") {
         repositories {
             totalCount
         }
@@ -31,6 +31,22 @@ const graphqlClosedIssues = (owner, name) => `{
 const graphqlPullRequests = (owner, name) => `{
     repository(owner:"${owner}", name:"${name}") { 
         pullRequests {
+            totalCount
+        }
+    }
+}`;
+
+const graphqlRefsCount = (owner, name) => `{
+    repository(owner:"${owner}", name:"${name}") { 
+        refs(refPrefix: "refs/heads/") {
+            totalCount
+        }
+    }
+}`;
+
+const graphqlTagCount = (owner, name) => `{
+    repository(owner:"${owner}", name:"${name}") { 
+        refs(refPrefix: "refs/tags/") {
             totalCount
         }
     }
@@ -101,6 +117,10 @@ async function githubTriggers(area, react) {
         await execQuery(area, user, graphqlClosedIssues, react);
     } else if (area.action.name === 'new_pull_request') {
         await execQuery(area, user, graphqlPullRequests, react);
+    } else if (area.action.name === 'new_ref') {
+        await execQuery(area, user, graphqlRefsCount, react);
+    } else if (area.action.name === 'new_tag') {
+        await execQuery(area, user, graphqlTagCount, react);
     }
 }
 

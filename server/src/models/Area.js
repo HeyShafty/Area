@@ -13,7 +13,7 @@ const ActionSchema = new mongoose.Schema({
         type: Object,
         required: true
     }
-});
+}, { minimize: false });
 
 const ReactionSchema = new mongoose.Schema({
     service: {
@@ -26,9 +26,9 @@ const ReactionSchema = new mongoose.Schema({
     },
     data: {
         type: Object,
-        default: {},
+        required: true
     }
-});
+}, { minimize: false });
 
 const AreaSchema = new mongoose.Schema({
     userId: {
