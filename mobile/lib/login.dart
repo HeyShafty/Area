@@ -52,65 +52,64 @@ class _LoginState extends State<Login> {
           title: Text("Sign in"),
         ),
         body: Center(
-          child: SingleChildScrollView(
-              child: Padding(
-                  padding: const EdgeInsets.only(left: 25.0, right: 25.0),
-                  child: Column(children: <Widget>[
-                    SizedBox(height: 200.0, child: Image.asset('assets/images/AREALOGO.png', fit: BoxFit.contain)),
-                    Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: TextField(
-                            obscureText: false,
-                            controller: this._emailController,
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                                errorText: this._emailError,
-                                hintText: "Email",
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-                            keyboardType: TextInputType.emailAddress)),
-                    Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: TextField(
-                            obscureText: true,
-                            controller: this._passwordController,
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                                errorText: this._passwordError,
-                                hintText: "Password",
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))))),
-                    Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: RoundedLoadingButton(
-                            child: Text(
-                              'Sign in',
-                              style: TextStyle(color: Colors.white),
-                              textAlign: TextAlign.center,
-                            ),
-                            controller: _buttonController,
-                            onPressed: this._isLoading
-                                ? null
-                                : () {
-                              FocusScope.of(context).unfocus();
-                              this.signInWithCredentials(this._emailController.value.text, this._passwordController.value.text);
-                            })),
-                    Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: TextButton(
-                            onPressed: this._isLoading ? null : () => this.openRegisterPage(),
-                            child: Text('Don\'t have an account? Sign up', style: TextStyle(color: Colors.blue, fontSize: 15)))),
-                    Padding(
-                        padding: const EdgeInsets.only(top: 5.0, bottom: 10.0),
-                        child: Text('Or sign in with:', style: TextStyle(color: Colors.black54, fontSize: 15))),
-                    IconButton(
-                        onPressed: this._isLoading
-                            ? null
-                            : () async {
-                          await this.signInWithMicrosoft();
-                        },
-                        icon: Image.asset("assets/images/microsoft.png"),
-                        color: Colors.blue)
-                  ]))),
-        ));
+            child: SingleChildScrollView(
+                child: Padding(
+                    padding: const EdgeInsets.only(left: 25.0, right: 25.0),
+                    child: Column(children: <Widget>[
+                      SizedBox(height: 200.0, child: Image.asset('assets/images/AREALOGO.png', fit: BoxFit.contain)),
+                      Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: TextField(
+                              obscureText: false,
+                              controller: this._emailController,
+                              decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                                  errorText: this._emailError,
+                                  hintText: "Email",
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+                              keyboardType: TextInputType.emailAddress)),
+                      Padding(
+                          padding: const EdgeInsets.only(top: 25.0),
+                          child: TextField(
+                              obscureText: true,
+                              controller: this._passwordController,
+                              decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                                  errorText: this._passwordError,
+                                  hintText: "Password",
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))))),
+                      Padding(
+                          padding: const EdgeInsets.only(top: 25.0),
+                          child: RoundedLoadingButton(
+                              child: Text(
+                                'Sign in',
+                                style: TextStyle(color: Colors.white),
+                                textAlign: TextAlign.center,
+                              ),
+                              controller: _buttonController,
+                              onPressed: this._isLoading
+                                  ? null
+                                  : () {
+                                      FocusScope.of(context).unfocus();
+                                      this.signInWithCredentials(this._emailController.value.text, this._passwordController.value.text);
+                                    })),
+                      Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: TextButton(
+                              onPressed: this._isLoading ? null : () => this.openRegisterPage(),
+                              child: Text('Don\'t have an account? Sign up', style: TextStyle(color: Colors.blue, fontSize: 15)))),
+                      Padding(
+                          padding: const EdgeInsets.only(top: 5.0, bottom: 10.0),
+                          child: Text('Or sign in with:', style: TextStyle(color: Colors.black54, fontSize: 15))),
+                      IconButton(
+                          onPressed: this._isLoading
+                              ? null
+                              : () async {
+                                  await this.signInWithMicrosoft();
+                                },
+                          icon: Image.asset("assets/images/microsoft.png"),
+                          color: Colors.blue)
+                    ])))));
   }
 
   void openRegisterPage() {
@@ -123,7 +122,7 @@ class _LoginState extends State<Login> {
 
   Future<void> signInWithMicrosoft() async {
     var pca =
-    await PublicClientApplication.createPublicClientApplication(APP_ID, authority: "https://login.microsoftonline.com/" + TENANT_ID);
+        await PublicClientApplication.createPublicClientApplication(APP_ID, authority: "https://login.microsoftonline.com/" + TENANT_ID);
 
     this.setState(() {
       this._isLoading = true;
@@ -218,12 +217,12 @@ class _LoginState extends State<Login> {
               title: Text('Server ip'),
               content: SingleChildScrollView(
                   child: ListBody(children: <Widget>[
-                    Text('Please enter the server ip address and port bellow.'),
-                    TextField(
-                        obscureText: false,
-                        controller: serverIpController,
-                        decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0), hintText: "10.0.2.2:8080"))
-                  ])),
+                Text('Please enter the server ip address and port bellow.'),
+                TextField(
+                    obscureText: false,
+                    controller: serverIpController,
+                    decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0), hintText: "10.0.2.2:8080"))
+              ])),
               actions: <Widget>[
                 TextButton(onPressed: () => exit(0), child: Text('Cancel')),
                 TextButton(

@@ -58,6 +58,22 @@ void main() {
       expect(find.byType(MyProfilePage), findsOneWidget);
     }
 
+    _logout(WidgetTester tester) async {
+      final logoutButton = find.byIcon(Icons.logout);
+      expect(logoutButton, findsOneWidget);
+
+      await tester.tap(logoutButton);
+      await tester.pump();
+
+      final confirmButton = find.text("Yes");
+      expect(confirmButton, findsOneWidget);
+
+      await tester.tap(confirmButton);
+      await tester.pump();
+
+      verify(mockObserver.didPush(any, any)).called(2);
+    }
+
     testWidgets("Is widget valid", (WidgetTester tester) async {
       await _loadWidget(tester);
 
@@ -74,6 +90,13 @@ void main() {
       await _loadWidget(tester);
 
       await _goToProfile(tester);
+    });
+
+    testWidgets("Logout", (WidgetTester tester) async {
+      await _loadWidget(tester);
+
+      await _goToProfile(tester);
+      await _logout(tester);
     });
   });
 }
