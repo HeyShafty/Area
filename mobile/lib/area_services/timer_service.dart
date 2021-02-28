@@ -35,14 +35,4 @@ class TimerService extends AreaServiceBase {
     }
     return null;
   }
-
-  @override
-  Option getReactionOption(String reactionValue) {
-    for (Option value in REACTIONS) {
-      if (value.name == reactionValue) {
-        return value;
-      }
-    }
-    return null;
-  }
 }

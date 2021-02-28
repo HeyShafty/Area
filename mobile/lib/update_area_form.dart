@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:area/area_form.dart';
+import 'package:area/services/area_service.dart';
 import 'package:area/services/toast_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,16 +11,17 @@ import 'exceptions/bad_token_exception.dart';
 import 'models/area.dart';
 
 class UpdateAreaFormPage extends AreaFormPage {
+  final AreaService _areaServiceInstance;
   final Area area;
 
-  const UpdateAreaFormPage({Key key, this.area}) : super(key: key);
+  UpdateAreaFormPage(this.area, [AreaService areaService]) : _areaServiceInstance = areaService ?? AreaService();
 
   @override
-  _UpdateAreaFormPageState createState() => _UpdateAreaFormPageState(area);
+  _UpdateAreaFormPageState createState() => _UpdateAreaFormPageState(area, _areaServiceInstance);
 }
 
 class _UpdateAreaFormPageState extends AreaFormPageState<UpdateAreaFormPage> {
-  _UpdateAreaFormPageState(Area area) {
+  _UpdateAreaFormPageState(Area area, AreaService areaService) : super(areaService) {
     if (area == null) {
       return;
     }

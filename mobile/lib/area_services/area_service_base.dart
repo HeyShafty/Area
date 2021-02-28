@@ -11,9 +11,13 @@ import '../constants.dart';
 abstract class AreaServiceBase extends StatefulWidget {
   AreaServiceBase({Key key}) : super(key: key);
 
-  Option getActionOption(String actionValue);
+  Option getActionOption(String actionValue) {
+    return null;
+  }
 
-  Option getReactionOption(String reactionValue);
+  Option getReactionOption(String reactionValue) {
+    return null;
+  }
 }
 
 class AreaServiceBaseState<Page extends AreaServiceBase> extends State<Page> {
@@ -70,18 +74,19 @@ class AreaServiceBaseState<Page extends AreaServiceBase> extends State<Page> {
   Widget body() {
     return Column(children: [
       if (this.isAction) this.showOptions(this.actions) else this.showOptions(this.reactions),
-      if (this._selectedOption != null) this.showInputs(this._selectedOption)
+      if (this._selectedOption != null) this.showInputs()
     ]);
   }
 
-  Widget showInputs(Option selectedAction) {
+  Widget showInputs() {
     return Column(
-        children: selectedAction.inputs.map<Widget>((input) {
+        children: this._selectedOption.inputs.map<Widget>((input) {
       return Padding(
           padding: EdgeInsets.only(top: 20.0),
           child: Container(
               width: double.infinity,
               child: TextField(
+                  key: Key("input_" + this._selectedOption.name + "_" + input.name),
                   controller: this.textControllers[input.name],
                   obscureText: false,
                   decoration: InputDecoration(
@@ -106,6 +111,11 @@ class AreaServiceBaseState<Page extends AreaServiceBase> extends State<Page> {
                       });
                     }
                     if (this.getErrorText(input, value) == null) {
+                      this.streamParams.add(this._params);
+                    } else {
+                      this.setState(() {
+                        this._params.remove(input.name);
+                      });
                       this.streamParams.add(this._params);
                     }
                   })));
@@ -132,6 +142,7 @@ class AreaServiceBaseState<Page extends AreaServiceBase> extends State<Page> {
             width: 200.0,
             child: DropdownButtonHideUnderline(
                 child: DropdownButton<Option>(
+                    key: this.isAction ? Key("action_options_dropdown") : Key("reaction_options_dropdown"),
                     isExpanded: true,
                     value: this._selectedOption,
                     items: options.map((e) => DropdownMenuItem(child: Text(e.name), value: e)).toList(),

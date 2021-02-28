@@ -94,8 +94,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                                     IconButton(
                                                         icon: Icon(Icons.edit, color: Colors.black),
                                                         onPressed: () {
-                                                          Navigator.push(context,
-                                                              MaterialPageRoute(builder: (context) => UpdateAreaFormPage(area: item)));
+                                                          Navigator.push(
+                                                              context, MaterialPageRoute(builder: (context) => UpdateAreaFormPage(item)));
                                                         }),
                                                     IconButton(
                                                         icon: Icon(Icons.delete_outline, color: Colors.red),

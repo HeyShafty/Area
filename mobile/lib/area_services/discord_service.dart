@@ -30,11 +30,6 @@ class DiscordService extends AreaServiceBase {
   AreaServiceBaseState createState() => _DiscordServiceState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
 
   @override
-  Option getActionOption(String actionValue) {
-    return null;
-  }
-
-  @override
   Option getReactionOption(String reactionValue) {
     for (Option value in REACTIONS) {
       if (value.name == reactionValue) {

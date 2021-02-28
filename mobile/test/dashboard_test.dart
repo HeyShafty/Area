@@ -99,6 +99,23 @@ void main() {
       expect(find.byType(UpdateAreaFormPage), findsOneWidget);
     }
 
+    _deleteArea(WidgetTester tester) async {
+      when(mockAreaService.getAreaList()).thenAnswer((_) async => ([
+            Area("", AreaAction("Github", "new_issue", {"owner": "EliottPal", "repo": "Dashboard_2020"}),
+                AreaReaction("Microsoft", "send_mail", {"to": "eliott.palueau@epitech.eu", "subject": "test", "body": "test"})),
+          ]));
+      await _loadWidget(tester);
+
+      final deleteButton = find.byIcon(Icons.delete_outline);
+      expect(deleteButton, findsOneWidget);
+
+      await tester.tap(deleteButton);
+      await tester.pumpAndSettle();
+
+      verify(mockAreaService.deleteArea(any)).called(1);
+      verify(mockAreaService.getAreaList()).called(2);
+    }
+
     testWidgets("Valid area list", (WidgetTester tester) async {
       await _displayAreaList(tester);
     });
@@ -121,6 +138,10 @@ void main() {
 
     testWidgets("Open update area form", (WidgetTester tester) async {
       await _openUpdateAreaForm(tester);
+    });
+
+    testWidgets("Delete area", (WidgetTester tester) async {
+      await _deleteArea(tester);
     });
   });
 }

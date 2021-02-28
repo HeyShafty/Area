@@ -36,9 +36,4 @@ class GoogleService extends AreaServiceBase {
     }
     return null;
   }
-
-  @override
-  Option getReactionOption(String reactionValue) {
-    return null;
-  }
 }

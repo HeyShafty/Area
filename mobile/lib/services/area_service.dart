@@ -112,7 +112,6 @@ class AreaService {
   Future<String> getServiceRedirectionUrl(ServiceInformation service) async {
     String serviceRedirectUri = service.uri;
     Uri uri = Uri.http(this.serverIp, serviceRedirectUri, {'mobile': 'true'});
-    log(uri.toString());
     http.Response response = await http.get(uri, headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken});
     if (response.statusCode == 401) {
       throw BadTokenException();
@@ -146,6 +145,7 @@ class AreaService {
     if (response.statusCode != 200) {
       throw BadResponseException();
     }
+    log(response.body);
     return User.fromJson(jsonDecode(response.body));
   }
 
@@ -163,6 +163,7 @@ class AreaService {
     if (response.statusCode != 200) {
       throw BadResponseException();
     }
+    log(response.body);
     Iterable l = json.decode(response.body);
     return List<Area>.from(l.map((e) => Area.fromJson(e)));
   }

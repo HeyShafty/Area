@@ -87,7 +87,8 @@ void main() {
     }
 
     Future<Null> _wrongEmailPasswordCombinationError(WidgetTester tester) async {
-      when(mockAreaService.signInWithCredentials("kylian.balan@epitech.eu", "heinnnn")).thenThrow(WrongEmailPasswordCombinationException);
+      when(mockAreaService.signInWithCredentials("kylian.balan@epitech.eu", "heinnnn")).thenThrow(WrongEmailPasswordCombinationException());
+      await _loadWidget(tester);
 
       final signInButton = find.widgetWithText(RoundedLoadingButton, "Sign in");
       final emailTextField = find.byWidgetPredicate((widget) => widget is TextField && widget.decoration.hintText == "Email");
@@ -108,7 +109,8 @@ void main() {
     }
 
     Future<Null> _badResponseError(WidgetTester tester) async {
-      when(mockAreaService.signInWithCredentials("kylian.balan@epitech.eu", "heinnnn")).thenThrow(BadResponseException);
+      when(mockAreaService.signInWithCredentials("kylian.balan@epitech.eu", "heinnnn")).thenThrow(BadResponseException());
+      await _loadWidget(tester);
 
       final signInButton = find.widgetWithText(RoundedLoadingButton, "Sign in");
       final emailTextField = find.byWidgetPredicate((widget) => widget is TextField && widget.decoration.hintText == "Email");
@@ -147,14 +149,10 @@ void main() {
     });
 
     testWidgets("Wrong email password combination error", (WidgetTester tester) async {
-      await _loadWidget(tester);
-
       await _wrongEmailPasswordCombinationError(tester);
     });
 
     testWidgets("Bad response error", (WidgetTester tester) async {
-      await _loadWidget(tester);
-
       await _badResponseError(tester);
     });
   });

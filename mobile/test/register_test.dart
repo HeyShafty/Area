@@ -75,7 +75,8 @@ void main() {
     }
 
     Future<Null> _alreadyExistingUserError(WidgetTester tester) async {
-      when(mockAreaService.signUp("kilio22", "kylian.balan@epitech.eu", "heinnnn")).thenThrow(AlreadyExistsException);
+      when(mockAreaService.signUp("kilio22", "kylian.balan@epitech.eu", "heinnnn")).thenThrow(AlreadyExistsException());
+      await _loadWidget(tester);
 
       final signUpButton = find.widgetWithText(RoundedLoadingButton, "Sign up");
       final usernameTextField = find.byWidgetPredicate((widget) => widget is TextField && widget.decoration.hintText == "Username");
@@ -99,7 +100,8 @@ void main() {
     }
 
     Future<Null> _badResponseError(WidgetTester tester) async {
-      when(mockAreaService.signUp("kilio22", "kylian.balan@epitech.eu", "heinnnn")).thenThrow(BadResponseException);
+      when(mockAreaService.signUp("kilio22", "kylian.balan@epitech.eu", "heinnnn")).thenThrow(BadResponseException());
+      await _loadWidget(tester);
 
       final signUpButton = find.widgetWithText(RoundedLoadingButton, "Sign up");
       final usernameTextField = find.byWidgetPredicate((widget) => widget is TextField && widget.decoration.hintText == "Username");
@@ -135,14 +137,10 @@ void main() {
     });
 
     testWidgets("Already existing user error", (WidgetTester tester) async {
-      await _loadWidget(tester);
-
       await _alreadyExistingUserError(tester);
     });
 
     testWidgets("Bad response error", (WidgetTester tester) async {
-      await _loadWidget(tester);
-
       await _badResponseError(tester);
     });
   });

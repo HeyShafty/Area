@@ -41,6 +41,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  test: ^1.15.7
   flutter_launcher_icons: "0.8.1"
 
 flutter_icons:

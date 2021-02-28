@@ -12,20 +12,26 @@ import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'constants.dart';
 
 class MyProfilePage extends StatefulWidget {
+  final AreaService _areaServiceInstance;
+
+  MyProfilePage([AreaService areaService]) : _areaServiceInstance = areaService ?? AreaService();
+
   @override
-  _MyProfilePageState createState() => _MyProfilePageState();
+  _MyProfilePageState createState() => _MyProfilePageState(_areaServiceInstance);
 }
 
 class _MyProfilePageState extends State<MyProfilePage> {
-  final AreaService areaServiceInstance = AreaService();
+  final AreaService _areaServiceInstance;
 
   User _user;
   bool _isLoading = false;
 
+  _MyProfilePageState(AreaService areaService) : this._areaServiceInstance = areaService;
+
   @override
   void initState() {
-    super.initState();
     this.getUserProfile();
+    super.initState();
   }
 
   @override
@@ -36,32 +42,32 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 children: this._user == null
                     ? <Widget>[CircularProgressIndicator()]
                     : <Widget>[
-                  Icon(
-                    Icons.person,
-                    size: 100.0,
-                  ),
-                  Padding(
-                      padding: EdgeInsets.only(bottom: 60.0),
-                      child: Column(children: [
+                        Icon(
+                          Icons.person,
+                          size: 100.0,
+                        ),
                         Padding(
-                            padding: EdgeInsets.only(bottom: 10.0),
-                            child: Text(_user.displayName,
-                                style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold))),
-                        Text(_user.email, style: TextStyle(color: Colors.black, fontSize: 15))
-                      ])),
-                  Padding(
-                      padding: EdgeInsets.only(left: 20.0, right: 20.0),
-                      child: Column(
-                          children: SERVICES_INFORMATION_MAP.entries.map((e) {
-                            if (e.value.uri != null) {
-                              return Padding(
-                                  padding: EdgeInsets.only(top: 20.0),
-                                  child:
-                                  getSignInWith(e.value, this._user.servicesConnectInformation.contains(e.value.name.toLowerCase())));
-                            }
-                            return Container();
-                          }).toList()))
-                ])));
+                            padding: EdgeInsets.only(bottom: 60.0),
+                            child: Column(children: [
+                              Padding(
+                                  padding: EdgeInsets.only(bottom: 10.0),
+                                  child: Text(_user.displayName,
+                                      style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold))),
+                              Text(_user.email, style: TextStyle(color: Colors.black, fontSize: 15))
+                            ])),
+                        Padding(
+                            padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                            child: Column(
+                                children: SERVICES_INFORMATION_MAP.entries.map((e) {
+                              if (e.value.uri != null) {
+                                return Padding(
+                                    padding: EdgeInsets.only(top: 20.0),
+                                    child:
+                                        getSignInWith(e.value, this._user.servicesConnectInformation.contains(e.value.name.toLowerCase())));
+                              }
+                              return Container();
+                            }).toList()))
+                      ])));
   }
 
   signInWithService(ServiceInformation service) async {
@@ -69,10 +75,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
       this._isLoading = true;
     });
     try {
-      final String url = await this.areaServiceInstance.getServiceRedirectionUrl(service);
+      final String url = await this._areaServiceInstance.getServiceRedirectionUrl(service);
       final String callbackUrl = await FlutterWebAuth.authenticate(url: url.toString(), callbackUrlScheme: service.callbackUrlScheme);
 
-      await this.areaServiceInstance.handleServiceRedirection(callbackUrl, service);
+      await this._areaServiceInstance.handleServiceRedirection(callbackUrl, service);
       await this.getUserProfile();
     } on BadTokenException {
       ToastService.showToast("Invalid token, please sign out.");
@@ -118,16 +124,16 @@ class _MyProfilePageState extends State<MyProfilePage> {
             children: this._isLoading
                 ? [CircularProgressIndicator()]
                 : [
-              Image.asset(service.iconPath),
-              Padding(
-                  padding: EdgeInsets.only(left: 10.0),
-                  child: Text('Connect with ' + service.name, style: TextStyle(color: Colors.black)))
-            ]));
+                    Image.asset(service.iconPath),
+                    Padding(
+                        padding: EdgeInsets.only(left: 10.0),
+                        child: Text('Connect with ' + service.name, style: TextStyle(color: Colors.black)))
+                  ]));
   }
 
   Future<void> getUserProfile() async {
     try {
-      final User user = await this.areaServiceInstance.getUserProfile();
+      final User user = await this._areaServiceInstance.getUserProfile();
 
       setState(() {
         this._user = user;

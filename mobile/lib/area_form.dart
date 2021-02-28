@@ -15,15 +15,17 @@ import 'exceptions/bad_token_exception.dart';
 import 'models/area.dart';
 
 class AreaFormPage extends StatefulWidget {
-  const AreaFormPage({Key key}) : super(key: key);
+  final AreaService _areaServiceInstance;
+
+  AreaFormPage([AreaService areaService]) : _areaServiceInstance = areaService ?? AreaService();
 
   @override
-  AreaFormPageState createState() => AreaFormPageState();
+  AreaFormPageState createState() => AreaFormPageState(_areaServiceInstance);
 }
 
 class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
   @protected
-  final AreaService areaServiceInstance = AreaService();
+  final AreaService areaServiceInstance;
   @protected
   final StreamController<Map<String, dynamic>> actionParamsController = StreamController<Map<String, dynamic>>();
   @protected
@@ -46,6 +48,8 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
 
   List<DropdownMenuItem<ServiceInformation>> _actionMenuItems = [];
   List<DropdownMenuItem<ServiceInformation>> _reactionMenuItems = [];
+
+  AreaFormPageState(AreaService areaService) : this.areaServiceInstance = areaService;
 
   @override
   void initState() {
@@ -126,6 +130,7 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
                                                 width: 200.0,
                                                 child: DropdownButtonHideUnderline(
                                                     child: DropdownButton<ServiceInformation>(
+                                                        key: Key("action_dropdown"),
                                                         isExpanded: true,
                                                         value: this.selectedActionServiceInfo,
                                                         items: this._actionMenuItems,
@@ -150,6 +155,7 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
                                       ]))),
                               Padding(padding: EdgeInsets.only(top: 40.0)),
                               Container(
+                                  key: Key("reaction"),
                                   width: double.infinity,
                                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(32.0), color: Color(0xffe5e8e8)),
                                   child: Padding(
@@ -167,6 +173,7 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
                                                 width: 200.0,
                                                 child: DropdownButtonHideUnderline(
                                                     child: DropdownButton<ServiceInformation>(
+                                                        key: Key("reaction_dropdown"),
                                                         isExpanded: true,
                                                         value: this.selectedReactionServiceInfo,
                                                         items: this._reactionMenuItems,
