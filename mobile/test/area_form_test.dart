@@ -1,4 +1,6 @@
 import 'package:area/area_form.dart';
+import 'package:area/exceptions/bad_response_exception.dart';
+import 'package:area/exceptions/bad_token_exception.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -71,12 +73,26 @@ void main() {
       await _completeAreaPart(
           tester, Key("action_dropdown"), "Timer", Key("action_options_dropdown"), "every_hour", {Key("input_every_hour_minute"): "42"});
 
+      // Scrolling up
+      await tester.drag(find.byType(SingleChildScrollView), const Offset(0.0, -800));
+      await tester.pumpAndSettle();
+
       // REACTION
       await _completeAreaPart(tester, Key("reaction_dropdown"), "Twitter", Key("reaction_options_dropdown"), "post_tweet",
           {Key("input_post_tweet_body"): "test"});
 
+      // Scrolling up
+      await tester.drag(find.byType(SingleChildScrollView), const Offset(0.0, -800));
+      await tester.pumpAndSettle();
+
       final submitButton = find.byWidgetPredicate((widget) => widget is RoundedLoadingButton && widget.onPressed != null);
       expect(submitButton, findsOneWidget);
+
+      await tester.tap(submitButton);
+      await tester.pumpAndSettle();
+
+      verify(mockAreaService.addArea(any)).called(1);
+      expect(find.byType(AreaFormPage), findsNothing);
     }
 
     _createAreaTwitterGithub(WidgetTester tester) async {
@@ -92,6 +108,10 @@ void main() {
       await _completeAreaPart(tester, Key("action_dropdown"), "Twitter", Key("action_options_dropdown"), "new_tweet_from",
           {Key("input_new_tweet_from_username"): "heyshafty"});
 
+      // Scrolling up
+      await tester.drag(find.byType(SingleChildScrollView), const Offset(0.0, -800));
+      await tester.pumpAndSettle();
+
       // REACTION
       await _completeAreaPart(tester, Key("reaction_dropdown"), "Github", Key("reaction_options_dropdown"), "open_issue", {
         Key("input_open_issue_owner"): "EliottPal",
@@ -100,19 +120,34 @@ void main() {
         Key("input_open_issue_body"): "Test"
       });
 
+      // Scrolling up
+      await tester.drag(find.byType(SingleChildScrollView), const Offset(0.0, -800));
+      await tester.pumpAndSettle();
+
       final submitButton = find.byWidgetPredicate((widget) => widget is RoundedLoadingButton && widget.onPressed != null);
       expect(submitButton, findsOneWidget);
+
+      await tester.tap(submitButton);
+      await tester.pumpAndSettle();
+
+      verify(mockAreaService.addArea(any)).called(1);
+      expect(find.byType(AreaFormPage), findsNothing);
     }
 
-    _createAreaDiscordGoogle(WidgetTester tester) async {
+    _createAreaDiscordGoogleBadResponseError(WidgetTester tester) async {
       when(mockAreaService.isConnectedToService("Twitter")).thenAnswer((_) async {
         return true;
       });
+      when(mockAreaService.addArea(any)).thenThrow(BadResponseException());
       await _loadWidget(tester);
 
       // ACTION
       await _completeAreaPart(
           tester, Key("action_dropdown"), "Google", Key("action_options_dropdown"), "new_video", {Key("input_new_video_id"): "42"});
+
+      // Scrolling up
+      await tester.drag(find.byType(SingleChildScrollView), const Offset(0.0, -800));
+      await tester.pumpAndSettle();
 
       // REACTION
       await _tapWidgetByKey(tester, Key("reaction_dropdown"));
@@ -127,28 +162,53 @@ void main() {
         await _writeTextInWidgetByKey(tester, entry.key, entry.value);
       }
 
+      // Scrolling up
+      await tester.drag(find.byType(SingleChildScrollView), const Offset(0.0, -800));
+      await tester.pumpAndSettle();
+
       final submitButton = find.byWidgetPredicate((widget) => widget is RoundedLoadingButton && widget.onPressed != null);
       expect(submitButton, findsOneWidget);
+
+      await tester.tap(submitButton);
+      await tester.pumpAndSettle();
+
+      verify(mockAreaService.addArea(any)).called(1);
+      expect(find.byType(AreaFormPage), findsOneWidget);
     }
 
-    _createAreaMicrosoftTwitter(WidgetTester tester) async {
+    _createAreaMicrosoftTwitterBadTokenError(WidgetTester tester) async {
       when(mockAreaService.isConnectedToService("Twitter")).thenAnswer((_) async {
         return true;
       });
       when(mockAreaService.isConnectedToService("Microsoft")).thenAnswer((_) async {
         return true;
       });
+      when(mockAreaService.addArea(any)).thenThrow(BadTokenException());
       await _loadWidget(tester);
 
       // ACTION
       await _completeAreaPart(tester, Key("action_dropdown"), "Microsoft", Key("action_options_dropdown"), "incoming_mail", {});
 
+      // Scrolling up
+      await tester.drag(find.byType(SingleChildScrollView), const Offset(0.0, -800));
+      await tester.pumpAndSettle();
+
       // REACTION
       await _completeAreaPart(tester, Key("reaction_dropdown"), "Twitter", Key("reaction_options_dropdown"), "post_tweet",
           {Key("input_post_tweet_body"): "test"});
 
+      // Scrolling up
+      await tester.drag(find.byType(SingleChildScrollView), const Offset(0.0, -800));
+      await tester.pumpAndSettle();
+
       final submitButton = find.byWidgetPredicate((widget) => widget is RoundedLoadingButton && widget.onPressed != null);
       expect(submitButton, findsOneWidget);
+
+      await tester.tap(submitButton);
+      await tester.pumpAndSettle();
+
+      verify(mockAreaService.addArea(any)).called(1);
+      expect(find.byType(AreaFormPage), findsOneWidget);
     }
 
     _createBadArea(WidgetTester tester) async {
@@ -193,7 +253,7 @@ void main() {
     });
 
     testWidgets("Create area - Discord + Google", (WidgetTester tester) async {
-      await _createAreaDiscordGoogle(tester);
+      await _createAreaDiscordGoogleBadResponseError(tester);
     });
 
     testWidgets("Create area - Twitter + Github", (WidgetTester tester) async {
@@ -201,7 +261,7 @@ void main() {
     });
 
     testWidgets("Create area - Microsoft + Twitter", (WidgetTester tester) async {
-      await _createAreaMicrosoftTwitter(tester);
+      await _createAreaMicrosoftTwitterBadTokenError(tester);
     });
 
     testWidgets("Create bad area", (WidgetTester tester) async {
