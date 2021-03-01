@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.get('/', protectedRequest, (req, res) => {
     res.send({ displayName: req.user.displayName, email: req.user.email, services: req.user.connectData });
+});
 
 router.put('/', protectedRequest, async (req, res) => {
     const { user } = req;
