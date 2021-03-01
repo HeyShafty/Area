@@ -25,6 +25,7 @@ async function getUserAccessToken(user, msalClient) {
         await User.findByIdAndUpdate(user._id, user);
         return response.accessToken;
     } catch (err) {
+        console.log(err);
         user.connectData.delete(MONGOOSE_MSAL_KEY);
         await User.findByIdAndUpdate(user._id, user);
         return null;
@@ -63,6 +64,15 @@ async function sendEmail(accessToken, receiver, message) {
         .post(mail);
 }
 
+async function getInboxItemCount(accessToken) {
+    const graphClient = getGraphClient(accessToken);
+    const result = await graphClient
+        .api('/me/mailFolders/inbox')
+        .get();
+
+    return result.totalItemCount;
+}
+
 function getGraphClient(accessToken) {
     return microsoft.Client.init({
         authProvider: done => {
@@ -74,5 +84,6 @@ function getGraphClient(accessToken) {
 module.exports = {
     getUserAccessToken,
     getUserDetails,
-    sendEmail
+    sendEmail,
+    getInboxItemCount
 };

@@ -1,18 +1,13 @@
 const express = require('express');
 const passport = require('passport');
-const axios = require('axios');
-const uuid = require('uuid');
 const User = require('../models/User');
 const OAuth = require('oauth').OAuth;
-const oauth1a = require('oauth-1.0a');
-const crypto = require('crypto');
 const { createConnectSession, extractConnectSession, addDataToConnectSession } = require('../utils/connectSessionHelper');
 
 const protectedRequest = require('../passport/protectedRequest');
 const { STRATEGY_GOOGLE_WEB, STRATEGY_GOOGLE_MOBILE } = require('../passport/googleStrategy');
 const { STRATEGY_GITHUB_WEB, STRATEGY_GITHUB_MOBILE } = require('../passport/githubStrategy');
 const { STRATEGY_DISCORD_MOBILE, STRATEGY_DISCORD_WEB } = require('../passport/discordStrategy');
-const { STRATEGY_TWITTER_WEB } = require('../passport/twitterStrategy');
 
 const { CLIENT_WEB_URI } = require('../config/config');
 const { MSAL_SCOPES, MSAL_REDIRECT_URI_WEB, MSAL_REDIRECT_URI_MOBILE, MONGOOSE_MSAL_KEY } = require('../config/msalConfig');
@@ -97,12 +92,11 @@ router.get('/google', protectedRequest, async (req, res) => {
     const config = isMobile ? GOOGLE_PASSPORT_CONFIG_MOBILE : GOOGLE_PASSPORT_CONFIG_WEB;
     const urlDeGrosChad = new URL('https://accounts.google.com/o/oauth2/v2/auth');
 
+    urlDeGrosChad.searchParams.append('response_type', 'code');
     urlDeGrosChad.searchParams.append('client_id', config.clientID);
     urlDeGrosChad.searchParams.append('redirect_uri', config.callbackURL);
-    urlDeGrosChad.searchParams.append('scope', GOOGLE_SCOPES.join(' '));
-    urlDeGrosChad.searchParams.append('access_type', 'offline');
     urlDeGrosChad.searchParams.append('prompt', 'consent');
-    urlDeGrosChad.searchParams.append('response_type', 'code');
+    urlDeGrosChad.searchParams.append('scope', GOOGLE_SCOPES.join(' '));
     urlDeGrosChad.searchParams.append('state', connectSessionId);
     return res.json({ url: urlDeGrosChad.href });
 });
@@ -128,6 +122,7 @@ router.get('/google/callback', async (req, res, next) => {
         return res.status(400).send('Invalid state');
     }
     req.user = user;
+    req.isMobile = isMobile;
     passport.authenticate(isMobile ? STRATEGY_GOOGLE_MOBILE : STRATEGY_GOOGLE_WEB, (err, success) => {
         if (err || !success) {
             return res.sendStatus(500);

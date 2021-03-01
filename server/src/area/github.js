@@ -5,7 +5,7 @@ const User = require('../models/User');
 const { MONGOOSE_GITHUB_KEY } = require('../config/githubConfig');
 
 const graphqlRepositoryCount = (owner, _) => `{
-    user(login:"${owner}") {
+    repositoryOwner(login:"${owner}") {
         repositories {
             totalCount
         }
@@ -36,9 +36,25 @@ const graphqlPullRequests = (owner, name) => `{
     }
 }`;
 
+const graphqlRefsCount = (owner, name) => `{
+    repository(owner:"${owner}", name:"${name}") { 
+        refs(refPrefix: "refs/heads/") {
+            totalCount
+        }
+    }
+}`;
+
+const graphqlTagCount = (owner, name) => `{
+    repository(owner:"${owner}", name:"${name}") { 
+        refs(refPrefix: "refs/tags/") {
+            totalCount
+        }
+    }
+}`;
+
 async function execQuery(area, user, graphQuery, react) {
-    const { data } = area.action;
     const connectData = user.connectData.get(MONGOOSE_GITHUB_KEY);
+    const { data } = area.action;
     let count = undefined;
 
     if (!connectData) {
@@ -73,17 +89,17 @@ async function execQuery(area, user, graphQuery, react) {
         return;
     }
     if (count === undefined) {
-        console.log('tfuck');
+        console.log('tfuck'); // TODO: est-ce que y'a besoin de faire une gestion d'erreur en mode le repo a été supprimé donc il faut del l'AREA
         return;
     }
-    console.log({ count, data: data.issueCount });
-    if (count !== data.issueCount) {
-        if (count > data.issueCount) { // TODO: devrait proc plusieures fois si jamais il y a plusieurs issues en même temps
-            area.action.data.issueCount = count;
+    console.log({ count, data: data.currentCount });
+    if (count !== data.currentCount) {
+        if (count > data.currentCount) { // TODO: devrait proc plusieures fois si jamais il y a plusieurs issues en même temps
+            area.action.data.currentCount = count;
             await Area.findByIdAndUpdate(area._id, area);
             react(area);
         } else {
-            area.action.data.issueCount = count;
+            area.action.data.currentCount = count;
             await Area.findByIdAndUpdate(area._id, area);
         }
     }
@@ -101,6 +117,10 @@ async function githubTriggers(area, react) {
         await execQuery(area, user, graphqlClosedIssues, react);
     } else if (area.action.name === 'new_pull_request') {
         await execQuery(area, user, graphqlPullRequests, react);
+    } else if (area.action.name === 'new_ref') {
+        await execQuery(area, user, graphqlRefsCount, react);
+    } else if (area.action.name === 'new_tag') {
+        await execQuery(area, user, graphqlTagCount, react);
     }
 }
 

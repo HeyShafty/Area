@@ -34,6 +34,7 @@
             <meta-data
                 android:name="io.flutter.embedding.android.SplashScreenDrawable"
                 android:resource="@drawable/launch_background" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -49,6 +50,17 @@
                 <data
                     android:scheme="msal24ffcb55-7348-48a4-bbe7-c6c5b3763578"
                     android:host="auth" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.linusu.flutter_web_auth.CallbackActivity">
+            <intent-filter android:label="flutter_web_auth">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="area.app" />
+                <data android:scheme="msauth.area.app" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
