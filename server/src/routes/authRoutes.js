@@ -10,7 +10,7 @@ const { STRATEGY_LOCAL_SIGN_IN, STRATEGY_LOCAL_SIGN_UP } = require('../passport/
 const router = express.Router();
 
 function makeToken(user, office) {
-    const body = { email: user.email, office };
+    const body = { id: user._id, office };
 
     return jwt.sign({ user: body }, JWT_SECRET_KEY, { expiresIn: '2 years' });
 }
@@ -89,7 +89,7 @@ router.post('/sign-in', (req, res, next) => {
             if (err) {
                 return next(err);
             }
-            return res.json({ token: makeToken(user, true) });
+            return res.json({ token: makeToken(user, user.isMicrosoftAuthed) });
         })
     })(req, res, next);
 });
