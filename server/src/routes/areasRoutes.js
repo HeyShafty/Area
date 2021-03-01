@@ -13,15 +13,15 @@ const router = express.Router();
  * /areas:
  *   post:
  *     summary: Create areas.
- *      responses:
- *        201:
- *          description: Area created.
- *        400:
- *          description: Action or Reaction service does not exist.
- *        401:
- *          description: Action or Reaction does not exist.
- *        500:
- *          description: Error.
+ *     responses:
+ *       201:
+ *         description: Area created.
+ *       400:
+ *         description: Action or Reaction service does not exist.
+ *       401:
+ *         description: Action or Reaction does not exist.
+ *       500:
+ *         description: Error.
  */
 router.post('/', protectedRequest, async(req, res) => {
     const { user } = req;
@@ -64,13 +64,13 @@ router.post('/', protectedRequest, async(req, res) => {
  * /areas:
  *   put:
  *     summary: Update area by id.
- *      responses:
- *        200:
- *          description: Area updated.
- *        400:
- *          description: Could not update Area.
- *        500:
- *          description: Error.
+ *     responses:
+ *       200:
+ *         description: Area updated.
+ *       400:
+ *         description: Could not update Area.
+ *       500:
+ *         description: Error.
  */
 router.put('/:id', protectedRequest, async (req, res) => {
     try {
@@ -88,13 +88,13 @@ router.put('/:id', protectedRequest, async (req, res) => {
  * /areas:
  *   delete:
  *     summary: Delete area by id.
- *      responses:
- *        204:
- *          description: Area deleted.
- *        400:
- *          description: Could not delete Area.
- *        500:
- *          description: Error.
+ *     responses:
+ *       200:
+ *         description: Area deleted.
+ *       400:
+ *         description: Could not delete Area.
+ *       500:
+ *         description: Error.
  */
 router.delete('/:id', protectedRequest, async (req, res) => {
     try {
@@ -112,13 +112,13 @@ router.delete('/:id', protectedRequest, async (req, res) => {
  * /areas:
  *   get:
  *     summary: Get all Areas of the user.
- *      responses:
- *        200:
- *          description: Areas list sent.
- *        400:
- *          description: Could not send Areas list.
- *        500:
- *          description: Error.
+ *     responses:
+ *       200:
+ *         description: Areas list sent.
+ *       400:
+ *         description: Could not send Areas list.
+ *       500:
+ *         description: Error.
  */
 router.get('/', protectedRequest, async (req, res) => {
     const { user } = req;

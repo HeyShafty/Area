@@ -6,6 +6,18 @@ const bcrypt = require('bcrypt');
 
 const router = express.Router();
 
+/**
+ * @swagger
+ *
+ * /profile:
+ *   get:
+ *     summary: Get profile information.
+ *     responses:
+ *       200:
+ *         description: Profile information sent.
+ *       500:
+ *         description: Error.
+ */
 router.get('/', protectedRequest, (req, res) => {
     let connectData = req.user.connectData;
     let formattedConnectData = [];
@@ -16,6 +28,20 @@ router.get('/', protectedRequest, (req, res) => {
     res.send({ displayName: req.user.displayName, email: req.user.email, services: formattedConnectData, isMicrosoftAuthed: req.user.isMicrosoftAuthed });
 });
 
+/**
+ * @swagger
+ *
+ * /profile:
+ *   put:
+ *     summary: Update username and email.
+ *     responses:
+ *       200:
+ *         description: Informations updated.
+ *       400:
+ *         description: Could not update informations.
+ *       500:
+ *         description: Error.
+ */
 router.put('/', protectedRequest, async (req, res) => {
     const { user } = req;
 
@@ -28,6 +54,20 @@ router.put('/', protectedRequest, async (req, res) => {
     return res.sendStatus(200);
 })
 
+/**
+ * @swagger
+ *
+ * /profile/password:
+ *   put:
+ *     summary: Update password.
+ *     responses:
+ *       200:
+ *         description: Password updated.
+ *       400:
+ *         description: Could not update password.
+ *       500:
+ *         description: Error.
+ */
 router.put('/password', protectedRequest, async (req, res) => {
     const { user } = req;
 
