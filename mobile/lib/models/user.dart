@@ -1,12 +1,14 @@
 class User {
-  final String displayName;
-  final String email;
+  String displayName = "";
+  String email = "";
   final List<String> servicesConnectInformation;
+  final bool isMicrosoftAuth;
 
-  User(this.displayName, this.email, this.servicesConnectInformation);
+  User(this.displayName, this.email, this.servicesConnectInformation, this.isMicrosoftAuth);
 
   User.fromJson(Map<String, dynamic> json)
-      : this.email = json['email'],
-        this.displayName = json['displayName'],
-        this.servicesConnectInformation = (json['connectData'] as List).map((i) => i.toString()).toList();
+      : this.displayName = json['displayName'],
+        this.email = json['email'],
+        this.servicesConnectInformation = (json['services'] as List).map((i) => i.toString()).toList(),
+        this.isMicrosoftAuth = json['isMicrosoftAuthed'];
 }

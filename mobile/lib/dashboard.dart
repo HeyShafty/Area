@@ -135,7 +135,7 @@ class _DashboardPageState extends State<DashboardPage> {
     } on Exception {
       ToastService.showToast("Couldn't delete area.");
     } catch (e) {
-      log(e);
+      log(e.toString());
       ToastService.showToast("Couldn't delete area.");
     }
   }

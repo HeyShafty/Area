@@ -29,7 +29,7 @@ void main() {
 
     _userProfile(WidgetTester tester) async {
       when(mockAreaService.getUserProfile()).thenAnswer((_) async {
-        return User("test", "test@epitech.eu", ["twitter", "github", "microsoft"]);
+        return User("test", "test@epitech.eu", ["twitter", "github", "microsoft"], false);
       });
 
       await _loadWidget(tester);

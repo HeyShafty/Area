@@ -42,18 +42,39 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 children: this._user == null
                     ? <Widget>[CircularProgressIndicator()]
                     : <Widget>[
-                        Icon(
-                          Icons.person,
-                          size: 100.0,
-                        ),
+                        Icon(Icons.person, size: 100.0),
                         Padding(
-                            padding: EdgeInsets.only(bottom: 60.0),
+                            padding: EdgeInsets.only(bottom: 50.0),
                             child: Column(children: [
-                              Padding(
-                                  padding: EdgeInsets.only(bottom: 10.0),
-                                  child: Text(_user.displayName,
-                                      style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold))),
-                              Text(_user.email, style: TextStyle(color: Colors.black, fontSize: 15))
+                              Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+                                Spacer(),
+                                Text(_user.displayName, style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
+                                Expanded(
+                                    child: this._user.isMicrosoftAuth
+                                        ? Container()
+                                        : Container(
+                                            alignment: Alignment.centerLeft,
+                                            child:
+                                                IconButton(icon: Icon(Icons.edit), onPressed: () => this.editUsername(), iconSize: 20.0)))
+                              ]),
+                              this._user.isMicrosoftAuth ? SizedBox(height: 10.0) : Container(),
+                              Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+                                Spacer(),
+                                Text(_user.email, style: TextStyle(color: Colors.black, fontSize: 15)),
+                                Expanded(
+                                    child: this._user.isMicrosoftAuth
+                                        ? Container()
+                                        : Container(
+                                            alignment: Alignment.centerLeft,
+                                            child: IconButton(icon: Icon(Icons.edit), onPressed: () => this.editEmail(), iconSize: 20.0)))
+                              ]),
+                              this._user.isMicrosoftAuth
+                                  ? Padding(
+                                      padding: EdgeInsets.only(top: 10.0),
+                                      child: Text("You're signed in with Microsoft.",
+                                          style: TextStyle(fontStyle: FontStyle.italic, color: Colors.green)))
+                                  : MaterialButton(
+                                      onPressed: () => this.editPassword(), color: Color(0xFFd5d8dc), child: Text("Change password"))
                             ])),
                         Padding(
                             padding: EdgeInsets.only(left: 20.0, right: 20.0),
@@ -68,6 +89,176 @@ class _MyProfilePageState extends State<MyProfilePage> {
                               return Container();
                             }).toList()))
                       ])));
+  }
+
+  editUsername() {
+    TextEditingController usernameController = TextEditingController(text: this._user.displayName);
+
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: Text('Edit username'),
+              content: SingleChildScrollView(
+                  child: ListBody(children: <Widget>[
+                Text('Edit your username below.'),
+                TextField(
+                    obscureText: false,
+                    controller: usernameController,
+                    decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0), hintText: "kilio22"))
+              ])),
+              actions: <Widget>[
+                TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Cancel')),
+                TextButton(
+                    onPressed: () async {
+                      if (usernameController.text == "") {
+                        ToastService.showToast("Please fill the username field.");
+                        return;
+                      }
+                      if (usernameController.text.length < 3) {
+                        ToastService.showToast("Username must be formed of at least 3 characters");
+                        return;
+                      }
+                      FocusScope.of(context).unfocus();
+
+                      try {
+                        User newUser = User(
+                            usernameController.text, this._user.email, this._user.servicesConnectInformation, this._user.isMicrosoftAuth);
+
+                        await this._areaServiceInstance.updateUsernameEmail(newUser);
+                        this.setState(() {
+                          this._user = newUser;
+                        });
+                        ToastService.showToast("Username updated successfully!", Colors.green);
+                        return Navigator.of(context).pop();
+                      } on BadTokenException {
+                        ToastService.showToast("Invalid token, please sign out.");
+                      } on Exception {
+                        ToastService.showToast("Couldn't update your username.");
+                      } catch (e) {
+                        log(e.toString());
+                        ToastService.showToast("Couldn't update your username.");
+                      }
+                    },
+                    child: Text('OK'))
+              ]);
+        });
+  }
+
+  editEmail() {
+    TextEditingController emailController = TextEditingController(text: this._user.email);
+
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: Text('Edit email'),
+              content: SingleChildScrollView(
+                  child: ListBody(children: <Widget>[
+                Text('Edit your email below.'),
+                TextField(
+                    obscureText: false,
+                    controller: emailController,
+                    decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0), hintText: "area@chad.com"))
+              ])),
+              actions: <Widget>[
+                TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Cancel')),
+                TextButton(
+                    onPressed: () async {
+                      if (emailController.text == "") {
+                        ToastService.showToast("Please fill the email field.");
+                        return;
+                      }
+                      if (RegExp(EMAIL_REGEX).hasMatch(emailController.text) == false) {
+                        ToastService.showToast("Invalid email.");
+                        return;
+                      }
+                      FocusScope.of(context).unfocus();
+
+                      try {
+                        User newUser = User(this._user.displayName, emailController.text, this._user.servicesConnectInformation,
+                            this._user.isMicrosoftAuth);
+
+                        await this._areaServiceInstance.updateUsernameEmail(newUser);
+                        this.setState(() {
+                          this._user = newUser;
+                        });
+                        ToastService.showToast("Email updated successfully!", Colors.green);
+                        return Navigator.of(context).pop();
+                      } on BadTokenException {
+                        ToastService.showToast("Invalid token, please sign out.");
+                      } on Exception {
+                        ToastService.showToast("Couldn't update your email.");
+                      } catch (e) {
+                        log(e.toString());
+                        ToastService.showToast("Couldn't update your email.");
+                      }
+                    },
+                    child: Text('OK'))
+              ]);
+        });
+  }
+
+  editPassword() {
+    TextEditingController passwordController = TextEditingController();
+    TextEditingController confirmPasswordController = TextEditingController();
+
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: Text('Change password'),
+              content: SingleChildScrollView(
+                  child: ListBody(children: <Widget>[
+                Text('Enter your new password below.'),
+                TextField(
+                    obscureText: true,
+                    controller: passwordController,
+                    decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0))),
+                SizedBox(height: 20.0),
+                Text('Confirm your new password below.'),
+                TextField(
+                    obscureText: true,
+                    controller: confirmPasswordController,
+                    decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0)))
+              ])),
+              actions: <Widget>[
+                TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Cancel')),
+                TextButton(
+                    onPressed: () async {
+                      if (passwordController.text == "" || confirmPasswordController.text == "") {
+                        ToastService.showToast("Please fill all fields.");
+                        return;
+                      }
+                      if (passwordController.text.length < 6) {
+                        ToastService.showToast("Password must be formed of at least 6 characters");
+                        return;
+                      }
+                      if (passwordController.text != confirmPasswordController.text) {
+                        ToastService.showToast("Both passwords are not the same.");
+                        return;
+                      }
+                      FocusScope.of(context).unfocus();
+
+                      try {
+                        await this._areaServiceInstance.updatePassword(passwordController.text);
+                        ToastService.showToast("Password updated successfully!", Colors.green);
+                        return Navigator.of(context).pop();
+                      } on BadTokenException {
+                        ToastService.showToast("Invalid token, please sign out.");
+                      } on Exception {
+                        ToastService.showToast("Couldn't update your password.");
+                      } catch (e) {
+                        log(e.toString());
+                        ToastService.showToast("Couldn't update your password.");
+                      }
+                    },
+                    child: Text('OK'))
+              ]);
+        });
   }
 
   signInWithService(ServiceInformation service) async {
@@ -102,10 +293,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
             Image.asset(service.iconPath),
             Padding(
                 padding: EdgeInsets.only(left: 10.0),
-                child: Text(
-                  'You\'re connected with ' + service.name,
-                  style: TextStyle(color: Colors.black),
-                ))
+                child: Text('You\'re connected with ' + service.name, style: TextStyle(color: Colors.black)))
           ]));
     }
     return MaterialButton(
@@ -135,7 +323,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     try {
       final User user = await this._areaServiceInstance.getUserProfile();
 
-      setState(() {
+      this.setState(() {
         this._user = user;
       });
     } on BadTokenException {
@@ -143,7 +331,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     } on Exception {
       ToastService.showToast("Cannot get user profile information.");
     } catch (e) {
-      log(e);
+      log(e.toString());
       ToastService.showToast("Cannot get user profile information.");
     }
   }

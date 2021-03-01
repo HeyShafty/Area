@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:area/exceptions/already_exists_exception.dart';
 import 'package:area/exceptions/bad_response_exception.dart';
@@ -145,7 +144,6 @@ class AreaService {
     if (response.statusCode != 200) {
       throw BadResponseException();
     }
-    log(response.body);
     return User.fromJson(jsonDecode(response.body));
   }
 
@@ -163,7 +161,6 @@ class AreaService {
     if (response.statusCode != 200) {
       throw BadResponseException();
     }
-    log(response.body);
     Iterable l = json.decode(response.body);
     return List<Area>.from(l.map((e) => Area.fromJson(e)));
   }
@@ -205,8 +202,30 @@ class AreaService {
     }
   }
 
-  Future<void> updateUserEmail() {
-    throw UnimplementedError();
+  Future<void> updateUsernameEmail(User user) async {
+    String body = jsonEncode({"email": user.email, "displayName": user.displayName});
+    http.Response response = await http.put("http://" + this._serverIp + "/profile",
+        headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken, 'Content-Type': 'application/json; charset=UTF-8'},
+        body: body);
+    if (response.statusCode == 401) {
+      throw BadTokenException();
+    }
+    if (response.statusCode != 200) {
+      throw BadResponseException();
+    }
+  }
+
+  Future<void> updatePassword(String newPassword) async {
+    String body = jsonEncode({"password": newPassword});
+    http.Response response = await http.put("http://" + this._serverIp + "/profile/password",
+        headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken, 'Content-Type': 'application/json; charset=UTF-8'},
+        body: body);
+    if (response.statusCode == 401) {
+      throw BadTokenException();
+    }
+    if (response.statusCode != 200) {
+      throw BadResponseException();
+    }
   }
 
   AreaService._internal();

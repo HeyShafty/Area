@@ -244,7 +244,7 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
       log(e.toString());
       ToastService.showToast("Couldn't add a new area.");
     } catch (e) {
-      log(e);
+      log(e.toString());
       ToastService.showToast("Couldn't add a new area.");
     }
     this.buttonController.reset();

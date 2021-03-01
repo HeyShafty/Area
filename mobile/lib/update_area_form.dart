@@ -69,7 +69,7 @@ class _UpdateAreaFormPageState extends AreaFormPageState<UpdateAreaFormPage> {
       log(e.toString());
       ToastService.showToast("Couldn't update area.");
     } catch (e) {
-      log(e);
+      log(e.toString());
       ToastService.showToast("Couldn't update area.");
     }
     this.buttonController.reset();

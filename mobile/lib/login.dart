@@ -211,7 +211,7 @@ class _LoginState extends State<Login> {
     }
     return showDialog(
         context: context,
-        barrierDismissible: false, // user must tap button!
+        barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
               title: Text('Server ip'),
