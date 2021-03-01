@@ -3,7 +3,7 @@ import { Configuration, LogLevel } from '@azure/msal-browser';
 export const appId: string = '24ffcb55-7348-48a4-bbe7-c6c5b3763578';
 export const baseUri: string = 'http://localhost:8080';
 export const redirectUri: string = 'http://localhost:8081/signin';
-export const apiScope: string = 'api://db074310-a1fb-45a3-8dd9-8462d3f688f8/user.base.read';
+export const apiScope: string = 'api://a8dcacc9-80da-4a2b-9f8a-6e20221951d0/user.base.read';
 
 export const tenantJWKSURI: string = 'https://login.microsoftonline.com/901cb4ca-b862-4029-9306-e5cd0f6d9f86/discovery/v2.0/keys';
 export const IssuerURL: string = 'https://login.microsoftonline.com/901cb4ca-b862-4029-9306-e5cd0f6d9f86/v2.0';

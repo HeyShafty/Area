@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <h1>404</h1>
-  </div>
+  <h1>ALLOU</h1>
 </template>
 
 <script lang="ts">
