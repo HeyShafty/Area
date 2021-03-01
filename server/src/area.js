@@ -9,18 +9,15 @@ const microsoftTriggers = require('./area/microsoft');
 const serviceGithub = require('./services/githubService');
 const serviceTwitter = require('./services/twitterService');
 const serviceMicrosoft = require('./services/microsoftService');
+const { BOT_TOKEN } = require('./config/discordConfig');
 
-const botToken = 'ODEzMzU1Nzc1ODI1MTQ5OTYy.YDOGmA.Ee-nvgFu2v0FHo_7c6XBDd0WsgI';
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
-client.login(botToken);
+client.login(BOT_TOKEN);
 
 async function doReaction(area, msalClient) {
     const user = await User.findById(area.userId);
-    console.log('doReaction');
-    console.log(area.action);
-    console.log(area.reaction);
 
     if (area.reaction.service === "github") {
         if (area.reaction.name === "open_issue") {
@@ -75,7 +72,6 @@ async function checkupTriggers(msalClient) {
     const areas = await Area.find({});
     const react = (_area) => doReaction(_area, msalClient);
 
-    // console.log(areas);
     for (const area of areas) {
         if (area.action.service === 'microsoft') {
             await microsoftTriggers(area, react, msalClient);
