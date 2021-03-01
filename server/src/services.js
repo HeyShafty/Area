@@ -22,7 +22,7 @@ class Service {
 
 const AREA_SERVICES = [
     new Service('microsoft', [
-        new Action('incoming_mail', 'Triggers when receiving an email')
+        new Action('incoming_mail', 'Triggers when an email is added into your inbox')
     ], [
         new Reaction('send_mail', 'Sends an email')
     ]),
@@ -44,7 +44,9 @@ const AREA_SERVICES = [
         new Action('new_repository', 'Triggers when a repository is created'),
         new Action('new_issue', 'Triggers when a new issue is added'),
         new Action('issue_closes', 'Triggers when an issue is closed'),
-        new Action('new_pull_request', 'Triggers when a new pull request is posted')
+        new Action('new_pull_request', 'Triggers when a new pull request is posted'),
+        new Action('new_ref', 'Triggers when a new ref (branch) was added'),
+        new Action('new_tag', 'Triggers when a new tag (release) was added')
     ], [
         new Reaction('open_issue', 'Opens a new issue')
     ]),

@@ -1,8 +1,10 @@
 const Area = require('./models/Area');
 const User = require('./models/User');
+
 const timerTriggers = require('./area/timer');
 const githubTriggers = require('./area/github');
 const youtubeTriggers = require('./area/youtube');
+const microsoftTriggers = require('./area/microsoft');
 
 const serviceGithub = require('./services/githubService');
 const serviceTwitter = require('./services/twitterService');
@@ -33,8 +35,9 @@ async function doReaction(area, msalClient) {
     if (area.reaction.service === "microsoft") {
         if (area.reaction.name === "send_mail") {
             const accessToken = await serviceMicrosoft.getUserAccessToken(user, msalClient);
+
             try {
-                const sendMailRequest = await serviceMicrosoft.sendEmail(accessToken, area.reaction.data.to, area.reaction.data);
+                await serviceMicrosoft.sendEmail(accessToken, area.reaction.data.to, area.reaction.data);
             } catch (err) {
                 console.log(err);
             }
@@ -44,14 +47,14 @@ async function doReaction(area, msalClient) {
         const data = await serviceTwitter.getUserData(user);
         if (area.reaction.name === "post_tweet") {
             try {
-                const postTweet = serviceTwitter.postTweet(data.accessToken, data.data.oauthAccessTokenSecret, area.reaction.data.body);
+                serviceTwitter.postTweet(data.accessToken, data.data.oauthAccessTokenSecret, area.reaction.data.body);
             } catch (err) {
                 console.log(err);
             }
         }
         if (area.reaction.name === "update_bio") {
             try {
-                const updateDescription = serviceTwitter.updateDescription(data.accessToken, data.data.oauthAccessTokenSecret, area.reaction.data.body);
+                serviceTwitter.updateDescription(data.accessToken, data.data.oauthAccessTokenSecret, area.reaction.data.body);
             } catch (err) {
                 console.log(err);
             }
@@ -74,13 +77,13 @@ async function checkupTriggers(msalClient) {
 
     // console.log(areas);
     for (const area of areas) {
-        if (area.action.service === 'youtube') {
-            await youtubeTriggers(area, doReaction);
-        }
-        if (area.action.service === 'github') {
+        if (area.action.service === 'microsoft') {
+            await microsoftTriggers(area, react, msalClient);
+        } else if (area.action.service === 'youtube') {
+            await youtubeTriggers(area, react);
+        } else if (area.action.service === 'github') {
             await githubTriggers(area, react);
-        }
-        if (area.action.service === 'timer') {
+        } else if (area.action.service === 'timer') {
             await timerTriggers(area, react);
         }
     }
