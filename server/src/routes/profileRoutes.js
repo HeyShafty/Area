@@ -7,7 +7,13 @@ const bcrypt = require('bcrypt');
 const router = express.Router();
 
 router.get('/', protectedRequest, (req, res) => {
-    res.send({ displayName: req.user.displayName, email: req.user.email, services: req.user.connectData });
+    let connectData = req.user.connectData;
+    let formattedConnectData = [];
+
+    for (const [ k ] of connectData) {
+        formattedConnectData.push(k);
+    }
+    res.send({ displayName: req.user.displayName, email: req.user.email, services: formattedConnectData, isMicrosoftAuthed: req.user.isMicrosoftAuthed });
 });
 
 router.put('/', protectedRequest, async (req, res) => {
@@ -25,6 +31,9 @@ router.put('/', protectedRequest, async (req, res) => {
 router.put('/password', protectedRequest, async (req, res) => {
     const { user } = req;
 
+    if (user.isMicrosoftAuthed === true) {
+        return res.status(403).send('You are connected using Microsoft');
+    }
     try {
         let pwd = await bcrypt.hash(req.body.password, 10);
 

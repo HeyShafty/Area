@@ -92,12 +92,11 @@ router.get('/google', protectedRequest, async (req, res) => {
     const config = isMobile ? GOOGLE_PASSPORT_CONFIG_MOBILE : GOOGLE_PASSPORT_CONFIG_WEB;
     const urlDeGrosChad = new URL('https://accounts.google.com/o/oauth2/v2/auth');
 
+    urlDeGrosChad.searchParams.append('response_type', 'code');
     urlDeGrosChad.searchParams.append('client_id', config.clientID);
     urlDeGrosChad.searchParams.append('redirect_uri', config.callbackURL);
-    urlDeGrosChad.searchParams.append('scope', GOOGLE_SCOPES.join(' '));
-    urlDeGrosChad.searchParams.append('access_type', 'offline');
     urlDeGrosChad.searchParams.append('prompt', 'consent');
-    urlDeGrosChad.searchParams.append('response_type', 'code');
+    urlDeGrosChad.searchParams.append('scope', GOOGLE_SCOPES.join(' '));
     urlDeGrosChad.searchParams.append('state', connectSessionId);
     return res.json({ url: urlDeGrosChad.href });
 });

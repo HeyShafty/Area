@@ -28,15 +28,20 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
   flat_icons_flutter: 1.0.2
-  msal_flutter: ^1.0.0+3
   fluttertoast: ^7.1.6
+  flutter_web_auth: ^0.2.4
   http: 0.12.2
+  meta: ^1.2.4
+  msal_flutter: ^1.0.0+3
+  oauth2_client: ^1.5.0
   rounded_loading_button: ^1.0.0
   shared_preferences: ^0.5.12+4
+  mockito: ^4.1.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  test: ^1.15.7
   flutter_launcher_icons: "0.8.1"
 
 flutter_icons:
@@ -57,6 +62,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/team/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
