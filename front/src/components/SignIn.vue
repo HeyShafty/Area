@@ -1,20 +1,30 @@
 <template>
   <div class="flex items-center min-h-screen p-4 bg-gray-100 lg:justify-center">
     <div class="container mx-auto root">
-    <!-- AREA LOGO -->
-      <img class="mx-auto max-w-sm w-auto object-fit:contain mb-10" src="../assets/AREALOGO.png">
-    <!-- CARD -->
+      <!-- AREA LOGO -->
+      <img
+        class="mx-auto max-w-sm w-auto object-fit:contain mb-10"
+        src="../assets/AREALOGO.png"
+      />
+      <!-- CARD -->
+
       <div
         class="mx-auto overflow-hidden bg-white rounded-md shadow-lg max-w-md"
       >
         <div class="p-5 md:flex-1">
           <!-- CARD HEADER -->
-          <h3 class="my-4 text-2xl font-semibold text-gray-700">Sign-In to your account</h3>
+          <h3 class="my-4 text-2xl font-semibold text-gray-700">
+            Sign-In to your account
+          </h3>
           <form action="#" class="flex flex-col space-y-5">
             <!-- EMAIL INPUT -->
             <div class="flex flex-col space-y-1">
               <div class="flex items-center justify-between">
-                <label for="password" class="text-md font-semibold text-gray-500">Email</label>
+                <label
+                  for="password"
+                  class="text-md font-semibold text-gray-500"
+                  >Email</label
+                >
               </div>
               <input
                 type="text"
@@ -22,19 +32,31 @@
                 autofocus
                 class="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
               />
-              <span v-if="errorMessages.email" class="text-sm font-semibold text-red-500">{{errorMessages.email}}</span>
+              <span
+                v-if="errorMessages.email"
+                class="text-sm font-semibold text-red-500"
+                >{{ errorMessages.email }}</span
+              >
             </div>
             <!-- PASSWORD INPUT -->
             <div class="flex flex-col space-y-1">
               <div class="flex items-center justify-between">
-                <label for="password" class="text-md font-semibold text-gray-500">Password</label>
+                <label
+                  for="password"
+                  class="text-md font-semibold text-gray-500"
+                  >Password</label
+                >
               </div>
               <input
                 type="password"
                 v-model="password"
                 class="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
               />
-              <span v-if="errorMessages.password" class="text-sm font-semibold text-red-500">{{errorMessages.password}}</span>
+              <span
+                v-if="errorMessages.password"
+                class="text-sm font-semibold text-red-500"
+                >{{ errorMessages.password }}</span
+              >
             </div>
             <!-- SIGNIN BUTTON -->
             <div>
@@ -46,7 +68,11 @@
               >
                 Sign-In
               </button>
-              <span v-if="errorMessages.request" class="text-sm font-semibold text-red-500">{{errorMessages.request}}</span>
+              <span
+                v-if="errorMessages.request"
+                class="text-sm font-semibold text-red-500"
+                >{{ errorMessages.request }}</span
+              >
             </div>
             <!-- "OR LOGIN WITH" DIVIDER -->
             <div class="flex flex-col space-y-5">
@@ -62,8 +88,13 @@
                 <span class="h-px"></span>
                 <div class="container mx-auto space-y-0.5">
                   <h5 class="font-semibold text-gray-700">First time here?</h5>
-                  <router-link to="/signup" v-slot="{ href, route, navigate, isActive, isExactActive }">
-                    <h5 class="font-semibold text-blue-500 cursor-pointer">Create an account</h5>
+                  <router-link
+                    to="/signup"
+                    v-slot="{ href, route, navigate, isActive, isExactActive }"
+                  >
+                    <h5 class="font-semibold text-blue-500 cursor-pointer">
+                      Create an account
+                    </h5>
                   </router-link>
                 </div>
               </div>
@@ -71,38 +102,42 @@
           </form>
         </div>
       </div>
+      <footer>
+        <h6 class="text-sm font-medium mt-4 -mb-4">© 2021 Chad Corporation</h6>
+      </footer>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue'
-import axios from 'axios'
-import { baseUri } from '../config'
-import OfficeLogin from './OfficeLogin.vue'
-import currentUser from '../services/UserService'
+import { ref, defineComponent } from "vue";
+import axios from "axios";
+import { baseUri } from "../config";
+import OfficeLogin from "./OfficeLogin.vue";
+import currentUser from "../services/UserService";
+
 
 export default defineComponent({
-  name: 'SignIn',
-    components: {
+  name: "SignIn",
+  components: {
     OfficeLogin,
   },
   setup: () => {
-    const count = ref(0)
-    return { count }
+    const count = ref(0);
+    return { count };
   },
   data() {
     return {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
       errorMessages: [],
-    }
+    };
   },
   watch: {
-    email(value){
+    email(value) {
       this.validateEmail();
     },
-    password(value){
+    password(value) {
       this.validatePassword();
     },
   },
@@ -111,49 +146,46 @@ export default defineComponent({
     validateEmail() {
       let regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       if (!regexEmail.test(this.email))
-        this.errorMessages['email'] = 'Invalid Email Address.';
-      else
-        this.errorMessages['email'] = '';
+        this.errorMessages["email"] = "Invalid Email Address.";
+      else this.errorMessages["email"] = "";
     },
 
     // CHECK IF PASSWORD IS LONG ENOUGH
     validatePassword() {
-      if (this.password.length < 6 )
-        this.errorMessages['password'] = 'Too short password.';
-      else
-        this.errorMessages['password'] = '';
+      if (this.password.length < 6)
+        this.errorMessages["password"] = "Too short password.";
+      else this.errorMessages["password"] = "";
     },
 
     // CHECK IF INPUTS ARE FILLED
     checkInputs() {
-      if (!this.email || !this.password)
-        return false
-      if (this.errorMessages['email'] || this.errorMessages['password'])
-        return false
-      return true
+      if (!this.email || !this.password) return false;
+      if (this.errorMessages["email"] || this.errorMessages["password"])
+        return false;
+      return true;
     },
 
     // CALL SERVER FOR SIGN-IN
     async signIn() {
-      console.log(this.email + ' wants to sign-in')
+      console.log(this.email + " wants to sign-in");
       try {
-        const ret = await axios.post(baseUri +'/auth/sign-in', {
+        const ret = await axios.post(baseUri + "/auth/sign-in", {
           email: this.email,
           password: this.password,
         });
         console.log(ret);
-        currentUser.connect(ret.token);
-        this.$router.push('/dashboard');
+        currentUser.connect(ret.data.token);
+        this.$router.push("/dashboard");
       } catch (error) {
         console.log(error);
         if (error.response.status == 409)
-          this.errorMessages['request'] = 'Invalid credentials.';
+          this.errorMessages["request"] = "Invalid credentials.";
         if (error.response.status == 500)
-          this.errorMessages['request'] = 'Server Error.';
+          this.errorMessages["request"] = "Server Error.";
       }
     },
-  }
-})
+  },
+});
 </script>
 
 <style scoped>
@@ -161,6 +193,6 @@ a {
   color: #42b983;
 }
 .root {
-  margin-top : 25px;
+  margin-top: 25px;
 }
 </style>

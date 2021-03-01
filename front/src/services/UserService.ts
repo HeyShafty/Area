@@ -26,11 +26,11 @@ class User {
         localStorage.removeItem("jwt");
     }
 
-    isConnected() {
+    isConnected(): boolean {
         return this.isAuthenticated;
     }
 
-    getJwt() {
+    getJwt(): string {
         return this.jwt;
     }
 }

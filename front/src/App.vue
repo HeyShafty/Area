@@ -1,6 +1,4 @@
 <template>
-  <!-- Faut qu'on établisse un moyen de définir si un utilisateur est connecté ou pas et qu'on file ça aux components -->
-  <!-- Pour l'instant dans la sidebar c'est en dur -->
   <Sidebar></Sidebar>
   <router-view/>
 </template>
