@@ -8,8 +8,8 @@
           <main class="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
             <div class="sm:text-center lg:text-left">
               <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-                <span class="xl:inline">Connect your apps and</span>
-                <span class="text-indigo-600 xl:inline">automate workflows</span>
+                <span class="xl:inline">Connect your apps and </span>
+                <span class="text-indigo-600 xl:inline"> automate workflows</span>
               </h1>
               <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
                 Easy automation for busy people. <br />
@@ -51,6 +51,19 @@
       </div>
     </div>
   </div>
+
+    <!-- Download APK -->
+    <div class="bg-gray-50">
+      <div class="max-w-7xl py-6 mx-auto px-4 sm:px-6 lg:flex lg:items-center lg:justify-between">
+        <h2 class="text-xl font-extrabold tracking-tight text-gray-900 sm:text-2xl">
+          <span class="block">Want to try it out on mobile ?</span>
+          <span class="block text-indigo-600">Download the APK now and use it natively on your android phone as well!</span>
+        </h2>
+        <a href="/client.apk" target="_blank" v-on:click="downloadApk" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+          Download APK
+        </a>
+      </div>
+    </div>
 
   <!-- Features Section -->
   <div class="py-12 bg-white">
@@ -206,7 +219,6 @@
         </dl>
       </div>
     </div>
-
     <!-- Testimonials Section -->
     <div class="center linespace md:w-1/2 md:px-4 mt-6 md:mt-0">
       <div
@@ -243,11 +255,24 @@
 
 <script lang="ts">
 import { ref, defineComponent } from "vue";
+import axios from "axios";
 
 export default defineComponent({
   name: "Home",
+  methods: {
+    downloadApk() {
+      axios.get("/client.apk", { responseType: 'blob' })
+      .then(response => {
+        const blob = new Blob([response.data], { type: 'application/octet-stream' })
+        const link = document.createElement('a')
+        link.href = URL.createObjectURL(blob)
+        link.download = "ChadArea.apk"
+        link.click()
+        URL.revokeObjectURL(link.href)
+      }).catch(console.error)
+    }
+  }
 });
-
 </script>
 
 <style scoped>
