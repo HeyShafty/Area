@@ -59,7 +59,7 @@
         <span>about.json</span>
       </span>
       <div class="fixed bottom-0 w-full">
-        <a href="/client.apk" target="_blank" v-on:click="downloadApk">
+        <a href="/client.apk" target="_blank">
           <span @click="isOpen = false" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
             <span class="mr-2">
               <span class="iconify" data-icon="icomoon-free:android" data-inline="false"></span>
@@ -127,17 +127,6 @@ export default defineComponent({
     isConnected() {
       return currentUser.isConnected();
     },
-    downloadApk() {
-      axios.get("/client.apk", { responseType: 'blob' })
-      .then(response => {
-        const blob = new Blob([response.data], { type: 'application/octet-stream' })
-        const link = document.createElement('a')
-        link.href = URL.createObjectURL(blob)
-        link.download = "ChadArea.apk"
-        link.click()
-        URL.revokeObjectURL(link.href)
-      }).catch(console.error)
-    }
   },
   watch: {
     isOpen: {

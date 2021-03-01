@@ -59,7 +59,7 @@
           <span class="block">Want to try it out on mobile ?</span>
           <span class="block text-indigo-600">Download the APK now and use it natively on your android phone as well!</span>
         </h2>
-        <a href="/client.apk" target="_blank" v-on:click="downloadApk" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+        <a href="/client.apk" target="_blank" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
           Download APK
         </a>
       </div>
@@ -258,20 +258,7 @@ import { ref, defineComponent } from "vue";
 import axios from "axios";
 
 export default defineComponent({
-  name: "Home",
-  methods: {
-    downloadApk() {
-      axios.get("/client.apk", { responseType: 'blob' })
-      .then(response => {
-        const blob = new Blob([response.data], { type: 'application/octet-stream' })
-        const link = document.createElement('a')
-        link.href = URL.createObjectURL(blob)
-        link.download = "ChadArea.apk"
-        link.click()
-        URL.revokeObjectURL(link.href)
-      }).catch(console.error)
-    }
-  }
+  name: "Home"
 });
 </script>
 
