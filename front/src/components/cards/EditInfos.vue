@@ -53,8 +53,9 @@
               >
                 Confirm
               </button>
-              <span v-if="errorMessages.request" class="text-sm font-semibold text-red-500">{{errorMessages.request}}</span>
             </div>
+              <span v-if="errorMessages.request" class="text-sm font-semibold text-red-500">{{errorMessages.request}}</span>
+              <span v-if="successMessage" class="text-md font-semibold text-green-500">{{successMessage}}</span>
           </form>
         </div>
       </div>
@@ -80,6 +81,7 @@ export default defineComponent({
       email: '',
       password: '',
       errorMessages: [],
+      successMessage: ''
     }
   },
   watch: {
@@ -145,6 +147,7 @@ export default defineComponent({
             authorization: `Bearer ${currentUser.jwt}`,
           },
         });
+        this.successMessage = 'Information succesfully changed!'
       } catch (error) {
         console.log(error);
         if (error.response.status == 500) console.log("500: Server Error");
