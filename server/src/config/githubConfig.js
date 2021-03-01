@@ -1,4 +1,4 @@
-const GITHUB_SCOPES = [ 'repo', 'user', /*'admin:repo_hook'*/ ];
+const GITHUB_SCOPES = [ 'repo', 'user', 'read:org' ];
 const MONGOOSE_GITHUB_KEY = 'github';
 
 const GITHUB_PASSPORT_CONFIG_WEB = {
