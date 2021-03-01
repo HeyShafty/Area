@@ -89,7 +89,7 @@ router.post('/sign-in', (req, res, next) => {
             if (err) {
                 return next(err);
             }
-            return res.json({ token: makeToken(user, true) });
+            return res.json({ token: makeToken(user, user.isMicrosoftAuthed) });
         })
     })(req, res, next);
 });
