@@ -315,7 +315,6 @@ export default defineComponent({
 a {
   color: #42b983;
 }
-
 .switch {
   position: absolute;
   right: 40%;

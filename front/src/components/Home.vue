@@ -83,7 +83,6 @@
         </router-link>
       </div>
     </div>
-  </div>
 
   <!-- Features Section -->
   <div class="py-12 bg-white">
@@ -279,6 +278,7 @@ import { ref, defineComponent } from "vue";
 export default defineComponent({
   name: "Home",
 });
+
 </script>
 
 <style scoped>
@@ -289,6 +289,7 @@ export default defineComponent({
 .linespace {
   margin-top: 65px;
   margin-bottom: 65px;
+
 }
 
 .center {

@@ -7,6 +7,7 @@
         src="../assets/AREALOGO.png"
       />
       <!-- CARD -->
+
       <div
         class="mx-auto overflow-hidden bg-white rounded-md shadow-lg max-w-md"
       >
@@ -114,6 +115,7 @@ import axios from "axios";
 import { baseUri } from "../config";
 import OfficeLogin from "./OfficeLogin.vue";
 import currentUser from "../services/UserService";
+
 
 export default defineComponent({
   name: "SignIn",
