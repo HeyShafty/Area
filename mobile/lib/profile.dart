@@ -36,59 +36,68 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: SingleChildScrollView(
-            child: Column(
-                children: this._user == null
-                    ? <Widget>[CircularProgressIndicator()]
-                    : <Widget>[
-                        Icon(Icons.person, size: 100.0),
-                        Padding(
-                            padding: EdgeInsets.only(bottom: 50.0),
-                            child: Column(children: [
-                              Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-                                Spacer(),
-                                Text(_user.displayName, style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
-                                Expanded(
-                                    child: this._user.isMicrosoftAuth
-                                        ? Container()
-                                        : Container(
-                                            alignment: Alignment.centerLeft,
-                                            child:
-                                                IconButton(icon: Icon(Icons.edit), onPressed: () => this.editUsername(), iconSize: 20.0)))
-                              ]),
-                              this._user.isMicrosoftAuth ? SizedBox(height: 10.0) : Container(),
-                              Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-                                Spacer(),
-                                Text(_user.email, style: TextStyle(color: Colors.black, fontSize: 15)),
-                                Expanded(
-                                    child: this._user.isMicrosoftAuth
-                                        ? Container()
-                                        : Container(
-                                            alignment: Alignment.centerLeft,
-                                            child: IconButton(icon: Icon(Icons.edit), onPressed: () => this.editEmail(), iconSize: 20.0)))
-                              ]),
-                              this._user.isMicrosoftAuth
-                                  ? Padding(
-                                      padding: EdgeInsets.only(top: 10.0),
-                                      child: Text("You're signed in with Microsoft.",
-                                          style: TextStyle(fontStyle: FontStyle.italic, color: Colors.green)))
-                                  : MaterialButton(
-                                      onPressed: () => this.editPassword(), color: Color(0xFFd5d8dc), child: Text("Change password"))
-                            ])),
-                        Padding(
-                            padding: EdgeInsets.only(left: 20.0, right: 20.0),
-                            child: Column(
-                                children: SERVICES_INFORMATION_MAP.entries.map((e) {
-                              if (e.value.uri != null) {
-                                return Padding(
-                                    padding: EdgeInsets.only(top: 20.0),
-                                    child:
-                                        getSignInWith(e.value, this._user.servicesConnectInformation.contains(e.value.name.toLowerCase())));
-                              }
-                              return Container();
-                            }).toList()))
-                      ])));
+    return Scaffold(
+        body: Center(
+            child: SingleChildScrollView(
+                child: Column(
+                    children: this._user == null
+                        ? <Widget>[CircularProgressIndicator()]
+                        : <Widget>[
+                            Icon(Icons.person, size: 100.0),
+                            Padding(
+                                padding: EdgeInsets.only(bottom: 50.0),
+                                child: Column(children: [
+                                  Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+                                    Spacer(),
+                                    Text(_user.displayName,
+                                        style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
+                                    Expanded(
+                                        child: this._user.isMicrosoftAuth
+                                            ? Container()
+                                            : Container(
+                                                alignment: Alignment.centerLeft,
+                                                child: IconButton(
+                                                    key: Key("edit_username"),
+                                                    icon: Icon(Icons.edit),
+                                                    onPressed: () => this.editUsername(),
+                                                    iconSize: 20.0)))
+                                  ]),
+                                  this._user.isMicrosoftAuth ? SizedBox(height: 10.0) : Container(),
+                                  Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+                                    Spacer(),
+                                    Text(_user.email, style: TextStyle(color: Colors.black, fontSize: 15)),
+                                    Expanded(
+                                        child: this._user.isMicrosoftAuth
+                                            ? Container()
+                                            : Container(
+                                                alignment: Alignment.centerLeft,
+                                                child: IconButton(
+                                                    key: Key("edit_email"),
+                                                    icon: Icon(Icons.edit),
+                                                    onPressed: () => this.editEmail(),
+                                                    iconSize: 20.0)))
+                                  ]),
+                                  this._user.isMicrosoftAuth
+                                      ? Padding(
+                                          padding: EdgeInsets.only(top: 10.0),
+                                          child: Text("You're signed in with Microsoft.",
+                                              style: TextStyle(fontStyle: FontStyle.italic, color: Colors.green)))
+                                      : MaterialButton(
+                                          onPressed: () => this.editPassword(), color: Color(0xFFd5d8dc), child: Text("Change password"))
+                                ])),
+                            Padding(
+                                padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                                child: Column(
+                                    children: SERVICES_INFORMATION_MAP.entries.map((e) {
+                                  if (e.value.uri != null) {
+                                    return Padding(
+                                        padding: EdgeInsets.only(top: 20.0),
+                                        child: getSignInWith(
+                                            e.value, this._user.servicesConnectInformation.contains(e.value.name.toLowerCase())));
+                                  }
+                                  return Container();
+                                }).toList()))
+                          ]))));
   }
 
   editUsername() {
@@ -104,6 +113,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   child: ListBody(children: <Widget>[
                 Text('Edit your username below.'),
                 TextField(
+                    key: Key("edit_username_input"),
                     obscureText: false,
                     controller: usernameController,
                     decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0), hintText: "kilio22"))
@@ -159,6 +169,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   child: ListBody(children: <Widget>[
                 Text('Edit your email below.'),
                 TextField(
+                    key: Key("edit_email_input"),
                     obscureText: false,
                     controller: emailController,
                     decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0), hintText: "area@chad.com"))
@@ -215,12 +226,14 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   child: ListBody(children: <Widget>[
                 Text('Enter your new password below.'),
                 TextField(
+                    key: Key("edit_password_input"),
                     obscureText: true,
                     controller: passwordController,
                     decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0))),
                 SizedBox(height: 20.0),
                 Text('Confirm your new password below.'),
                 TextField(
+                    key: Key("edit_password_confirm_input"),
                     obscureText: true,
                     controller: confirmPasswordController,
                     decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0)))
