@@ -76,7 +76,10 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue'
+import { ref, defineComponent } from 'vue';
+import axios from "axios";
+import { baseUri } from "../../config";
+import currentUser from "../../services/UserService";
 
 export default defineComponent({
   name: 'EditPassword',
@@ -150,8 +153,21 @@ data() {
     },
 
     // EDIT UPASSWORD
-    editPassword() {
-      alert('CALL SERVER')
+    async editPassword() {
+            try {
+        await axios.put(baseUri + "/profile/password",
+        {
+          password: this.newPassword
+        },
+        {
+          headers: {
+            authorization: `Bearer ${currentUser.jwt}`,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+        if (error.response.status == 500) console.log("500: Server Error");
+      }
     },
   }
 })

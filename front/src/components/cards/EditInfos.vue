@@ -63,7 +63,10 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue'
+import { ref, defineComponent } from 'vue';
+import axios from "axios";
+import { baseUri } from "../../config";
+import currentUser from "../../services/UserService";
 
 export default defineComponent({
   name: 'EditInfos',
@@ -73,8 +76,8 @@ export default defineComponent({
   },
   data() {
     return {
-      username: 'Current Username',
-      email: 'Current Email',
+      username: '',
+      email: '',
       password: '',
       errorMessages: [],
     }
@@ -130,8 +133,22 @@ export default defineComponent({
     },
 
     // EDIT USERNAME/EMAIL
-    editInfos() {
-      alert('CALL SERVER')
+    async editInfos() {
+      try {
+        await axios.put(baseUri + "/profile",
+        {
+          username: this.username,
+          email: this.email
+        },
+        {
+          headers: {
+            authorization: `Bearer ${currentUser.jwt}`,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+        if (error.response.status == 500) console.log("500: Server Error");
+      }
     },
   }
 })

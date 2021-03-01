@@ -188,15 +188,15 @@ export default defineComponent({
     checkregisteredServices(ret) {
       console.log(ret.data.services);
       if (ret.data.services) {
-        if (ret.data.connectData.twitter) this.toggles["twitter"] = true;
+        if (ret.data.services.twitter) this.toggles["twitter"] = true;
         else this.toggles["twitter"] = false;
-        if (ret.data.connectData.github) this.toggles["github"] = true;
+        if (ret.data.services.github) this.toggles["github"] = true;
         else this.toggles["github"] = false;
-        if (ret.data.connectData.discord) this.toggles["discord"] = true;
+        if (ret.data.services.discord) this.toggles["discord"] = true;
         else this.toggles["discord"] = false;
-        if (ret.data.connectData.google) this.toggles["youtube"] = true;
+        if (ret.data.services.google) this.toggles["youtube"] = true;
         else this.toggles["youtube"] = false;
-        if (ret.data.connectData.microsoft) this.toggles["outlook"] = true;
+        if (ret.data.services.microsoft) this.toggles["outlook"] = true;
         else this.toggles["outlook"] = false;
       } else this.toggles.fill(false);
     },
