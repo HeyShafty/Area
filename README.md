@@ -11,7 +11,7 @@ This software suite is a divided into 3 parts:
 - A mobile application to use the app from a phone.
 
 ## Languages:  
-This project was developped using uses the following languages:  
+This project was developped using the following languages:  
 - Server → NodeJs Express.  
 - Database → MongoDb.  
 - Web application → VueJs / Typescript.  
@@ -26,7 +26,7 @@ In the `documentation/` folder you can find these documents:
   SCREEN ICI  
 
 ## Services:  
-Here are all the diiferent actions/reactions that you can use to create
+Here are all the diiferent actions/reactions that you can use:  
 - Outlook:  
   - Reception of a new email.
   - Send an email.
