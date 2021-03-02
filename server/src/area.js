@@ -3,7 +3,7 @@ const User = require('./models/User');
 
 const timerTriggers = require('./area/timer');
 const githubTriggers = require('./area/github');
-const youtubeTriggers = require('./area/youtube');
+const googleTriggers = require('./area/google');
 const microsoftTriggers = require('./area/microsoft');
 
 const serviceGithub = require('./services/githubService');
@@ -75,8 +75,8 @@ async function checkupTriggers(publicMsalClient, confidentialMsalClient) {
     for (const area of areas) {
         if (area.action.service === 'microsoft') {
             await microsoftTriggers(area, react, publicMsalClient, confidentialMsalClient);
-        } else if (area.action.service === 'youtube') {
-            await youtubeTriggers(area, react);
+        } else if (area.action.service === 'google') {
+            await googleTriggers(area, react);
         } else if (area.action.service === 'github') {
             await githubTriggers(area, react);
         } else if (area.action.service === 'timer') {

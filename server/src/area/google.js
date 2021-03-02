@@ -85,7 +85,7 @@ async function playlistUpdate(area, user, react) {
     }
 }
 
-async function youtubeTriggers(area, react) {
+async function googleTriggers(area, react) {
     const user = await User.findById(area.userId);
 
     console.log(area.action.name);
@@ -96,4 +96,4 @@ async function youtubeTriggers(area, react) {
     }
 }
 
-module.exports = youtubeTriggers;
+module.exports = googleTriggers;
