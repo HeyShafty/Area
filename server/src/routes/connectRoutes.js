@@ -24,6 +24,20 @@ const CONNECT_SESSION_GITHUB = 'github';
 const CONNECT_SESSION_DISCORD = 'discord';
 const CONNECT_SESSION_TWITTER = 'twitter';
 
+/**
+ * @swagger
+ *
+ * /connect/microsoft:
+ *   get:
+ *     summary: Login to Microsoft service.
+ *     responses:
+ *       302:
+ *         description: Redirects to Microsoft login page. On error, redirects to app home page.
+ *       401:
+ *         description: Not authenticated to the app.
+ *       500:
+ *         description: Error.
+ */
 router.get('/microsoft', protectedRequest, async (req, res) => {
     const isMobile = !!req.query.mobile;
     const connectSessionId = await createConnectSession(req.user._id, CONNECT_SESSION_MICROSOFT, isMobile);
@@ -44,6 +58,20 @@ router.get('/microsoft', protectedRequest, async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ *
+ * /connect/microsoft/callback:
+ *   get:
+ *     summary: Callback used to catch Microsoft authentication response.
+ *     responses:
+ *       302:
+ *         description: Redirects to app home page.
+ *       401:
+ *         description: Not authenticated to the app.
+ *       500:
+ *         description: Error.
+ */
 router.get('/microsoft/callback', async (req, res) => {
     const { user, isMobile } = await extractConnectSession(req.query.state || '', CONNECT_SESSION_MICROSOFT);
     const tokenRequest = {
