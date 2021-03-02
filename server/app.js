@@ -39,6 +39,17 @@ const swaggerSpec = swaggerJSDoc(SWAGGER_OPTIONS); // TODO: move (avec la config
 
 const port = process.env.SERVER_PORT || 8080;
 
+async function eraseUsersMicrosoftConnectData() {
+    const User = require('./src/models/User');
+    const { MONGOOSE_MSAL_KEY } = require('./src/config/msalConfig');
+    const users = await User.find({});
+
+    for (const user of users) {
+        user.connectData.delete(MONGOOSE_MSAL_KEY);
+        await User.findByIdAndUpdate(user._id, user);
+    }
+}
+
 function startServer() {
     const app = express();
 
@@ -94,7 +105,9 @@ function connectToDb() {
     mongoose.set('useFindAndModify', false);
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', () => {
-        startServer();
+        eraseUsersMicrosoftConnectData().then(() => {
+            startServer();
+        });
     });
 }
 
