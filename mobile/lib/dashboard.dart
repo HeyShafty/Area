@@ -81,14 +81,28 @@ class _DashboardPageState extends State<DashboardPage> {
                                                   borderRadius: BorderRadius.circular(4.0)),
                                               child: ListTile(
                                                   title: Row(children: [
-                                                    Text(actionService.name, style: TextStyle(color: Colors.black, fontSize: 20.0)),
+                                                    Flexible(
+                                                      child: new Container(
+                                                          child: Text(actionService.name,
+                                                              overflow: TextOverflow.ellipsis,
+                                                              style: TextStyle(color: Colors.black, fontSize: 20.0))),
+                                                    ),
                                                     Icon(Icons.arrow_forward, color: Colors.black),
-                                                    Text(reactionService.name, style: TextStyle(color: Colors.black, fontSize: 20.0))
+                                                    Flexible(
+                                                      child: new Container(
+                                                          child: Text(reactionService.name,
+                                                              overflow: TextOverflow.ellipsis,
+                                                              style: TextStyle(color: Colors.black, fontSize: 20.0))),
+                                                    )
                                                   ]),
                                                   subtitle: Row(children: [
-                                                    Text(item.action.name),
+                                                    Flexible(
+                                                      child: new Container(child: Text(item.action.name, overflow: TextOverflow.ellipsis)),
+                                                    ),
                                                     Icon(Icons.arrow_forward, color: Colors.grey),
-                                                    Text(item.reaction.name)
+                                                    Flexible(
+                                                        child:
+                                                            new Container(child: Text(item.reaction.name, overflow: TextOverflow.ellipsis)))
                                                   ]),
                                                   trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
                                                     IconButton(
