@@ -24,6 +24,7 @@ const router = express.Router();
  *         description: Error.
  */
 router.post('/', protectedRequest, async(req, res) => {
+    const isMobile = !!req.query.mobile;
     const { user } = req;
     const actionService = AREA_SERVICES.find(service => service.name === req.body.action.service);
     const reactionService = AREA_SERVICES.find(service => service.name === req.body.reaction.service);
@@ -48,6 +49,7 @@ router.post('/', protectedRequest, async(req, res) => {
     try {
         const newArea = await Area.create({
             userId: user._id,
+            isMobile,
             action: req.body.action,
             reaction: req.body.reaction
         });

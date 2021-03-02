@@ -35,6 +35,10 @@ const AreaSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    isMobile: {
+        type: Boolean,
+        required: true
+    },
     action: {
         type: ActionSchema,
         required: true,

@@ -9,7 +9,6 @@ const MSAL_CONFIG = {
     auth: {
         clientId: 'a8dcacc9-80da-4a2b-9f8a-6e20221951d0',
         authority: 'https://login.microsoftonline.com/common/',
-        clientSecret: '~p94lnyu4O_5GD5ABNAFh-~vgh1OIyWoU.'
     },
     system: {
         loggerOptions: {
@@ -22,10 +21,19 @@ const MSAL_CONFIG = {
     }
 };
 
+const MSAL_CONFIG_SECRET = {
+    ...MSAL_CONFIG,
+    auth: {
+        ...MSAL_CONFIG.auth,
+        clientSecret: '~p94lnyu4O_5GD5ABNAFh-~vgh1OIyWoU.'
+    }
+}
+
 module.exports = {
     MONGOOSE_MSAL_KEY,
     MSAL_SCOPES,
     MSAL_REDIRECT_URI_WEB,
     MSAL_REDIRECT_URI_MOBILE,
     MSAL_CONFIG,
+    MSAL_CONFIG_SECRET
 };

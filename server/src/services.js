@@ -33,7 +33,7 @@ const AREA_SERVICES = [
     new Service('discord', [], [
         new Reaction('post_message', 'Posts a message in a specific location')
     ]),
-    new Service('youtube', [
+    new Service('google', [
         new Action('new_video', 'Triggers when a video was uploaded by a subscribed channel'),
         new Action('playlist_update', 'Triggers when a video was added to a playlist')
     ], []),

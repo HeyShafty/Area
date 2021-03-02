@@ -156,7 +156,7 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
   }
 
   onActionDropdownPressed(ServiceInformation value) async {
-    if (value.uri != null && await this.areaServiceInstance.isConnectedToService(value.connectServiceName) == false) {
+    if (value.uri != null && await this.areaServiceInstance.isConnectedToService(value.name) == false) {
       this.setState(() {
         this.selectedActionServiceInfo = null;
         this.actionService = null;
