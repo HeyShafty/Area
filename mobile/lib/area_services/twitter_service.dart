@@ -8,10 +8,7 @@ import 'area_service_base.dart';
 import 'input.dart';
 
 class TwitterService extends AreaServiceBase {
-  static const List<Option> ACTIONS = [
-    Option("new_tweet_from", [Input("username", "Username", r'^[A-Za-z0-9_]{1,15}$', false)]),
-    Option("new_follower", [])
-  ];
+  static const List<Option> ACTIONS = [];
   static const List<Option> REACTIONS = [
     Option("post_tweet", [Input("body", "Tweet body", null, false)]),
     Option("update_bio", [Input("body", "Your new biography", null, false)])
@@ -29,16 +26,6 @@ class TwitterService extends AreaServiceBase {
 
   @override
   AreaServiceBaseState createState() => AreaServiceBaseState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
-
-  @override
-  Option getActionOption(String actionValue) {
-    for (Option value in ACTIONS) {
-      if (value.name == actionValue) {
-        return value;
-      }
-    }
-    return null;
-  }
 
   @override
   Option getReactionOption(String reactionValue) {

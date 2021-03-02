@@ -105,8 +105,8 @@ void main() {
       await _loadWidget(tester);
 
       // ACTION
-      await _completeAreaPart(tester, Key("action_dropdown"), "Twitter", Key("action_options_dropdown"), "new_tweet_from",
-          {Key("input_new_tweet_from_username"): "heyshafty"});
+      await _completeAreaPart(
+          tester, Key("action_dropdown"), "Timer", Key("action_options_dropdown"), "every_hour", {Key("input_every_hour_minute"): "42"});
 
       // Scrolling up
       await tester.drag(find.byType(SingleChildScrollView), const Offset(0.0, -800));
