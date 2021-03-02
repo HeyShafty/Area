@@ -21,7 +21,11 @@ class UpdateAreaFormPage extends AreaFormPage {
 }
 
 class _UpdateAreaFormPageState extends AreaFormPageState<UpdateAreaFormPage> {
-  _UpdateAreaFormPageState(Area area, AreaService areaService) : super(areaService) {
+  final Area _currentArea;
+
+  _UpdateAreaFormPageState(Area area, AreaService areaService)
+      : _currentArea = area,
+        super(areaService) {
     if (area == null) {
       return;
     }
@@ -56,11 +60,14 @@ class _UpdateAreaFormPageState extends AreaFormPageState<UpdateAreaFormPage> {
 
   @override
   onButtonPressed() async {
-    Area area = Area("", AreaAction(this.selectedActionServiceInfo.name.toLowerCase(), this.actionParams[ACTION_KEY], this.actionParams),
+    String areaId = this._currentArea != null ? this._currentArea.id : "";
+    Area area = Area(
+        areaId,
+        AreaAction(this.selectedActionServiceInfo.name.toLowerCase(), this.actionParams[ACTION_KEY], this.actionParams),
         AreaReaction(this.selectedReactionServiceInfo.name.toLowerCase(), this.reactionParams[REACTION_KEY], this.reactionParams));
 
     try {
-      await this.areaServiceInstance.addArea(area);
+      await this.areaServiceInstance.updateArea(area);
       ToastService.showToast("Area updated successfully!", Colors.green);
       return Navigator.pop(context);
     } on BadTokenException {
