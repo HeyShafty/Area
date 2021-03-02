@@ -18,8 +18,13 @@ function postTweet(accessToken, accessTokenSecret, tweet) {
         access_token_key: accessToken,
         access_token_secret: accessTokenSecret
     });
+    const date = new Date();
+    const hour = date.getUTCHours();
+    const minutes = date.getUTCMinutes();
+    const seconds = date.getUTCSeconds();
+    const actualHour = hour + 1;
 
-    client.post('/statuses/update', { status: tweet }, (err) => {
+    client.post('/statuses/update', { status: tweet + ', at ' + actualHour + ':' + minutes + ':' + seconds }, (err) => {
         if (err) {
             console.log(err);
             return false;
@@ -29,9 +34,14 @@ function postTweet(accessToken, accessTokenSecret, tweet) {
 }
 
 function updateRequest(client, description, name) {
+    const date = new Date();
+    const hour = date.getUTCHours();
+    const minutes = date.getUTCMinutes();
+    const seconds = date.getUTCSeconds();
+    const actualHour = hour + 1;
     const params = {
         name: name,
-        description: description
+        description: description + ', at ' + actualHour + ':' + minutes + ':' + seconds
     }
     client.post('/account/update_profile.json', params, (err) => {
         if (err) {
