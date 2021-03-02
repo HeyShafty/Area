@@ -167,7 +167,7 @@ class AreaService {
 
   Future<void> addArea(final Area area) async {
     String body = jsonEncode(area.toJson());
-    http.Response response = await http.post("http://" + this._serverIp + "/areas",
+    http.Response response = await http.post("http://" + this._serverIp + "/areas?mobile=true",
         headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken, 'Content-Type': 'application/json; charset=UTF-8'},
         body: body);
     if (response.statusCode == 401) {
