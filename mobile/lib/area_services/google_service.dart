@@ -7,7 +7,7 @@ import 'area_service_base.dart';
 import 'input.dart';
 import 'option.dart';
 
-class YoutubeService extends AreaServiceBase {
+class GoogleService extends AreaServiceBase {
   static const List<Option> ACTIONS = [
     Option("new_video", [Input("id", "Channel id", null, false)]),
     Option("playlist_update", [Input("id", "Playlist id", null, false)])
@@ -18,10 +18,10 @@ class YoutubeService extends AreaServiceBase {
   final bool isAction;
   final Map<String, dynamic> params;
 
-  YoutubeService({Key key, @required this.streamParamsController, @required this.isAction, this.params = const {}}) : super(key: key);
+  GoogleService({Key key, @required this.streamParamsController, @required this.isAction, this.params = const {}}) : super(key: key);
 
   static create(StreamController<Map<String, dynamic>> streamParamsController, bool isAction, [params = const {}]) {
-    return YoutubeService(streamParamsController: streamParamsController, isAction: isAction, params: params);
+    return GoogleService(streamParamsController: streamParamsController, isAction: isAction, params: params);
   }
 
   @override
