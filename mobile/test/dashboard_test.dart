@@ -32,7 +32,7 @@ void main() {
       when(mockAreaService.getAreaList()).thenAnswer((_) async => ([
             Area("", AreaAction("Github", "new_issue", {"owner": "EliottPal", "repo": "Dashboard_2020"}),
                 AreaReaction("Microsoft", "send_mail", {"to": "eliott.palueau@epitech.eu", "subject": "test", "body": "test"})),
-            Area("", AreaAction("Google", "new_video", {"id": "UCB3Vqxt5hVRKKWivG_OI4DA"}),
+            Area("", AreaAction("Youtube", "new_video", {"id": "UCB3Vqxt5hVRKKWivG_OI4DA"}),
                 AreaReaction("Discord", "post_message", {"id": "798196713449979954", "body": "test"})),
             Area("", AreaAction("Timer", "every_hour", {"minute": 42}),
                 AreaReaction("Microsoft", "send_mail", {"to": "eliott.palueau@epitech.eu", "subject": "test", "body": "test"})),
@@ -43,7 +43,7 @@ void main() {
 
       verify(mockAreaService.getAreaList()).called(1);
       expect(find.byKey(Key("card_github_microsoft")), findsOneWidget);
-      expect(find.byKey(Key("card_google_discord")), findsOneWidget);
+      expect(find.byKey(Key("card_youtube_discord")), findsOneWidget);
       expect(find.byKey(Key("card_timer_microsoft")), findsWidgets);
     }
 
