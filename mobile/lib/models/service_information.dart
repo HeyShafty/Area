@@ -5,6 +5,7 @@ import 'package:area/area_services/service_factory.dart';
 
 class ServiceInformation {
   final String name;
+  final String connectServiceName;
   final String uri;
   final String callbackUrlScheme;
   final String fullCallbackUrl;
@@ -13,8 +14,8 @@ class ServiceInformation {
   final bool hasActions;
   final bool hasReactions;
 
-  const ServiceInformation(this.name, this.uri, this.callbackUrlScheme, this.fullCallbackUrl, this.serverRedirectUri, this.iconPath,
-      this.hasActions, this.hasReactions);
+  const ServiceInformation(this.name, this.connectServiceName, this.uri, this.callbackUrlScheme, this.fullCallbackUrl,
+      this.serverRedirectUri, this.iconPath, this.hasActions, this.hasReactions);
 
   AreaServiceBase createServiceInstance(StreamController<Map<String, dynamic>> streamParamsController, bool isAction,
       [Map<String, dynamic> params = const {}]) {

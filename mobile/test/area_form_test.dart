@@ -105,8 +105,8 @@ void main() {
       await _loadWidget(tester);
 
       // ACTION
-      await _completeAreaPart(tester, Key("action_dropdown"), "Twitter", Key("action_options_dropdown"), "new_tweet_from",
-          {Key("input_new_tweet_from_username"): "heyshafty"});
+      await _completeAreaPart(
+          tester, Key("action_dropdown"), "Timer", Key("action_options_dropdown"), "every_hour", {Key("input_every_hour_minute"): "42"});
 
       // Scrolling up
       await tester.drag(find.byType(SingleChildScrollView), const Offset(0.0, -800));
@@ -143,7 +143,7 @@ void main() {
 
       // ACTION
       await _completeAreaPart(
-          tester, Key("action_dropdown"), "Google", Key("action_options_dropdown"), "new_video", {Key("input_new_video_id"): "42"});
+          tester, Key("action_dropdown"), "Youtube", Key("action_options_dropdown"), "new_video", {Key("input_new_video_id"): "42"});
 
       // Scrolling up
       await tester.drag(find.byType(SingleChildScrollView), const Offset(0.0, -800));

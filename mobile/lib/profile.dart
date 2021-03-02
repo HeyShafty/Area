@@ -92,8 +92,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
                                   if (e.value.uri != null) {
                                     return Padding(
                                         padding: EdgeInsets.only(top: 20.0),
-                                        child: getSignInWith(
-                                            e.value, this._user.servicesConnectInformation.contains(e.value.name.toLowerCase())));
+                                        child: getSignInWith(e.value,
+                                            this._user.servicesConnectInformation.contains(e.value.connectServiceName.toLowerCase())));
                                   }
                                   return Container();
                                 }).toList()))
@@ -306,7 +306,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
             Image.asset(service.iconPath),
             Padding(
                 padding: EdgeInsets.only(left: 10.0),
-                child: Text('You\'re connected with ' + service.name, style: TextStyle(color: Colors.black)))
+                child: Text('You\'re connected with ' + service.connectServiceName, style: TextStyle(color: Colors.black)))
           ]));
     }
     return MaterialButton(
@@ -328,7 +328,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     Image.asset(service.iconPath),
                     Padding(
                         padding: EdgeInsets.only(left: 10.0),
-                        child: Text('Connect with ' + service.name, style: TextStyle(color: Colors.black)))
+                        child: Text('Connect with ' + service.connectServiceName, style: TextStyle(color: Colors.black)))
                   ]));
   }
 

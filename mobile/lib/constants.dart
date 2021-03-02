@@ -9,16 +9,16 @@ const String APP_ID = "24ffcb55-7348-48a4-bbe7-c6c5b3763578";
 const String SERVER_SCOPE = "api://a8dcacc9-80da-4a2b-9f8a-6e20221951d0/user.base.read";
 const String CONNECT_URL_KEY = "url";
 const Map<String, ServiceInformation> SERVICES_INFORMATION_MAP = {
-  "discord": ServiceInformation('Discord', null, null, null, null, null, false, true),
-  "github": ServiceInformation(
-      'Github', '/connect/github', 'area.app', 'area.app://auth', '/connect/github/callback', 'assets/images/github.png', true, true),
-  "google": ServiceInformation(
-      'Google', '/connect/google', 'area.app', 'area.app:/auth', '/connect/google/callback', 'assets/images/google.png', true, false),
-  "microsoft": ServiceInformation('Microsoft', '/connect/microsoft', 'msauth.area.app', 'msauth.area.app://auth',
+  "discord": ServiceInformation('Discord', null, null, null, null, null, null, false, true),
+  "github": ServiceInformation('Github', 'Github', '/connect/github', 'area.app', 'area.app://auth', '/connect/github/callback',
+      'assets/images/github.png', true, true),
+  "youtube": ServiceInformation('Youtube', 'Google', '/connect/google', 'area.app', 'area.app:/auth', '/connect/google/callback',
+      'assets/images/google.png', true, false),
+  "microsoft": ServiceInformation('Microsoft', 'Microsoft', '/connect/microsoft', 'msauth.area.app', 'msauth.area.app://auth',
       '/connect/microsoft/callback', 'assets/images/microsoft.png', true, true),
-  "timer": ServiceInformation('Timer', null, null, null, null, null, true, false),
-  "twitter": ServiceInformation(
-      'Twitter', '/connect/twitter', 'area.app', 'area.app://', '/connect/twitter/callback', 'assets/images/twitter.png', true, true)
+  "timer": ServiceInformation('Timer', null, null, null, null, null, null, true, false),
+  "twitter": ServiceInformation('Twitter', 'Twitter', '/connect/twitter', 'area.app', 'area.app://', '/connect/twitter/callback',
+      'assets/images/twitter.png', false, true)
 };
 const String ACTION_KEY = "action";
 const String REACTION_KEY = "reaction";
