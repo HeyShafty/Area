@@ -50,8 +50,8 @@ Here are all the diiferent actions/reactions that you can use to create
   - Specific hour.
   - Specific day.
   
-## Server API:  
-  SWAGGER ICI  
+## API endpoits:  
+![image](https://user-images.githubusercontent.com/44638280/109667842-d7158f00-7b70-11eb-8d04-55dcc1f7206e.png) 
 
 ### Made by:  
 - [Kylian Balan](https://github.com/Kilio22)  
