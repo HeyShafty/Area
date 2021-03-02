@@ -16,7 +16,7 @@ const client = new Discord.Client();
 
 client.login(BOT_TOKEN);
 
-async function doReaction(area, msalClient) {
+async function doReaction(area, publicMsalClient, confidentialMsalClient) {
     const user = await User.findById(area.userId);
 
     if (area.reaction.service === "github") {
@@ -31,7 +31,7 @@ async function doReaction(area, msalClient) {
     }
     if (area.reaction.service === "microsoft") {
         if (area.reaction.name === "send_mail") {
-            const accessToken = await serviceMicrosoft.getUserAccessToken(user, msalClient);
+            const accessToken = await serviceMicrosoft.getUserAccessToken(user, (area.isMobile ? publicMsalClient : confidentialMsalClient));
 
             try {
                 await serviceMicrosoft.sendEmail(accessToken, area.reaction.data.to, area.reaction.data);
@@ -68,13 +68,13 @@ async function doReaction(area, msalClient) {
     }
 }
 
-async function checkupTriggers(msalClient) {
+async function checkupTriggers(publicMsalClient, confidentialMsalClient) {
     const areas = await Area.find({});
-    const react = (_area) => doReaction(_area, msalClient);
+    const react = (_area) => doReaction(_area, publicMsalClient, confidentialMsalClient);
 
     for (const area of areas) {
         if (area.action.service === 'microsoft') {
-            await microsoftTriggers(area, react, msalClient);
+            await microsoftTriggers(area, react, publicMsalClient, confidentialMsalClient);
         } else if (area.action.service === 'youtube') {
             await youtubeTriggers(area, react);
         } else if (area.action.service === 'github') {

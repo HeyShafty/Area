@@ -17,7 +17,7 @@ const twitterRouter = require('./src/routes/twitterRoutes');
 
 const { ALLOWED_ORIGINS } = require('./src/config/config');
 const { MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PASSWORD } = require('./src/config/mongoConfig');
-const { MSAL_CONFIG } = require('./src/config/msalConfig');
+const { MSAL_CONFIG, MSAL_CONFIG_SECRET } = require('./src/config/msalConfig');
 const AREA_SERVICES = require('./src/services');
 const checkupTriggers = require('./src/area');
 
@@ -53,7 +53,8 @@ async function eraseUsersMicrosoftConnectData() {
 function startServer() {
     const app = express();
 
-    app.locals.msalClient = new msal.ConfidentialClientApplication(MSAL_CONFIG);
+    app.locals.publicMsalClient = new msal.PublicClientApplication(MSAL_CONFIG);
+    app.locals.confidentialMsalClient = new msal.ConfidentialClientApplication(MSAL_CONFIG_SECRET);
 
     app.use(morgan('combined'));
     app.use(bodyParser.json());
@@ -88,7 +89,7 @@ function startServer() {
     });
 
     setInterval(() => {
-        checkupTriggers(app.locals.msalClient);
+        checkupTriggers(app.locals.publicMsalClient, app.locals.confidentialMsalClient);
     }, 5000);
 }
 

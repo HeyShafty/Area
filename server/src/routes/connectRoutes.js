@@ -35,7 +35,7 @@ router.get('/microsoft', protectedRequest, async (req, res) => {
     };
 
     try {
-        const authUrl = await req.app.locals.msalClient.getAuthCodeUrl(urlParameters);
+        const authUrl = await (isMobile ? req.app.locals.publicMsalClient : req.app.locals.confidentialMsalClient).getAuthCodeUrl(urlParameters);
 
         res.json({ url: authUrl });
     } catch (err) {
@@ -56,7 +56,7 @@ router.get('/microsoft/callback', async (req, res) => {
         return res.status(400).send('Invalid state');
     }
     try {
-        const response = await req.app.locals.msalClient.acquireTokenByCode(tokenRequest);
+        const response = await (isMobile ? req.app.locals.publicMsalClient : req.app.locals.confidentialMsalClient).acquireTokenByCode(tokenRequest);
 
         user.connectData.set(MONGOOSE_MSAL_KEY, {
             accessToken: response.accessToken,
@@ -65,6 +65,7 @@ router.get('/microsoft/callback', async (req, res) => {
         await User.findByIdAndUpdate(user._id, user);
     } catch (err) {
         console.log(err)
+        return res.sendStatus(400);
     }
     if (isMobile) {
         return res.sendStatus(200);

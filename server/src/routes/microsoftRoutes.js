@@ -8,7 +8,7 @@ const router = express.Router();
 const couldNotGetAccessToken = (res) => res.status(401).send('Could not get a new access token, please connect to Microsoft and try again.');
 
 router.get('/me', protectedRequest, async (req, res) => {
-    const accessToken = await service.getUserAccessToken(req.user, req.app.locals.msalClient);
+    const accessToken = await service.getUserAccessToken(req.user, req.app.locals.confidentialMsalClient);
 
     if (!accessToken) {
         return couldNotGetAccessToken(res);
@@ -17,7 +17,7 @@ router.get('/me', protectedRequest, async (req, res) => {
 });
 
 router.post('/send', protectedRequest, async (req, res) => {
-    const accessToken = await service.getUserAccessToken(req.user, req.app.locals.msalClient);
+    const accessToken = await service.getUserAccessToken(req.user, req.app.locals.confidentialMsalClient);
 
     if (!accessToken) {
         return couldNotGetAccessToken(res);
