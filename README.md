@@ -23,7 +23,9 @@ In the `documentation/` folder you can find these documents:
 - Technical documentation → Technical information about the project.  
 
 ## Achievement:    
-  SCREEN ICI  
+
+### Mobile app:  
+![image](https://user-images.githubusercontent.com/44638280/109784846-c6febd80-7c0b-11eb-9020-961c8085ff0d.png)
 
 ## Services:  
 Here are all the diiferent actions/reactions that you can use:  
@@ -50,7 +52,7 @@ Here are all the diiferent actions/reactions that you can use:
   - Specific hour.
   - Specific day.
   
-## API endpoits:  
+## API endpoints:  
 ![image](https://user-images.githubusercontent.com/44638280/109667842-d7158f00-7b70-11eb-8d04-55dcc1f7206e.png) 
 
 ### Made by:  
