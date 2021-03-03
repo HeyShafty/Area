@@ -25,7 +25,11 @@ In the `documentation/` folder you can find these documents:
 ## Achievement:    
 
 ### Mobile app:  
-![image](https://user-images.githubusercontent.com/44638280/109784846-c6febd80-7c0b-11eb-9020-961c8085ff0d.png)
+![image](https://user-images.githubusercontent.com/44638280/109784846-c6febd80-7c0b-11eb-9020-961c8085ff0d.png)  
+  
+  
+### Web app:  
+![image](https://user-images.githubusercontent.com/44638280/109785774-c3b80180-7c0c-11eb-9cf7-7556c944a2ed.png)  
 
 ## Services:  
 Here are all the diiferent actions/reactions that you can use:  
