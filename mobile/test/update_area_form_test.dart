@@ -1,3 +1,5 @@
+import 'package:area/exceptions/bad_response_exception.dart';
+import 'package:area/exceptions/bad_token_exception.dart';
 import 'package:area/models/area.dart';
 import 'package:area/update_area_form.dart';
 import 'package:flutter/cupertino.dart';
@@ -61,10 +63,60 @@ void main() {
       expect(find.byType(UpdateAreaFormPage), findsNothing);
     }
 
+    _updateAreaBadTokenError(WidgetTester tester) async {
+      when(mockAreaService.updateArea(any)).thenThrow(BadTokenException());
+      await _loadWidget(tester);
+
+      await tester.tap(find.text("OK"));
+      await tester.pumpAndSettle();
+
+      // Scrolling up
+      await tester.drag(find.byType(SingleChildScrollView), const Offset(0.0, -800));
+      await tester.pumpAndSettle();
+
+      final submitButton = find.byWidgetPredicate((widget) => widget is RoundedLoadingButton && widget.onPressed != null);
+      expect(submitButton, findsOneWidget);
+
+      await tester.tap(submitButton);
+      await tester.pumpAndSettle();
+
+      verify(mockAreaService.updateArea(any)).called(1);
+      expect(find.byType(UpdateAreaFormPage), findsOneWidget);
+    }
+
+    _updateAreaBadResponseError(WidgetTester tester) async {
+      when(mockAreaService.updateArea(any)).thenThrow(BadResponseException());
+      await _loadWidget(tester);
+
+      await tester.tap(find.text("OK"));
+      await tester.pumpAndSettle();
+
+      // Scrolling up
+      await tester.drag(find.byType(SingleChildScrollView), const Offset(0.0, -800));
+      await tester.pumpAndSettle();
+
+      final submitButton = find.byWidgetPredicate((widget) => widget is RoundedLoadingButton && widget.onPressed != null);
+      expect(submitButton, findsOneWidget);
+
+      await tester.tap(submitButton);
+      await tester.pumpAndSettle();
+
+      verify(mockAreaService.updateArea(any)).called(1);
+      expect(find.byType(UpdateAreaFormPage), findsOneWidget);
+    }
+
     testWidgets("Update area", (WidgetTester tester) async {
       await _loadWidget(tester);
 
       await _updateArea(tester);
+    });
+
+    testWidgets("Bad token error", (WidgetTester tester) async {
+      await _updateAreaBadTokenError(tester);
+    });
+
+    testWidgets("Bad response error", (WidgetTester tester) async {
+      await _updateAreaBadResponseError(tester);
     });
   });
 }
