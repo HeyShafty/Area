@@ -63,9 +63,14 @@ router.post('/', protectedRequest, async(req, res) => {
 /**
  * @swagger
  *
- * /areas:
+ * /areas/:id:
  *   put:
  *     summary: Update area by id.
+ *     parameters:
+ *       - name: id
+ *         required: true
+ *         description: User ID
+ *         in: path
  *     responses:
  *       200:
  *         description: Area updated.
@@ -87,9 +92,14 @@ router.put('/:id', protectedRequest, async (req, res) => {
 /**
  * @swagger
  *
- * /areas:
+ * /areas/:id:
  *   delete:
  *     summary: Delete area by id.
+ *     parameters:
+ *       - name: id
+ *         required: true
+ *         description: User ID
+ *         in: path
  *     responses:
  *       200:
  *         description: Area deleted.

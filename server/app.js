@@ -12,6 +12,7 @@ const areaRouter = require('./src/routes/areasRoutes');
 const authRouter = require('./src/routes/authRoutes');
 const connectRouter = require('./src/routes/connectRoutes');
 const profileRouter = require('./src/routes/profileRoutes');
+const usersRouter = require('./src/routes/usersRoutes');
 
 const { ALLOWED_ORIGINS } = require('./src/config/config');
 const { MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PASSWORD } = require('./src/config/mongoConfig');
@@ -71,6 +72,7 @@ function startServer() {
     app.use('/auth', authRouter);
     app.use('/connect', connectRouter);
     app.use('/profile', profileRouter);
+    app.use('/users', usersRouter);
 
     app.get('/', (req, res) => {
         res.send('Hello World!');
