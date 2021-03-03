@@ -25,7 +25,7 @@ router.get('/', protectedRequest, async (req, res) => {
         let formatted = [];
 
         for (const user of users) {
-            formatted.push({ id: user._id, username: user.displayName, email: user.email })
+            formatted.push({ id: user._id, displayName: user.displayName, email: user.email })
         }
         return res.send(formatted);
     } catch (err) {
