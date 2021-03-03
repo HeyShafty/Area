@@ -30,6 +30,7 @@ In the `documentation/` folder you can find these documents:
   
 ### Web app:  
 ![image](https://user-images.githubusercontent.com/44638280/109785774-c3b80180-7c0c-11eb-9cf7-7556c944a2ed.png)  
+![image](https://user-images.githubusercontent.com/44638280/109786257-45a82a80-7c0d-11eb-899c-9dc23f803bff.png)  
 
 ## Services:  
 Here are all the diiferent actions/reactions that you can use:  
