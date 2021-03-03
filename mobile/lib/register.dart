@@ -1,5 +1,5 @@
 import 'package:area/exceptions/bad_response_exception.dart';
-import 'package:area/services/toast_service.dart';
+import 'package:area/services/app_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
@@ -143,13 +143,13 @@ class _RegisterState extends State<Register> {
       this.openHomePage();
       return this._btnController.success();
     } on AlreadyExistsException {
-      ToastService.showToast("Email already in use.");
+      AppService.showToast("Email already in use.");
     } on BadResponseException {
-      ToastService.showToast("Couldn't sign you up.");
+      AppService.showToast("Couldn't sign you up.");
     } on Exception {
-      ToastService.showToast("Couldn't sign you up.");
+      AppService.showToast("Couldn't sign you up.");
     } catch (e) {
-      ToastService.showToast(e.toString());
+      AppService.showToast(e.toString());
     }
     this._btnController.reset();
   }

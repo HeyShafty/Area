@@ -228,5 +228,29 @@ class AreaService {
     }
   }
 
+  Future<List<User>> getUsers() async {
+    http.Response response =
+        await http.get("http://" + this._serverIp + "/users", headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken});
+    if (response.statusCode == 401) {
+      throw BadTokenException();
+    }
+    if (response.statusCode != 200) {
+      throw BadResponseException();
+    }
+    Iterable l = json.decode(response.body);
+    return List<User>.from(l.map((e) => User.fromJson(e)));
+  }
+
+  Future<void> deleteUser(final User user) async {
+    http.Response response = await http
+        .delete("http://" + this._serverIp + "/users/" + user.id, headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken});
+    if (response.statusCode == 401) {
+      throw BadTokenException();
+    }
+    if (response.statusCode != 204) {
+      throw BadResponseException();
+    }
+  }
+
   AreaService._internal();
 }
