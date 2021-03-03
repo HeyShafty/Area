@@ -1,12 +1,11 @@
 import 'package:area/dashboard.dart';
 import 'package:area/profile.dart';
-import 'package:area/services/shared_preferences_service.dart';
+import 'package:area/services/app_service.dart';
+import 'package:area/users.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'about.dart';
-import 'constants.dart';
-import 'login.dart';
 
 class MyMainPage extends StatefulWidget {
   @override
@@ -14,7 +13,7 @@ class MyMainPage extends StatefulWidget {
 }
 
 class _MyMainPageState extends State<MyMainPage> {
-  final List<Widget> _children = [DashboardPage(), MyProfilePage(), AboutPage()];
+  final List<Widget> _children = [DashboardPage(), MyProfilePage(), Users()];
 
   int _selectedIndex = 0;
 
@@ -41,6 +40,7 @@ class _MyMainPageState extends State<MyMainPage> {
         bottomNavigationBar: BottomNavigationBar(items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Users'),
         ], currentIndex: _selectedIndex, selectedItemColor: Colors.blueAccent, onTap: onItemTapped));
   }
 
@@ -60,13 +60,7 @@ class _MyMainPageState extends State<MyMainPage> {
               content: SingleChildScrollView(child: ListBody(children: <Widget>[Text('Do you really want to sign out?')])),
               actions: <Widget>[
                 TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Cancel')),
-                TextButton(
-                    onPressed: () async {
-                      await SharedPreferencesService.clearValueByKey(TOKEN_KEY);
-                      await Navigator.pushAndRemoveUntil(
-                          context, MaterialPageRoute(builder: (context) => Login()), (Route<dynamic> route) => false);
-                    },
-                    child: Text('Yes'))
+                TextButton(onPressed: () => AppService.signOut(context), child: Text('Yes'))
               ]);
         });
   }

@@ -1,11 +1,10 @@
 import 'dart:developer';
 
 import 'package:area/area_form.dart';
-import 'package:area/exceptions/bad_response_exception.dart';
 import 'package:area/models/area.dart';
 import 'package:area/models/service_information.dart';
+import 'package:area/services/app_service.dart';
 import 'package:area/services/area_service.dart';
-import 'package:area/services/toast_service.dart';
 import 'package:area/update_area_form.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,13 +32,7 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
-    this.setState(() {
-      this._isLoading = true;
-    });
-    this.getAreaList();
-    this.setState(() {
-      this._isLoading = false;
-    });
+    this.updateAreaList();
   }
 
   @override
@@ -146,14 +139,15 @@ class _DashboardPageState extends State<DashboardPage> {
   deleteArea(Area area) async {
     try {
       await this._areaServiceInstance.deleteArea(area);
-      return ToastService.showToast("Area deleted successfully!", Colors.green);
+      return AppService.showToast("Area deleted successfully!", Colors.green);
     } on BadTokenException {
-      ToastService.showToast("Invalid token, please sign out.");
+      AppService.showToast("Invalid token, signing you out.");
+      AppService.signOut(context);
     } on Exception {
-      ToastService.showToast("Couldn't delete area.");
+      AppService.showToast("Couldn't delete area.");
     } catch (e) {
       log(e.toString());
-      ToastService.showToast("Couldn't delete area.");
+      AppService.showToast("Couldn't delete area.");
     }
   }
 
@@ -178,14 +172,13 @@ class _DashboardPageState extends State<DashboardPage> {
         this._areaList = areaList;
       });
     } on BadTokenException {
-      ToastService.showToast("Invalid token, please sign out.");
-    } on BadResponseException {
-      ToastService.showToast("Cannot get area list.");
+      AppService.showToast("Invalid token, signing you out.");
+      AppService.signOut(context);
     } on Exception {
-      ToastService.showToast("Cannot get area list.");
+      AppService.showToast("Cannot get area list.");
     } catch (e) {
       log(e.toString());
-      ToastService.showToast("Cannot get area list.");
+      AppService.showToast("Cannot get area list.");
     }
     this.setState(() {
       this._areaList = null;

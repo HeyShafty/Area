@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:area/exceptions/bad_token_exception.dart';
 import 'package:area/models/service_information.dart';
 import 'package:area/models/user.dart';
+import 'package:area/services/app_service.dart';
 import 'package:area/services/area_service.dart';
-import 'package:area/services/toast_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
@@ -123,32 +123,33 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 TextButton(
                     onPressed: () async {
                       if (usernameController.text == "") {
-                        ToastService.showToast("Please fill the username field.");
+                        AppService.showToast("Please fill the username field.");
                         return;
                       }
                       if (usernameController.text.length < 3) {
-                        ToastService.showToast("Username must be formed of at least 3 characters");
+                        AppService.showToast("Username must be formed of at least 3 characters");
                         return;
                       }
                       FocusScope.of(context).unfocus();
 
                       try {
-                        User newUser = User(
-                            usernameController.text, this._user.email, this._user.servicesConnectInformation, this._user.isMicrosoftAuth);
+                        User newUser = User("", usernameController.text, this._user.email, this._user.servicesConnectInformation,
+                            this._user.isMicrosoftAuth);
 
                         await this._areaServiceInstance.updateUsernameEmail(newUser);
                         this.setState(() {
                           this._user = newUser;
                         });
-                        ToastService.showToast("Username updated successfully!", Colors.green);
+                        AppService.showToast("Username updated successfully!", Colors.green);
                         return Navigator.of(context).pop();
                       } on BadTokenException {
-                        ToastService.showToast("Invalid token, please sign out.");
+                        AppService.showToast("Invalid token, signing you out.");
+                        AppService.signOut(context);
                       } on Exception {
-                        ToastService.showToast("Couldn't update your username.");
+                        AppService.showToast("Couldn't update your username.");
                       } catch (e) {
                         log(e.toString());
-                        ToastService.showToast("Couldn't update your username.");
+                        AppService.showToast("Couldn't update your username.");
                       }
                     },
                     child: Text('OK'))
@@ -179,32 +180,33 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 TextButton(
                     onPressed: () async {
                       if (emailController.text == "") {
-                        ToastService.showToast("Please fill the email field.");
+                        AppService.showToast("Please fill the email field.");
                         return;
                       }
                       if (RegExp(EMAIL_REGEX).hasMatch(emailController.text) == false) {
-                        ToastService.showToast("Invalid email.");
+                        AppService.showToast("Invalid email.");
                         return;
                       }
                       FocusScope.of(context).unfocus();
 
                       try {
-                        User newUser = User(this._user.displayName, emailController.text, this._user.servicesConnectInformation,
+                        User newUser = User("", this._user.displayName, emailController.text, this._user.servicesConnectInformation,
                             this._user.isMicrosoftAuth);
 
                         await this._areaServiceInstance.updateUsernameEmail(newUser);
                         this.setState(() {
                           this._user = newUser;
                         });
-                        ToastService.showToast("Email updated successfully!", Colors.green);
+                        AppService.showToast("Email updated successfully!", Colors.green);
                         return Navigator.of(context).pop();
                       } on BadTokenException {
-                        ToastService.showToast("Invalid token, please sign out.");
+                        AppService.showToast("Invalid token, signing you out.");
+                        AppService.signOut(context);
                       } on Exception {
-                        ToastService.showToast("Couldn't update your email.");
+                        AppService.showToast("Couldn't update your email.");
                       } catch (e) {
                         log(e.toString());
-                        ToastService.showToast("Couldn't update your email.");
+                        AppService.showToast("Couldn't update your email.");
                       }
                     },
                     child: Text('OK'))
@@ -243,30 +245,31 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 TextButton(
                     onPressed: () async {
                       if (passwordController.text == "" || confirmPasswordController.text == "") {
-                        ToastService.showToast("Please fill all fields.");
+                        AppService.showToast("Please fill all fields.");
                         return;
                       }
                       if (passwordController.text.length < 6) {
-                        ToastService.showToast("Password must be formed of at least 6 characters");
+                        AppService.showToast("Password must be formed of at least 6 characters");
                         return;
                       }
                       if (passwordController.text != confirmPasswordController.text) {
-                        ToastService.showToast("Both passwords are not the same.");
+                        AppService.showToast("Both passwords are not the same.");
                         return;
                       }
                       FocusScope.of(context).unfocus();
 
                       try {
                         await this._areaServiceInstance.updatePassword(passwordController.text);
-                        ToastService.showToast("Password updated successfully!", Colors.green);
+                        AppService.showToast("Password updated successfully!", Colors.green);
                         return Navigator.of(context).pop();
                       } on BadTokenException {
-                        ToastService.showToast("Invalid token, please sign out.");
+                        AppService.showToast("Invalid token, signing you out.");
+                        AppService.signOut(context);
                       } on Exception {
-                        ToastService.showToast("Couldn't update your password.");
+                        AppService.showToast("Couldn't update your password.");
                       } catch (e) {
                         log(e.toString());
-                        ToastService.showToast("Couldn't update your password.");
+                        AppService.showToast("Couldn't update your password.");
                       }
                     },
                     child: Text('OK'))
@@ -285,10 +288,11 @@ class _MyProfilePageState extends State<MyProfilePage> {
       await this._areaServiceInstance.handleServiceRedirection(callbackUrl, service);
       await this.getUserProfile();
     } on BadTokenException {
-      ToastService.showToast("Invalid token, please sign out.");
+      AppService.showToast("Invalid token, signing you out.");
+      AppService.signOut(context);
     } catch (e) {
       log(e.toString());
-      ToastService.showToast("Couldn't sign you in with this service.");
+      AppService.showToast("Couldn't sign you in with this service.");
     }
     setState(() {
       this._isLoading = false;
@@ -340,12 +344,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
         this._user = user;
       });
     } on BadTokenException {
-      ToastService.showToast("Invalid token, please sign out.");
+      AppService.showToast("Invalid token, signing you out.");
+      AppService.signOut(context);
     } on Exception {
-      ToastService.showToast("Cannot get user profile information.");
+      AppService.showToast("Cannot get user profile information.");
     } catch (e) {
       log(e.toString());
-      ToastService.showToast("Cannot get user profile information.");
+      AppService.showToast("Cannot get user profile information.");
     }
   }
 }

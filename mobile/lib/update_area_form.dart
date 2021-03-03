@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:area/area_form.dart';
+import 'package:area/services/app_service.dart';
 import 'package:area/services/area_service.dart';
-import 'package:area/services/toast_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -68,16 +68,16 @@ class _UpdateAreaFormPageState extends AreaFormPageState<UpdateAreaFormPage> {
 
     try {
       await this.areaServiceInstance.updateArea(area);
-      ToastService.showToast("Area updated successfully!", Colors.green);
+      AppService.showToast("Area updated successfully!", Colors.green);
       return Navigator.pop(context);
     } on BadTokenException {
-      ToastService.showToast("Invalid token, please sign out.");
-    } on Exception catch (e) {
-      log(e.toString());
-      ToastService.showToast("Couldn't update area.");
+      AppService.showToast("Invalid token, signing you out.");
+      AppService.signOut(context);
+    } on Exception {
+      AppService.showToast("Couldn't update area.");
     } catch (e) {
       log(e.toString());
-      ToastService.showToast("Couldn't update area.");
+      AppService.showToast("Couldn't update area.");
     }
     this.buttonController.reset();
   }

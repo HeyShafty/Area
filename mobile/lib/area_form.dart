@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:area/models/service_information.dart';
+import 'package:area/services/app_service.dart';
 import 'package:area/services/area_service.dart';
-import 'package:area/services/toast_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
@@ -161,7 +161,7 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
         this.selectedActionServiceInfo = null;
         this.actionService = null;
       });
-      return ToastService.showToast("Please go to profile page and sign in with this service to use it.");
+      return AppService.showToast("Please go to profile page and sign in with this service to use it.");
     }
     this.actionParams.clear();
     this.setState(() {
@@ -176,7 +176,7 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
         this.selectedReactionServiceInfo = null;
         this.reactionService = null;
       });
-      return ToastService.showToast("Please go to profile page and sign in with this service to use it.");
+      return AppService.showToast("Please go to profile page and sign in with this service to use it.");
     }
     this.reactionParams.clear();
     this.setState(() {
@@ -216,16 +216,16 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
 
     try {
       await this.areaServiceInstance.addArea(area);
-      ToastService.showToast("Area added successfully!", Colors.green);
+      AppService.showToast("Area added successfully!", Colors.green);
       return Navigator.pop(context);
     } on BadTokenException {
-      ToastService.showToast("Invalid token, please sign out.");
-    } on Exception catch (e) {
-      log(e.toString());
-      ToastService.showToast("Couldn't add a new area.");
+      AppService.showToast("Invalid token, signing you out.");
+      AppService.signOut(context);
+    } on Exception {
+      AppService.showToast("Couldn't add a new area.");
     } catch (e) {
       log(e.toString());
-      ToastService.showToast("Couldn't add a new area.");
+      AppService.showToast("Couldn't add a new area.");
     }
     this.buttonController.reset();
   }

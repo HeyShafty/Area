@@ -29,7 +29,7 @@ void main() {
 
     _userProfile(WidgetTester tester) async {
       when(mockAreaService.getUserProfile()).thenAnswer((_) async {
-        return User("test", "test@epitech.eu", ["twitter", "github", "microsoft"], true);
+        return User("", "test", "test@epitech.eu", ["twitter", "github", "microsoft"], true);
       });
       await _loadWidget(tester);
 
@@ -46,7 +46,7 @@ void main() {
 
     _editUsername(WidgetTester tester) async {
       when(mockAreaService.getUserProfile()).thenAnswer((_) async {
-        return User("test", "test@epitech.eu", ["twitter", "github", "microsoft"], false);
+        return User("", "test", "test@epitech.eu", ["twitter", "github", "microsoft"], false);
       });
       await _loadWidget(tester);
 
@@ -71,7 +71,7 @@ void main() {
 
     _editEmail(WidgetTester tester) async {
       when(mockAreaService.getUserProfile()).thenAnswer((_) async {
-        return User("test", "test@epitech.eu", ["twitter", "github", "microsoft"], false);
+        return User("", "test", "test@epitech.eu", ["twitter", "github", "microsoft"], false);
       });
       await _loadWidget(tester);
 
@@ -96,7 +96,7 @@ void main() {
 
     _editPassword(WidgetTester tester) async {
       when(mockAreaService.getUserProfile()).thenAnswer((_) async {
-        return User("test", "test@epitech.eu", ["twitter", "github", "microsoft"], false);
+        return User("", "test", "test@epitech.eu", ["twitter", "github", "microsoft"], false);
       });
       await _loadWidget(tester);
 
