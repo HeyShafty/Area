@@ -11,6 +11,6 @@ class User {
       : this.id = json['id'],
         this.displayName = json['displayName'],
         this.email = json['email'],
-        this.servicesConnectInformation = json['services'] == null ? [] : (json['services'] as List).map((i) => i.toString()).toList(),
+        this.servicesConnectInformation = (json['services'] as List)?.map((i) => i.toString())?.toList() ?? [],
         this.isMicrosoftAuth = json['isMicrosoftAuthed'];
 }
