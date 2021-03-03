@@ -108,8 +108,9 @@ class _DashboardPageState extends State<DashboardPage> {
                                                     IconButton(
                                                         icon: Icon(Icons.edit, color: Colors.black),
                                                         onPressed: () {
-                                                          Navigator.push(
-                                                              context, MaterialPageRoute(builder: (context) => UpdateAreaFormPage(item)));
+                                                          Navigator.push(context,
+                                                                  MaterialPageRoute(builder: (context) => UpdateAreaFormPage(item)))
+                                                              .then((value) => this.updateAreaList());
                                                         }),
                                                     IconButton(
                                                         icon: Icon(Icons.delete_outline, color: Colors.red),
@@ -129,14 +130,16 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   navigateToForm() {
-    return Navigator.push(context, MaterialPageRoute(builder: (context) => AreaFormPage())).then((value) async {
-      this.setState(() {
-        this._isLoading = true;
-      });
-      await this.getAreaList();
-      this.setState(() {
-        this._isLoading = false;
-      });
+    return Navigator.push(context, MaterialPageRoute(builder: (context) => AreaFormPage())).then((_) => this.updateAreaList());
+  }
+
+  updateAreaList() async {
+    this.setState(() {
+      this._isLoading = true;
+    });
+    await this.getAreaList();
+    this.setState(() {
+      this._isLoading = false;
     });
   }
 
