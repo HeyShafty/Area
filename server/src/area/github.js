@@ -1,9 +1,9 @@
 const { graphql } = require("@octokit/graphql");
 
-const Area = require('../models/Area');
 const User = require('../models/User');
 const githubService = require('../services/githubService');
 const { MONGOOSE_GITHUB_KEY } = require('../config/githubConfig');
+const checkCount = require('./checkCount');
 
 const graphqlRepositoryCount = (owner, _) => `{
     repositoryOwner(login:"${owner}") {
@@ -62,66 +62,54 @@ const QUERIES = {
     'new_tag': graphqlTagCount
 }
 
-async function execQuery(area, user, graphQuery, react) {
+async function getQueryCount(user, queryData, graphQuery) {
     const connectData = user.connectData.get(MONGOOSE_GITHUB_KEY);
-    const { data } = area.action;
     let count = undefined;
 
     if (!connectData) {
-        return "Not connected to github";
+        throw "Not connected to github";
     }
     try {
-        const graphResult = await graphql(graphQuery(data.owner, data.repo), {
+        const graphResult = await graphql(graphQuery(queryData.owner, queryData.repo), {
             headers: {
                 authorization: `Bearer ${connectData.accessToken}`,
             },
         });
 
-        /* data be like
-            { repository: { issues:       { totalCount: number } } } new_issue
-            { repository: { issues:       { totalCount: number } } } issue_closes
-            { repository: { pullRequests: { totalCount: number } } } new_pull_request
-            { user:       { repositories: { totalCount: number } } } new_repository
+        /* graphResult be like
+            { repository:      { issues:       { totalCount: number } } } new_issue
+            { repository:      { issues:       { totalCount: number } } } issue_closes
+            { repository:      { pullRequests: { totalCount: number } } } new_pull_request
+            { repositoryOwner: { repositories: { totalCount: number } } } new_repository
+            ...
             du coup je fais un trick pour ne pas à faire des ifs or something
         */
         for (const obj in graphResult) {
             if (graphResult.hasOwnProperty(obj)) {
                 const res = graphResult[obj];
                 for (const data in res) {
-                    if (res.hasOwnProperty(data))
+                    if (res.hasOwnProperty(data)) {
                         count = res[data].totalCount;
+                    }
                 }
             }
         }
     } catch (err) {
         console.log(err);
-        return "Could not process query";
+        throw "Could not process query";
     }
     if (count === undefined) {
-        // TODO: est-ce que y'a besoin de faire une gestion d'erreur en mode le repo a été supprimé donc il faut del l'AREA
-        return "Could not find any count in query response";
+        throw "Could not find any count in query response";
     }
-    console.log({ count, data: data.currentCount });
-    if (count !== data.currentCount) {
-        if (count > data.currentCount) { // TODO: devrait proc plusieures fois si jamais il y a plusieurs issues en même temps
-            area.action.data.currentCount = count;
-            await Area.findByIdAndUpdate(area._id, area);
-            react(area);
-        } else {
-            area.action.data.currentCount = count;
-            await Area.findByIdAndUpdate(area._id, area);
-        }
-    }
-    return false;
+    return count;
 }
 
 async function githubTriggers(area, react) {
     const user = await User.findById(area.userId);
     const query = QUERIES[area.action.name];
 
-    console.log(area.action.name);
     if (query) {
-        await execQuery(area, user, query, react);
+        await checkCount(area, () => getQueryCount(user, area.action.data, query), react);
     }
 }
 
@@ -139,13 +127,18 @@ async function githubReact(area) {
     }
 }
 
-async function githubCheck(action) {
-    const query = QUERIES[area.action.name];
+async function githubCheck(user, action) {
+    const query = QUERIES[action.name];
 
     if (query) {
-        return await execQuery({ action }, user, query, react);
+        try {
+            await getQueryCount(user, action.data, graphQuery);
+        } catch (err) {
+            return err;
+        }
+        return false;
     }
-    return "Could not find query from action name (not supposed to happen)";
+    return "Could not find any query from action name (not supposed to happen)";
 }
 
 module.exports = {

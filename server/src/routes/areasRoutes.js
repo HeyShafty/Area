@@ -55,7 +55,7 @@ router.post('/', protectedRequest, async(req, res) => {
         }
     }
 
-    const error = action.checkFct(req.body.action);
+    const error = action.checkFct(user, req.body.action, isMobile ? req.app.locals.publicMsalClient : req.app.locals.confidentialMsalClient);
     if (error) {
         return res.status(400).send(error);
     }

@@ -1,16 +1,15 @@
 const { google } = require('googleapis');
-const Area = require('../models/Area');
+
 const User = require('../models/User');
 const getUserClient = require('../services/googleService');
+const checkCount = require('./checkCount');
 
-async function newVideo(area, user, react) {
+async function getVideoCount(user, data) {
     const oauth2Client = await getUserClient(user);
-    const { data } = area.action;
     let count = undefined;
 
     if (oauth2Client == null) {
-        console.log("delete area ?");
-        return;
+        throw "Not connected to google";
     }
     try {
         const googleRes = await google.youtube('v3').channels.list({
@@ -18,40 +17,25 @@ async function newVideo(area, user, react) {
             part: [
                 'statistics'
             ],
-            // forUsername: area.action.data.username
             id: [ data.id ]
         });
 
         if (!googleRes.data.items || googleRes.data.items.length === 0) {
-            // no items found -> delete area ?
-            return;
+            throw "Could not find any video from given channel id parameter";
         }
         count = parseInt(googleRes.data.items[0].statistics.videoCount);
     } catch (err) {
-        console.log(err);
-        return;
+        throw "Could not process query";
     }
-    console.log({ count, data: data.currentCount });
-    if (count !== data.currentCount) {
-        if (count > data.currentCount) { // TODO: devrait proc plusieures fois si jamais il y a plusieurs vidéos en même temps
-            area.action.data.currentCount = count;
-            await Area.findByIdAndUpdate(area._id, area);
-            react(area);
-        } else {
-            area.action.data.currentCount = count;
-            await Area.findByIdAndUpdate(area._id, area);
-        }
-    }
+    return count;
 }
 
-async function playlistUpdate(area, user, react) {
+async function getPlaylistVideoCount(user, data) {
     const oauth2Client = await getUserClient(user);
-    const { data } = area.action;
     let count = undefined;
 
     if (oauth2Client == null) {
-        console.log("delete area ?");
-        return;
+        throw "Not connected to google";
     }
     try {
         const googleRes = await google.youtube('v3').playlists.list({
@@ -59,43 +43,49 @@ async function playlistUpdate(area, user, react) {
             part: [
                 'contentDetails'
             ],
-            // forUsername: area.action.data.username
             id: [ data.id ]
         });
 
         if (!googleRes.data.items || googleRes.data.items.length === 0) {
-            // no items found -> delete area ?
-            return;
+            throw "Could not find any playlist from given id parameter";
         }
         count = googleRes.data.items[0].contentDetails.itemCount;
     } catch (err) {
-        console.log(err);
-        return;
+        throw "Could not process query";
     }
-    console.log({ count, data: data.currentCount });
-    if (count !== data.currentCount) {
-        if (count > data.currentCount) { // TODO: devrait proc plusieures fois si jamais il y a plusieurs vidéos en même temps
-            area.action.data.currentCount = count;
-            await Area.findByIdAndUpdate(area._id, area);
-            react(area);
-        } else {
-            area.action.data.currentCount = count;
-            await Area.findByIdAndUpdate(area._id, area);
-        }
-    }
+    return count;
 }
 
 async function googleTriggers(area, react) {
     const user = await User.findById(area.userId);
 
-    console.log(area.action.name);
     if (area.action.name === 'new_video') {
-        await newVideo(area, user, react);
+        await checkCount(area, () => getVideoCount(user, area.action.data), react);
     } else if (area.action.name === 'playlist_update') {
-        await playlistUpdate(area, user, react);
+        await checkCount(area, () => getPlaylistVideoCount(user, area.action.data), react);
     }
 }
 
+async function googleCheck(user, action) {
+    if (action.name === 'new_video') {
+        try {
+            await getVideoCount(user, action.data);
+        } catch (err) {
+            return err;
+        }
+        return false;
+    } else if (action.name === 'playlist_update') {
+        try {
+            await getPlaylistVideoCount(user, action.data);
+        } catch (err) {
+            return err;
+        }
+        return false;
+    }
+    return "Could not find any query from action name (not supposed to happen)";
+}
+
 module.exports = {
-    googleTriggers
+    googleTriggers,
+    googleCheck
 };
