@@ -27,7 +27,8 @@ void main() {
 
     _isWidgetValid(WidgetTester tester) {
       expect(find.byType(BottomNavigationBar), findsOneWidget);
-      expect(find.text("Dashboard"), findsOneWidget);
+      expect(find.text("Dashboard"), findsWidgets);
+      expect(find.text("Users"), findsOneWidget);
       expect(find.text("Profile"), findsOneWidget);
       expect(find.byIcon(Icons.info_outline), findsOneWidget);
       expect(find.byIcon(Icons.logout), findsNothing);

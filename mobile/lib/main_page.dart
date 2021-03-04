@@ -13,7 +13,9 @@ class MyMainPage extends StatefulWidget {
 }
 
 class _MyMainPageState extends State<MyMainPage> {
-  final List<Widget> _children = [DashboardPage(), MyProfilePage(), Users()];
+  static const List<String> _childrenTitle = ["Dashboard", "Users", "Profile"];
+
+  final List<Widget> _children = [DashboardPage(), Users(), MyProfilePage()];
 
   int _selectedIndex = 0;
 
@@ -22,25 +24,22 @@ class _MyMainPageState extends State<MyMainPage> {
     return Scaffold(
         appBar: AppBar(
             centerTitle: true,
-            actions: _selectedIndex == 1
+            actions: _selectedIndex == 2
                 ? <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(right: 15.0),
-                      child: IconButton(onPressed: () => this.signOut(), icon: Icon(Icons.logout)),
-                    )
+                        padding: EdgeInsets.only(right: 15.0), child: IconButton(onPressed: () => this.signOut(), icon: Icon(Icons.logout)))
                   ]
                 : <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(right: 15.0),
-                      child: IconButton(onPressed: () => this.goToAboutPage(), icon: Icon(Icons.info_outline)),
-                    )
+                        padding: EdgeInsets.only(right: 15.0),
+                        child: IconButton(onPressed: () => this.goToAboutPage(), icon: Icon(Icons.info_outline)))
                   ],
-            title: Text('Area')),
+            title: Text(_childrenTitle[this._selectedIndex])),
         body: this._children[_selectedIndex],
         bottomNavigationBar: BottomNavigationBar(items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
           BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Users'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile')
         ], currentIndex: _selectedIndex, selectedItemColor: Colors.blueAccent, onTap: onItemTapped));
   }
 
