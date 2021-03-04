@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:area/area_services/input.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'area_service_widget_base.dart';
+import 'input.dart';
 import 'option.dart';
 
 class TimerServiceWidget extends AreaServiceWidgetBase {

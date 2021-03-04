@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:area/area_services/area_service_widget_base.dart';
-import 'package:area/area_services/service_widget_factory.dart';
+import 'package:area/area_services_widget/area_service_widget_base.dart';
+import 'package:area/area_services_widget/service_widget_factory.dart';
 
 class Service {
   final String name;

@@ -8,8 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
-import 'area_services/area_service_widget_base.dart';
-import 'area_services/option.dart';
+import 'area_services_widget/area_service_widget_base.dart';
+import 'area_services_widget/option.dart';
 import 'constants.dart';
 import 'exceptions/bad_token_exception.dart';
 import 'models/area.dart';

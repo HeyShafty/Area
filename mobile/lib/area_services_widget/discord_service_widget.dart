@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:area/area_services/input.dart';
-import 'package:area/area_services/option.dart';
 import 'package:area/services/app_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +7,8 @@ import 'package:flutter/services.dart';
 
 import '../constants.dart';
 import 'area_service_widget_base.dart';
+import 'input.dart';
+import 'option.dart';
 
 class DiscordServiceWidget extends AreaServiceWidgetBase {
   static const List<Option> ACTIONS = [];
