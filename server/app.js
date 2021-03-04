@@ -11,13 +11,12 @@ const msal = require('@azure/msal-node');
 const areaRouter = require('./src/routes/areasRoutes');
 const authRouter = require('./src/routes/authRoutes');
 const connectRouter = require('./src/routes/connectRoutes');
-const microsoftRouter = require('./src/routes/microsoftRoutes');
 const profileRouter = require('./src/routes/profileRoutes');
-const twitterRouter = require('./src/routes/twitterRoutes');
+const usersRouter = require('./src/routes/usersRoutes');
 
 const { ALLOWED_ORIGINS } = require('./src/config/config');
 const { MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PASSWORD } = require('./src/config/mongoConfig');
-const { MSAL_CONFIG } = require('./src/config/msalConfig');
+const { MSAL_CONFIG, MSAL_CONFIG_SECRET } = require('./src/config/msalConfig');
 const AREA_SERVICES = require('./src/services');
 const checkupTriggers = require('./src/area');
 
@@ -39,10 +38,22 @@ const swaggerSpec = swaggerJSDoc(SWAGGER_OPTIONS); // TODO: move (avec la config
 
 const port = process.env.SERVER_PORT || 8080;
 
+async function eraseUsersMicrosoftConnectData() {
+    const User = require('./src/models/User');
+    const { MONGOOSE_MSAL_KEY } = require('./src/config/msalConfig');
+    const users = await User.find({});
+
+    for (const user of users) {
+        user.connectData.delete(MONGOOSE_MSAL_KEY);
+        await User.findByIdAndUpdate(user._id, user);
+    }
+}
+
 function startServer() {
     const app = express();
 
-    app.locals.msalClient = new msal.ConfidentialClientApplication(MSAL_CONFIG);
+    app.locals.publicMsalClient = new msal.PublicClientApplication(MSAL_CONFIG);
+    app.locals.confidentialMsalClient = new msal.ConfidentialClientApplication(MSAL_CONFIG_SECRET);
 
     app.use(morgan('combined'));
     app.use(bodyParser.json());
@@ -60,9 +71,8 @@ function startServer() {
     app.use('/areas', areaRouter);
     app.use('/auth', authRouter);
     app.use('/connect', connectRouter);
-    app.use('/microsoft', microsoftRouter);
     app.use('/profile', profileRouter);
-    app.use('/twitter', twitterRouter);
+    app.use('/users', usersRouter);
 
     app.get('/', (req, res) => {
         res.send('Hello World!');
@@ -77,7 +87,7 @@ function startServer() {
     });
 
     setInterval(() => {
-        checkupTriggers(app.locals.msalClient);
+        checkupTriggers(app.locals.publicMsalClient, app.locals.confidentialMsalClient);
     }, 5000);
 }
 
@@ -94,7 +104,9 @@ function connectToDb() {
     mongoose.set('useFindAndModify', false);
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', () => {
-        startServer();
+        eraseUsersMicrosoftConnectData().then(() => {
+            startServer();
+        });
     });
 }
 

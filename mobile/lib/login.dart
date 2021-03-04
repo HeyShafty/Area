@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:area/exceptions/bad_response_exception.dart';
 import 'package:area/exceptions/wrong_email_password_combination_exception.dart';
 import 'package:area/register.dart';
+import 'package:area/services/app_service.dart';
 import 'package:area/services/area_service.dart';
 import 'package:area/services/shared_preferences_service.dart';
-import 'package:area/services/toast_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:msal_flutter/msal_flutter.dart';
@@ -133,13 +133,13 @@ class _LoginState extends State<Login> {
       await this._areaServiceInstance.signInWithAccessToken(token);
       return this.openHomePage();
     } on MsalException {
-      ToastService.showToast("Couldn't sign you in with Microsoft.");
+      AppService.showToast("Couldn't sign you in with Microsoft.");
     } on BadResponseException {
-      ToastService.showToast("Couldn't sign you in with Microsoft.");
+      AppService.showToast("Couldn't sign you in with Microsoft.");
     } on Exception {
-      ToastService.showToast("Couldn't sign you in with Microsoft.");
+      AppService.showToast("Couldn't sign you in with Microsoft.");
     } catch (e) {
-      ToastService.showToast(e.toString());
+      AppService.showToast(e.toString());
     }
     this.setState(() {
       this._isLoading = false;
@@ -188,11 +188,11 @@ class _LoginState extends State<Login> {
       this._buttonController.success();
       return this.openHomePage();
     } on WrongEmailPasswordCombinationException {
-      ToastService.showToast("Bad email / password combination.");
+      AppService.showToast("Bad email / password combination.");
     } on BadResponseException {
-      ToastService.showToast("Couldn't sign you in.");
+      AppService.showToast("Couldn't sign you in.");
     } catch (e) {
-      ToastService.showToast(e.toString());
+      AppService.showToast(e.toString());
     }
     this._buttonController.reset();
     this.setState(() {
@@ -211,7 +211,7 @@ class _LoginState extends State<Login> {
     }
     return showDialog(
         context: context,
-        barrierDismissible: false, // user must tap button!
+        barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
               title: Text('Server ip'),
@@ -236,9 +236,9 @@ class _LoginState extends State<Login> {
                       try {
                         await this._areaServiceInstance.checkIp();
                       } on BadResponseException {
-                        return ToastService.showToast("Bad ip address.");
+                        return AppService.showToast("Bad ip address.");
                       } catch (e) {
-                        return ToastService.showToast("Couldn't check server availability.");
+                        return AppService.showToast("Couldn't check server availability.");
                       }
                       await SharedPreferencesService.saveString(IP_KEY, serverIpController.value.text);
                       Navigator.of(context).pop();

@@ -12,7 +12,9 @@ class GithubService extends AreaServiceBase {
     Option("new_issue", [Input("owner", "EliottPal", null, false), Input("repo", "Dashboard_2020", null, false)]),
     Option("new_repository", [Input("owner", "EliottPal", null, false)]),
     Option("new_pull_request", [Input("owner", "EliottPal", null, false), Input("repo", "Dashboard_2020", null, false)]),
-    Option("issue_closes", [Input("owner", "EliottPal", null, false), Input("repo", "Dashboard_2020", null, false)])
+    Option("issue_closes", [Input("owner", "EliottPal", null, false), Input("repo", "Dashboard_2020", null, false)]),
+    Option("new_ref", [Input("owner", "EliottPal", null, false), Input("repo", "Dashboard_2020", null, false)]),
+    Option("new_tag", [Input("owner", "EliottPal", null, false), Input("repo", "Dashboard_2020", null, false)])
   ];
   static const List<Option> REACTIONS = [
     Option("open_issue", [

@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:area/models/service_information.dart';
+import 'package:area/services/app_service.dart';
 import 'package:area/services/area_service.dart';
-import 'package:area/services/toast_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
@@ -46,16 +46,16 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
   @protected
   Map<String, dynamic> reactionParams = Map();
 
-  List<DropdownMenuItem<ServiceInformation>> _actionMenuItems = [];
-  List<DropdownMenuItem<ServiceInformation>> _reactionMenuItems = [];
+  List<DropdownMenuItem<ServiceInformation>> _actionDropdownItems = [];
+  List<DropdownMenuItem<ServiceInformation>> _reactionDropdownItems = [];
 
   AreaFormPageState(AreaService areaService) : this.areaServiceInstance = areaService;
 
   @override
   void initState() {
     super.initState();
-    this._actionMenuItems = this.buildDropDownMenuItems(true);
-    this._reactionMenuItems = this.buildDropDownMenuItems(false);
+    this._actionDropdownItems = this.buildDropDownMenuItems(true);
+    this._reactionDropdownItems = this.buildDropDownMenuItems(false);
     this.actionParamsController.stream.listen((event) {
       this.setState(() {
         this.actionParams = event;
@@ -112,90 +112,11 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
                         child: Padding(
                             padding: EdgeInsets.only(left: 45.0, right: 45.0, top: 20.0, bottom: 20.0),
                             child: Column(children: [
-                              Container(
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(32.0), color: Color(0xffe5e8e8)),
-                                  child: Padding(
-                                      padding: EdgeInsets.only(top: 10.0, bottom: 10.0, right: 10.0, left: 10.0),
-                                      child: Column(children: [
-                                        Text("ACTION", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
-                                        Padding(
-                                            padding: EdgeInsets.only(top: 20.0),
-                                            child: Container(
-                                                decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(32.0),
-                                                    color: Colors.white,
-                                                    border: Border.all(width: 2.0, color: Colors.grey)),
-                                                padding: const EdgeInsets.only(left: 20.0, right: 10.0),
-                                                width: 200.0,
-                                                child: DropdownButtonHideUnderline(
-                                                    child: DropdownButton<ServiceInformation>(
-                                                        key: Key("action_dropdown"),
-                                                        isExpanded: true,
-                                                        value: this.selectedActionServiceInfo,
-                                                        items: this._actionMenuItems,
-                                                        onChanged: (value) async {
-                                                          if (value.uri != null &&
-                                                              await this.areaServiceInstance.isConnectedToService(value.name) == false) {
-                                                            this.setState(() {
-                                                              this.selectedActionServiceInfo = null;
-                                                              this.actionService = null;
-                                                            });
-                                                            return ToastService.showToast(
-                                                                "Please go to profile page and sign in with this service to use it.");
-                                                          }
-                                                          this.actionParams.clear();
-                                                          this.setState(() {
-                                                            this.selectedActionServiceInfo = value;
-                                                            this.actionService =
-                                                                value.createServiceInstance(this.actionParamsController, true);
-                                                          });
-                                                        })))),
-                                        if (this.actionService != null) this.actionService
-                                      ]))),
+                              this.getAreaFormPart("ACTION", Key("action_dropdown"), this.selectedActionServiceInfo,
+                                  this._actionDropdownItems, this.actionService, this.onActionDropdownPressed),
                               Padding(padding: EdgeInsets.only(top: 40.0)),
-                              Container(
-                                  key: Key("reaction"),
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(32.0), color: Color(0xffe5e8e8)),
-                                  child: Padding(
-                                      padding: EdgeInsets.only(top: 10.0, bottom: 10.0, right: 10.0, left: 10.0),
-                                      child: Column(children: [
-                                        Text("REACTION", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
-                                        Padding(
-                                            padding: EdgeInsets.only(top: 20.0),
-                                            child: Container(
-                                                decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(32.0),
-                                                    color: Colors.white,
-                                                    border: Border.all(width: 2.0, color: Colors.grey)),
-                                                padding: const EdgeInsets.only(left: 20.0, right: 10.0),
-                                                width: 200.0,
-                                                child: DropdownButtonHideUnderline(
-                                                    child: DropdownButton<ServiceInformation>(
-                                                        key: Key("reaction_dropdown"),
-                                                        isExpanded: true,
-                                                        value: this.selectedReactionServiceInfo,
-                                                        items: this._reactionMenuItems,
-                                                        onChanged: (value) async {
-                                                          if (value.uri != null &&
-                                                              await this.areaServiceInstance.isConnectedToService(value.name) == false) {
-                                                            this.setState(() {
-                                                              this.selectedReactionServiceInfo = null;
-                                                              this.reactionService = null;
-                                                            });
-                                                            return ToastService.showToast(
-                                                                "Please go to profile page and sign in with this service to use it.");
-                                                          }
-                                                          this.reactionParams.clear();
-                                                          this.setState(() {
-                                                            this.selectedReactionServiceInfo = value;
-                                                            this.reactionService =
-                                                                value.createServiceInstance(this.reactionParamsController, false);
-                                                          });
-                                                        })))),
-                                        if (this.reactionService != null) this.reactionService
-                                      ]))),
+                              this.getAreaFormPart("REACTION", Key("reaction_dropdown"), this.selectedReactionServiceInfo,
+                                  this._reactionDropdownItems, this.reactionService, this.onReactionDropdownPressed),
                               Padding(
                                   padding: EdgeInsets.only(top: 20.0),
                                   child: RoundedLoadingButton(
@@ -203,6 +124,65 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
                                       child: Text('Submit', style: TextStyle(color: Colors.white), textAlign: TextAlign.center),
                                       onPressed: this.isButtonActivated() ? this.onButtonPressed : null))
                             ])))))));
+  }
+
+  getAreaFormPart(String areaPartName, Key dropdownKey, ServiceInformation selectedServiceInfo,
+      List<DropdownMenuItem<ServiceInformation>> items, AreaServiceBase service, Function onDropdownPressed) {
+    return Container(
+        width: double.infinity,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(32.0), color: Color(0xffe5e8e8)),
+        child: Padding(
+            padding: EdgeInsets.only(top: 10.0, bottom: 10.0, right: 10.0, left: 10.0),
+            child: Column(children: [
+              Text(areaPartName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
+              Padding(
+                  padding: EdgeInsets.only(top: 20.0),
+                  child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(32.0),
+                          color: Colors.white,
+                          border: Border.all(width: 2.0, color: Colors.grey)),
+                      padding: const EdgeInsets.only(left: 20.0, right: 10.0),
+                      width: 200.0,
+                      child: DropdownButtonHideUnderline(
+                          child: DropdownButton<ServiceInformation>(
+                              key: dropdownKey,
+                              isExpanded: true,
+                              value: selectedServiceInfo,
+                              items: items,
+                              onChanged: onDropdownPressed)))),
+              if (service != null) service
+            ])));
+  }
+
+  onActionDropdownPressed(ServiceInformation value) async {
+    if (value.uri != null && await this.areaServiceInstance.isConnectedToService(value.name) == false) {
+      this.setState(() {
+        this.selectedActionServiceInfo = null;
+        this.actionService = null;
+      });
+      return AppService.showToast("Please go to profile page and sign in with this service to use it.");
+    }
+    this.actionParams.clear();
+    this.setState(() {
+      this.selectedActionServiceInfo = value;
+      this.actionService = value.createServiceInstance(this.actionParamsController, true);
+    });
+  }
+
+  onReactionDropdownPressed(ServiceInformation value) async {
+    if (value.uri != null && await this.areaServiceInstance.isConnectedToService(value.name) == false) {
+      this.setState(() {
+        this.selectedReactionServiceInfo = null;
+        this.reactionService = null;
+      });
+      return AppService.showToast("Please go to profile page and sign in with this service to use it.");
+    }
+    this.reactionParams.clear();
+    this.setState(() {
+      this.selectedReactionServiceInfo = value;
+      this.reactionService = value.createServiceInstance(this.reactionParamsController, false);
+    });
   }
 
   Widget getFormTitle() {
@@ -236,16 +216,16 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
 
     try {
       await this.areaServiceInstance.addArea(area);
-      ToastService.showToast("Area added successfully!", Colors.green);
+      AppService.showToast("Area added successfully!", Colors.green);
       return Navigator.pop(context);
     } on BadTokenException {
-      ToastService.showToast("Invalid token, please sign out.");
-    } on Exception catch (e) {
-      log(e.toString());
-      ToastService.showToast("Couldn't add a new area.");
+      AppService.showToast("Invalid token, signing you out.");
+      AppService.signOut(context);
+    } on Exception {
+      AppService.showToast("Couldn't add a new area.");
     } catch (e) {
-      log(e);
-      ToastService.showToast("Couldn't add a new area.");
+      log(e.toString());
+      AppService.showToast("Couldn't add a new area.");
     }
     this.buttonController.reset();
   }

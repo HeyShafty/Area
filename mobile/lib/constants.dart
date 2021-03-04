@@ -18,7 +18,7 @@ const Map<String, ServiceInformation> SERVICES_INFORMATION_MAP = {
       '/connect/microsoft/callback', 'assets/images/microsoft.png', true, true),
   "timer": ServiceInformation('Timer', null, null, null, null, null, true, false),
   "twitter": ServiceInformation(
-      'Twitter', '/connect/twitter', 'area.app', 'area.app://', '/connect/twitter/callback', 'assets/images/twitter.png', true, true)
+      'Twitter', '/connect/twitter', 'area.app', 'area.app://', '/connect/twitter/callback', 'assets/images/twitter.png', false, true)
 };
 const String ACTION_KEY = "action";
 const String REACTION_KEY = "reaction";

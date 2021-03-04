@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:area/area_services/input.dart';
 import 'package:area/area_services/option.dart';
-import 'package:area/services/toast_service.dart';
+import 'package:area/services/app_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -65,7 +65,7 @@ class _DiscordServiceState extends AreaServiceBaseState<DiscordService> {
                 MaterialButton(
                     onPressed: () {
                       Clipboard.setData(new ClipboardData(text: DISCORD_BOT_LINK));
-                      ToastService.showToast("Copied to clipboard", Colors.grey);
+                      AppService.showToast("Copied to clipboard", Colors.grey);
                     },
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0), side: BorderSide(color: Colors.black)),
                     color: Color(0xFFd5d8dc),

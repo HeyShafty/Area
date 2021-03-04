@@ -26,17 +26,14 @@ const AREA_SERVICES = [
     ], [
         new Reaction('send_mail', 'Sends an email')
     ]),
-    new Service('twitter', [
-        new Action('new_tweet_from', 'Triggers when a user tweets'),
-        new Action('new_follower', 'Triggers when someone starts following you')
-    ], [
+    new Service('twitter', [], [
         new Reaction('post_tweet', 'Post a new tweet'),
         new Reaction('update_bio', 'Updates your bio')
     ]),
     new Service('discord', [], [
         new Reaction('post_message', 'Posts a message in a specific location')
     ]),
-    new Service('youtube', [
+    new Service('google', [
         new Action('new_video', 'Triggers when a video was uploaded by a subscribed channel'),
         new Action('playlist_update', 'Triggers when a video was added to a playlist')
     ], []),

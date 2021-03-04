@@ -29,10 +29,10 @@ void main() {
     }
 
     _tapWidgetByKey(WidgetTester tester, Key key) async {
-      final dropdown = find.byKey(key);
-      expect(dropdown, findsOneWidget);
+      final widget = find.byKey(key);
+      expect(widget, findsOneWidget);
 
-      await tester.tap(dropdown);
+      await tester.tap(widget);
       await tester.pumpAndSettle();
     }
 
@@ -105,8 +105,8 @@ void main() {
       await _loadWidget(tester);
 
       // ACTION
-      await _completeAreaPart(tester, Key("action_dropdown"), "Twitter", Key("action_options_dropdown"), "new_tweet_from",
-          {Key("input_new_tweet_from_username"): "heyshafty"});
+      await _completeAreaPart(
+          tester, Key("action_dropdown"), "Timer", Key("action_options_dropdown"), "every_hour", {Key("input_every_hour_minute"): "42"});
 
       // Scrolling up
       await tester.drag(find.byType(SingleChildScrollView), const Offset(0.0, -800));
@@ -252,7 +252,7 @@ void main() {
       await _createAreaTimerTwitter(tester);
     });
 
-    testWidgets("Create area - Discord + Google", (WidgetTester tester) async {
+    testWidgets("Create area - Discord + Google bad response error", (WidgetTester tester) async {
       await _createAreaDiscordGoogleBadResponseError(tester);
     });
 
@@ -260,7 +260,7 @@ void main() {
       await _createAreaTwitterGithub(tester);
     });
 
-    testWidgets("Create area - Microsoft + Twitter", (WidgetTester tester) async {
+    testWidgets("Create area - Microsoft + Twitter bad token error", (WidgetTester tester) async {
       await _createAreaMicrosoftTwitterBadTokenError(tester);
     });
 

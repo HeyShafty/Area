@@ -2,8 +2,8 @@ const Area = require('../models/Area');
 const User = require('../models/User');
 const microsoftService = require('../services/microsoftService');
 
-async function incomingMail(area, user, react, msalClient) {
-    const accessToken = await microsoftService.getUserAccessToken(user, msalClient);
+async function incomingMail(area, user, react, publicMsalClient, confidentialMsalClient) {
+    const accessToken = await microsoftService.getUserAccessToken(user, (area.isMobile ? publicMsalClient : confidentialMsalClient));
     const { data } = area.action;
     let count = undefined;
 
@@ -35,12 +35,12 @@ async function incomingMail(area, user, react, msalClient) {
     }
 }
 
-async function microsoftTriggers(area, react, msalClient) {
+async function microsoftTriggers(area, react, publicMsalClient, confidentialMsalClient) {
     const user = await User.findById(area.userId);
 
     console.log(area.action);
     if (area.action.name === 'incoming_mail') {
-        await incomingMail(area, user, react, msalClient);
+        await incomingMail(area, user, react, publicMsalClient, confidentialMsalClient);
     }
 }
 

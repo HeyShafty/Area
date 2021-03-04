@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:area/area_form.dart';
+import 'package:area/services/app_service.dart';
 import 'package:area/services/area_service.dart';
-import 'package:area/services/toast_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +21,11 @@ class UpdateAreaFormPage extends AreaFormPage {
 }
 
 class _UpdateAreaFormPageState extends AreaFormPageState<UpdateAreaFormPage> {
-  _UpdateAreaFormPageState(Area area, AreaService areaService) : super(areaService) {
+  final Area _currentArea;
+
+  _UpdateAreaFormPageState(Area area, AreaService areaService)
+      : _currentArea = area,
+        super(areaService) {
     if (area == null) {
       return;
     }
@@ -56,21 +60,24 @@ class _UpdateAreaFormPageState extends AreaFormPageState<UpdateAreaFormPage> {
 
   @override
   onButtonPressed() async {
-    Area area = Area("", AreaAction(this.selectedActionServiceInfo.name.toLowerCase(), this.actionParams[ACTION_KEY], this.actionParams),
+    String areaId = this._currentArea != null ? this._currentArea.id : "";
+    Area area = Area(
+        areaId,
+        AreaAction(this.selectedActionServiceInfo.name.toLowerCase(), this.actionParams[ACTION_KEY], this.actionParams),
         AreaReaction(this.selectedReactionServiceInfo.name.toLowerCase(), this.reactionParams[REACTION_KEY], this.reactionParams));
 
     try {
-      await this.areaServiceInstance.addArea(area);
-      ToastService.showToast("Area updated successfully!", Colors.green);
+      await this.areaServiceInstance.updateArea(area);
+      AppService.showToast("Area updated successfully!", Colors.green);
       return Navigator.pop(context);
     } on BadTokenException {
-      ToastService.showToast("Invalid token, please sign out.");
-    } on Exception catch (e) {
-      log(e.toString());
-      ToastService.showToast("Couldn't update area.");
+      AppService.showToast("Invalid token, signing you out.");
+      AppService.signOut(context);
+    } on Exception {
+      AppService.showToast("Couldn't update area.");
     } catch (e) {
-      log(e);
-      ToastService.showToast("Couldn't update area.");
+      log(e.toString());
+      AppService.showToast("Couldn't update area.");
     }
     this.buttonController.reset();
   }

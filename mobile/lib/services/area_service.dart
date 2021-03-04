@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:area/exceptions/already_exists_exception.dart';
 import 'package:area/exceptions/bad_response_exception.dart';
@@ -145,7 +144,6 @@ class AreaService {
     if (response.statusCode != 200) {
       throw BadResponseException();
     }
-    log(response.body);
     return User.fromJson(jsonDecode(response.body));
   }
 
@@ -163,14 +161,13 @@ class AreaService {
     if (response.statusCode != 200) {
       throw BadResponseException();
     }
-    log(response.body);
     Iterable l = json.decode(response.body);
     return List<Area>.from(l.map((e) => Area.fromJson(e)));
   }
 
   Future<void> addArea(final Area area) async {
     String body = jsonEncode(area.toJson());
-    http.Response response = await http.post("http://" + this._serverIp + "/areas",
+    http.Response response = await http.post("http://" + this._serverIp + "/areas?mobile=true",
         headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken, 'Content-Type': 'application/json; charset=UTF-8'},
         body: body);
     if (response.statusCode == 401) {
@@ -189,7 +186,7 @@ class AreaService {
     if (response.statusCode == 401) {
       throw BadTokenException();
     }
-    if (response.statusCode != 201) {
+    if (response.statusCode != 200) {
       throw BadResponseException();
     }
   }
@@ -205,8 +202,54 @@ class AreaService {
     }
   }
 
-  Future<void> updateUserEmail() {
-    throw UnimplementedError();
+  Future<void> updateUsernameEmail(User user) async {
+    String body = jsonEncode({"email": user.email, "displayName": user.displayName});
+    http.Response response = await http.put("http://" + this._serverIp + "/profile",
+        headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken, 'Content-Type': 'application/json; charset=UTF-8'},
+        body: body);
+    if (response.statusCode == 401) {
+      throw BadTokenException();
+    }
+    if (response.statusCode != 200) {
+      throw BadResponseException();
+    }
+  }
+
+  Future<void> updatePassword(String newPassword) async {
+    String body = jsonEncode({"password": newPassword});
+    http.Response response = await http.put("http://" + this._serverIp + "/profile/password",
+        headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken, 'Content-Type': 'application/json; charset=UTF-8'},
+        body: body);
+    if (response.statusCode == 401) {
+      throw BadTokenException();
+    }
+    if (response.statusCode != 200) {
+      throw BadResponseException();
+    }
+  }
+
+  Future<List<User>> getUsers() async {
+    http.Response response =
+        await http.get("http://" + this._serverIp + "/users", headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken});
+    if (response.statusCode == 401) {
+      throw BadTokenException();
+    }
+    if (response.statusCode != 200) {
+      throw BadResponseException();
+    }
+    Iterable l = json.decode(response.body);
+    return List<User>.from(l.map((e) => User.fromJson(e)));
+  }
+
+  Future<void> deleteUser(final User user) async {
+    http.Response response = await http
+        .delete("http://" + this._serverIp + "/users/" + user.id, headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken});
+    if (response.statusCode == 401) {
+      throw BadTokenException();
+    }
+    if (response.statusCode != 204) {
+      throw BadResponseException();
+    }
   }
 
   AreaService._internal();
