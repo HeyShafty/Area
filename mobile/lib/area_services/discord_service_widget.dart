@@ -8,9 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../constants.dart';
-import 'area_service_base.dart';
+import 'area_service_widget_base.dart';
 
-class DiscordService extends AreaServiceBase {
+class DiscordServiceWidget extends AreaServiceWidgetBase {
   static const List<Option> ACTIONS = [];
   static const List<Option> REACTIONS = [
     Option("post_message", [Input("id", "Channel id", null, false), Input("body", "Body of the message", null, false)])
@@ -20,14 +20,14 @@ class DiscordService extends AreaServiceBase {
   final bool isAction;
   final Map<String, dynamic> params;
 
-  DiscordService({Key key, @required this.streamParamsController, @required this.isAction, this.params = const {}}) : super(key: key);
+  DiscordServiceWidget({Key key, @required this.streamParamsController, @required this.isAction, this.params = const {}}) : super(key: key);
 
   static create(StreamController<Map<String, dynamic>> streamParamsController, bool isAction, [params = const {}]) {
-    return DiscordService(streamParamsController: streamParamsController, isAction: isAction, params: params);
+    return DiscordServiceWidget(streamParamsController: streamParamsController, isAction: isAction, params: params);
   }
 
   @override
-  AreaServiceBaseState createState() => _DiscordServiceState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
+  AreaServiceWidgetBaseState createState() => _DiscordServiceWidgetState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
 
   @override
   Option getReactionOption(String reactionValue) {
@@ -40,9 +40,9 @@ class DiscordService extends AreaServiceBase {
   }
 }
 
-class _DiscordServiceState extends AreaServiceBaseState<DiscordService> {
-  _DiscordServiceState(StreamController<Map<String, dynamic>> streamParams, bool isAction, List<Option> actions, List<Option> reactions,
-      Map<String, dynamic> params)
+class _DiscordServiceWidgetState extends AreaServiceWidgetBaseState<DiscordServiceWidget> {
+  _DiscordServiceWidgetState(StreamController<Map<String, dynamic>> streamParams, bool isAction, List<Option> actions,
+      List<Option> reactions, Map<String, dynamic> params)
       : super(streamParams, isAction, actions, reactions, params);
 
   @override

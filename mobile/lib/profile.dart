@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:area/exceptions/bad_token_exception.dart';
-import 'package:area/models/service_information.dart';
+import 'package:area/models/service.dart';
 import 'package:area/models/user.dart';
 import 'package:area/services/app_service.dart';
 import 'package:area/services/area_service.dart';
@@ -277,7 +277,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
         });
   }
 
-  signInWithService(ServiceInformation service) async {
+  signInWithService(Service service) async {
     setState(() {
       this._isLoading = true;
     });
@@ -299,7 +299,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     });
   }
 
-  getSignInWith(ServiceInformation service, bool isAuthenticated) {
+  getSignInWith(Service service, bool isAuthenticated) {
     if (isAuthenticated) {
       return MaterialButton(
           onPressed: null,

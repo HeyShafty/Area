@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:area/models/service_information.dart';
+import 'package:area/models/service.dart';
 import 'package:area/services/app_service.dart';
 import 'package:area/services/area_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
-import 'area_services/area_service_base.dart';
+import 'area_services/area_service_widget_base.dart';
 import 'area_services/option.dart';
 import 'constants.dart';
 import 'exceptions/bad_token_exception.dart';
@@ -34,20 +34,20 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
   final RoundedLoadingButtonController buttonController = new RoundedLoadingButtonController();
 
   @protected
-  ServiceInformation selectedActionServiceInfo;
+  Service selectedActionServiceInfo;
   @protected
-  ServiceInformation selectedReactionServiceInfo;
+  Service selectedReactionServiceInfo;
   @protected
-  AreaServiceBase actionService;
+  AreaServiceWidgetBase actionService;
   @protected
-  AreaServiceBase reactionService;
+  AreaServiceWidgetBase reactionService;
   @protected
   Map<String, dynamic> actionParams = Map();
   @protected
   Map<String, dynamic> reactionParams = Map();
 
-  List<DropdownMenuItem<ServiceInformation>> _actionDropdownItems = [];
-  List<DropdownMenuItem<ServiceInformation>> _reactionDropdownItems = [];
+  List<DropdownMenuItem<Service>> _actionDropdownItems = [];
+  List<DropdownMenuItem<Service>> _reactionDropdownItems = [];
 
   AreaFormPageState(AreaService areaService) : this.areaServiceInstance = areaService;
 
@@ -75,10 +75,10 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
     super.dispose();
   }
 
-  List<DropdownMenuItem<ServiceInformation>> buildDropDownMenuItems(bool actions) {
-    List<DropdownMenuItem<ServiceInformation>> items = [];
+  List<DropdownMenuItem<Service>> buildDropDownMenuItems(bool actions) {
+    List<DropdownMenuItem<Service>> items = [];
 
-    for (MapEntry<String, ServiceInformation> serviceMapEntry in SERVICES_INFORMATION_MAP.entries) {
+    for (MapEntry<String, Service> serviceMapEntry in SERVICES_INFORMATION_MAP.entries) {
       if (actions && serviceMapEntry.value.hasActions) {
         items.add(DropdownMenuItem(
           child: Text(serviceMapEntry.value.name),
@@ -126,8 +126,8 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
                             ])))))));
   }
 
-  getAreaFormPart(String areaPartName, Key dropdownKey, ServiceInformation selectedServiceInfo,
-      List<DropdownMenuItem<ServiceInformation>> items, AreaServiceBase service, Function onDropdownPressed) {
+  getAreaFormPart(String areaPartName, Key dropdownKey, Service selectedServiceInfo, List<DropdownMenuItem<Service>> items,
+      AreaServiceWidgetBase service, Function onDropdownPressed) {
     return Container(
         width: double.infinity,
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(32.0), color: Color(0xffe5e8e8)),
@@ -145,7 +145,7 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
                       padding: const EdgeInsets.only(left: 20.0, right: 10.0),
                       width: 200.0,
                       child: DropdownButtonHideUnderline(
-                          child: DropdownButton<ServiceInformation>(
+                          child: DropdownButton<Service>(
                               key: dropdownKey,
                               isExpanded: true,
                               value: selectedServiceInfo,
@@ -155,7 +155,7 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
             ])));
   }
 
-  onActionDropdownPressed(ServiceInformation value) async {
+  onActionDropdownPressed(Service value) async {
     if (value.uri != null && await this.areaServiceInstance.isConnectedToService(value.name) == false) {
       this.setState(() {
         this.selectedActionServiceInfo = null;
@@ -166,11 +166,11 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
     this.actionParams.clear();
     this.setState(() {
       this.selectedActionServiceInfo = value;
-      this.actionService = value.createServiceInstance(this.actionParamsController, true);
+      this.actionService = value.createServiceWidgetInstance(this.actionParamsController, true);
     });
   }
 
-  onReactionDropdownPressed(ServiceInformation value) async {
+  onReactionDropdownPressed(Service value) async {
     if (value.uri != null && await this.areaServiceInstance.isConnectedToService(value.name) == false) {
       this.setState(() {
         this.selectedReactionServiceInfo = null;
@@ -181,7 +181,7 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
     this.reactionParams.clear();
     this.setState(() {
       this.selectedReactionServiceInfo = value;
-      this.reactionService = value.createServiceInstance(this.reactionParamsController, false);
+      this.reactionService = value.createServiceWidgetInstance(this.reactionParamsController, false);
     });
   }
 

@@ -5,7 +5,7 @@ import 'package:area/exceptions/bad_response_exception.dart';
 import 'package:area/exceptions/bad_token_exception.dart';
 import 'package:area/exceptions/wrong_email_password_combination_exception.dart';
 import 'package:area/models/area.dart';
-import 'package:area/models/service_information.dart';
+import 'package:area/models/service.dart';
 import 'package:area/models/user.dart';
 import 'package:area/services/shared_preferences_service.dart';
 import 'package:http/http.dart' as http;
@@ -108,7 +108,7 @@ class AreaService {
     await SharedPreferencesService.saveString(TOKEN_KEY, this.accessToken);
   }
 
-  Future<String> getServiceRedirectionUrl(ServiceInformation service) async {
+  Future<String> getServiceRedirectionUrl(Service service) async {
     String serviceRedirectUri = service.uri;
     Uri uri = Uri.http(this.serverIp, serviceRedirectUri, {'mobile': 'true'});
     http.Response response = await http.get(uri, headers: <String, String>{"Authorization": 'Bearer ' + this.accessToken});
@@ -123,7 +123,7 @@ class AreaService {
     return decodedBody[CONNECT_URL_KEY] ?? (throw BadResponseException(cause: "Wrong response body."));
   }
 
-  Future<void> handleServiceRedirection(String callbackUrl, ServiceInformation service) async {
+  Future<void> handleServiceRedirection(String callbackUrl, Service service) async {
     if (!callbackUrl.contains(service.fullCallbackUrl)) {
       throw BadResponseException(cause: "Bad redirect URI");
     }

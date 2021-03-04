@@ -6,9 +6,9 @@ import 'package:area/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'area_service_base.dart';
+import 'area_service_widget_base.dart';
 
-class MicrosoftService extends AreaServiceBase {
+class MicrosoftServiceWidget extends AreaServiceWidgetBase {
   static const List<Option> ACTIONS = [Option("incoming_mail", [])];
   static const List<Option> REACTIONS = [
     Option(
@@ -19,14 +19,15 @@ class MicrosoftService extends AreaServiceBase {
   final bool isAction;
   final Map<String, dynamic> params;
 
-  MicrosoftService({Key key, @required this.streamParamsController, @required this.isAction, this.params = const {}}) : super(key: key);
+  MicrosoftServiceWidget({Key key, @required this.streamParamsController, @required this.isAction, this.params = const {}})
+      : super(key: key);
 
   static create(StreamController<Map<String, dynamic>> streamParamsController, bool isAction, [params = const {}]) {
-    return MicrosoftService(streamParamsController: streamParamsController, isAction: isAction, params: params);
+    return MicrosoftServiceWidget(streamParamsController: streamParamsController, isAction: isAction, params: params);
   }
 
   @override
-  AreaServiceBaseState createState() => AreaServiceBaseState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
+  AreaServiceWidgetBaseState createState() => AreaServiceWidgetBaseState(streamParamsController, isAction, ACTIONS, REACTIONS, params);
 
   @override
   Option getActionOption(String actionValue) {

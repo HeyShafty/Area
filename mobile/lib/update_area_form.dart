@@ -38,7 +38,7 @@ class _UpdateAreaFormPageState extends AreaFormPageState<UpdateAreaFormPage> {
           params.addAll(area.action.data);
         }
         this.selectedActionServiceInfo = value;
-        this.actionService = value.createServiceInstance(this.actionParamsController, true, params);
+        this.actionService = value.createServiceWidgetInstance(this.actionParamsController, true, params);
       }
       if (area.reaction.service.toLowerCase() == value.name.toLowerCase()) {
         Map<String, dynamic> params = Map();
@@ -48,7 +48,7 @@ class _UpdateAreaFormPageState extends AreaFormPageState<UpdateAreaFormPage> {
           params.addAll(area.reaction.data);
         }
         this.selectedReactionServiceInfo = value;
-        this.reactionService = value.createServiceInstance(this.reactionParamsController, false, params);
+        this.reactionService = value.createServiceWidgetInstance(this.reactionParamsController, false, params);
       }
     });
   }

@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:area/area_form.dart';
 import 'package:area/models/area.dart';
-import 'package:area/models/service_information.dart';
+import 'package:area/models/service.dart';
 import 'package:area/services/app_service.dart';
 import 'package:area/services/area_service.dart';
 import 'package:area/update_area_form.dart';
@@ -53,8 +53,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                     itemCount: _areaList.length,
                                     itemBuilder: (context, index) {
                                       final Area item = _areaList[index];
-                                      ServiceInformation actionService;
-                                      ServiceInformation reactionService;
+                                      Service actionService;
+                                      Service reactionService;
 
                                       SERVICES_INFORMATION_MAP.forEach((key, value) {
                                         if (item.action.service.toLowerCase() == value.name.toLowerCase()) {

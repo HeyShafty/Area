@@ -8,8 +8,8 @@ import 'package:flutter/services.dart';
 
 import '../constants.dart';
 
-abstract class AreaServiceBase extends StatefulWidget {
-  AreaServiceBase({Key key}) : super(key: key);
+abstract class AreaServiceWidgetBase extends StatefulWidget {
+  AreaServiceWidgetBase({Key key}) : super(key: key);
 
   Option getActionOption(String actionValue) {
     return null;
@@ -20,7 +20,7 @@ abstract class AreaServiceBase extends StatefulWidget {
   }
 }
 
-class AreaServiceBaseState<Page extends AreaServiceBase> extends State<Page> {
+class AreaServiceWidgetBaseState<Page extends AreaServiceWidgetBase> extends State<Page> {
   final List<Option> actions;
   final List<Option> reactions;
   final StreamController<Map<String, dynamic>> streamParams;
@@ -30,7 +30,7 @@ class AreaServiceBaseState<Page extends AreaServiceBase> extends State<Page> {
   Option _selectedOption;
   Map<String, dynamic> _params = Map();
 
-  AreaServiceBaseState(this.streamParams, this.isAction, this.actions, this.reactions, Map<String, dynamic> params) {
+  AreaServiceWidgetBaseState(this.streamParams, this.isAction, this.actions, this.reactions, Map<String, dynamic> params) {
     if (params == null || params.length == 0) {
       return;
     }
