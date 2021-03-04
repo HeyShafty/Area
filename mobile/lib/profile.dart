@@ -88,7 +88,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                             Padding(
                                 padding: EdgeInsets.only(left: 20.0, right: 20.0),
                                 child: Column(
-                                    children: SERVICES_INFORMATION_MAP.entries.map((e) {
+                                    children: SERVICES_MAP.entries.map((e) {
                                   if (e.value.uri != null) {
                                     return Padding(
                                         padding: EdgeInsets.only(top: 20.0),

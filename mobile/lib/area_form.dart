@@ -78,7 +78,7 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
   List<DropdownMenuItem<Service>> buildDropDownMenuItems(bool actions) {
     List<DropdownMenuItem<Service>> items = [];
 
-    for (MapEntry<String, Service> serviceMapEntry in SERVICES_INFORMATION_MAP.entries) {
+    for (MapEntry<String, Service> serviceMapEntry in SERVICES_MAP.entries) {
       if (actions && serviceMapEntry.value.hasActions) {
         items.add(DropdownMenuItem(
           child: Text(serviceMapEntry.value.name),

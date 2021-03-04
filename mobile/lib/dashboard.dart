@@ -56,7 +56,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                       Service actionService;
                                       Service reactionService;
 
-                                      SERVICES_INFORMATION_MAP.forEach((key, value) {
+                                      SERVICES_MAP.forEach((key, value) {
                                         if (item.action.service.toLowerCase() == value.name.toLowerCase()) {
                                           actionService = value;
                                         }
@@ -155,8 +155,8 @@ class _DashboardPageState extends State<DashboardPage> {
     List<Area> finalAreaList = areaList;
 
     areaList.asMap().forEach((idx, element) {
-      if (!SERVICES_INFORMATION_MAP.containsKey(element.action.service.toLowerCase()) ||
-          !SERVICES_INFORMATION_MAP.containsKey(element.reaction.service.toLowerCase())) {
+      if (!SERVICES_MAP.containsKey(element.action.service.toLowerCase()) ||
+          !SERVICES_MAP.containsKey(element.reaction.service.toLowerCase())) {
         finalAreaList.removeAt(idx);
       }
     });

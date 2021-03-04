@@ -1,3 +1,9 @@
+import 'package:area/area_services/discord_service.dart';
+import 'package:area/area_services/github_service.dart';
+import 'package:area/area_services/google_service.dart';
+import 'package:area/area_services/microsoft_service.dart';
+import 'package:area/area_services/timer_service.dart';
+import 'package:area/area_services/twitter_service.dart';
 import 'package:area/models/service.dart';
 
 const String EMAIL_REGEX =
@@ -8,17 +14,13 @@ const String TENANT_ID = "901cb4ca-b862-4029-9306-e5cd0f6d9f86";
 const String APP_ID = "24ffcb55-7348-48a4-bbe7-c6c5b3763578";
 const String SERVER_SCOPE = "api://a8dcacc9-80da-4a2b-9f8a-6e20221951d0/user.base.read";
 const String CONNECT_URL_KEY = "url";
-const Map<String, Service> SERVICES_INFORMATION_MAP = {
-  "discord": Service('Discord', null, null, null, null, null, false, true),
-  "github": Service(
-      'Github', '/connect/github', 'area.app', 'area.app://auth', '/connect/github/callback', 'assets/images/github.png', true, true),
-  "google": Service(
-      'Google', '/connect/google', 'area.app', 'area.app:/auth', '/connect/google/callback', 'assets/images/google.png', true, false),
-  "microsoft": Service('Microsoft', '/connect/microsoft', 'msauth.area.app', 'msauth.area.app://auth', '/connect/microsoft/callback',
-      'assets/images/microsoft.png', true, true),
-  "timer": Service('Timer', null, null, null, null, null, true, false),
-  "twitter": Service(
-      'Twitter', '/connect/twitter', 'area.app', 'area.app://', '/connect/twitter/callback', 'assets/images/twitter.png', false, true)
+const Map<String, Service> SERVICES_MAP = {
+  "discord": DiscordService(),
+  "github": GithubService(),
+  "google": GoogleService(),
+  "microsoft": MicrosoftService(),
+  "timer": TimerService(),
+  "twitter": TwitterService()
 };
 const String ACTION_KEY = "action";
 const String REACTION_KEY = "reaction";
