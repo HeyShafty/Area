@@ -5,6 +5,7 @@ import Page_404 from './components/404.vue'
 import Page_Home from './components/Home.vue'
 import Page_Dashboard from './components/Dashboard.vue'
 import Page_Profile from './components/Profile.vue'
+import Page_Users from './components/Users.vue'
 import Page_About from './components/About.vue'
 import currentUser from './services/UserService'
 
@@ -15,6 +16,7 @@ const routes = [
     { path: '/dashboard', component: Page_Dashboard },
     { path: '/about', component: Page_About },
     { path: '/profile', component: Page_Profile },
+    { path: '/users', component: Page_Users },
     { path: '/:pathMatch(.*)*', component: Page_404 }
 ];
 const history = createWebHistory();

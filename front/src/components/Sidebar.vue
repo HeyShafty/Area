@@ -44,6 +44,16 @@
           </span>
         </router-link>
       </template>
+      <template v-if="isConnected()">
+        <router-link to="/users" v-slot="{ href, route, navigate, isActive, isExactActive }">
+          <span @click="isOpen = false" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
+            <span class="mr-2">
+              <span class="iconify" data-icon="fa-solid:user-friends" data-inline="false"></span>
+            </span>
+            <span>Users</span>
+          </span>
+        </router-link>
+      </template>
       <router-link to="/about" v-slot="{ href, route, navigate, isActive, isExactActive }">
         <span @click="isOpen = false" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
           <span class="mr-2">
