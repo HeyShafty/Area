@@ -5,9 +5,9 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const moment = require('moment');
 const msal = require('@azure/msal-node');
 
+const aboutRouter = require('./src/routes/aboutRoute');
 const areaRouter = require('./src/routes/areasRoutes');
 const authRouter = require('./src/routes/authRoutes');
 const connectRouter = require('./src/routes/connectRoutes');
@@ -17,7 +17,6 @@ const usersRouter = require('./src/routes/usersRoutes');
 const { ALLOWED_ORIGINS } = require('./src/config/config');
 const { MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PASSWORD } = require('./src/config/mongoConfig');
 const { MSAL_CONFIG, MSAL_CONFIG_SECRET } = require('./src/config/msalConfig');
-const AREA_SERVICES = require('./src/services');
 const checkupTriggers = require('./src/area');
 
 const swaggerUi = require('swagger-ui-express');
@@ -68,18 +67,14 @@ function startServer() {
     }));
     app.use(passport.initialize({}));
 
+    app.use('/about.json', aboutRouter);
     app.use('/areas', areaRouter);
     app.use('/auth', authRouter);
     app.use('/connect', connectRouter);
     app.use('/profile', profileRouter);
     app.use('/users', usersRouter);
 
-    app.get('/', (req, res) => {
-        res.send('Hello World!');
-    });
-    app.get('/about.json', (req, res) => {
-        res.json({ client: { host: req.ip }, server: { current_time: moment().unix(), services: AREA_SERVICES } });
-    });
+    app.get('/', (req, res) => res.send('Hello World!'));
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
     app.listen(port, () => {

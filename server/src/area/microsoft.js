@@ -27,7 +27,7 @@ async function incomingMail(area, user, react, publicMsalClient, confidentialMsa
         if (count > data.currentCount) { // TODO: devrait proc plusieures fois si jamais il y en a plusieurs en même temps
             area.action.data.currentCount = count;
             await Area.findByIdAndUpdate(area._id, area);
-            react(area);
+            react(area); // TODO: mais mon serveau omg mets juste le react dans le if '>' et pas le reste
         } else {
             area.action.data.currentCount = count;
             await Area.findByIdAndUpdate(area._id, area);
@@ -44,4 +44,22 @@ async function microsoftTriggers(area, react, publicMsalClient, confidentialMsal
     }
 }
 
-module.exports = microsoftTriggers;
+async function microsoftReact(area, publicMsalClient, confidentialMsalClient) {
+    const user = await User.findById(area.userId);
+
+    console.log(area.reaction);
+    if (area.reaction.name === "send_mail") {
+        const accessToken = await microsoftService.getUserAccessToken(user, (area.isMobile ? publicMsalClient : confidentialMsalClient));
+
+        try {
+            await microsoftService.sendEmail(accessToken, area.reaction.data.to, area.reaction.data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+}
+
+module.exports = {
+    microsoftTriggers,
+    microsoftReact
+};

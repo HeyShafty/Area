@@ -1,6 +1,5 @@
 const axios = require('axios');
 
-const User = require('../models/User');
 const { MONGOOSE_GITHUB_KEY } = require('../config/githubConfig');
 
 function getUserData(user) {

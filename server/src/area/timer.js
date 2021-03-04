@@ -36,4 +36,6 @@ async function timerTriggers(area, react) {
     }
 }
 
-module.exports = timerTriggers;
+module.exports = {
+    timerTriggers
+};

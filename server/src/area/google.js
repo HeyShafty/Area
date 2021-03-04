@@ -96,4 +96,6 @@ async function googleTriggers(area, react) {
     }
 }
 
-module.exports = googleTriggers;
+module.exports = {
+    googleTriggers
+};
