@@ -9,7 +9,7 @@ import 'package:area/area_services/twitter_service_widget.dart';
 
 import 'area_service_widget_base.dart';
 
-class ServiceFactory {
+class ServiceWidgetFactory {
   static const Map<String, Function> SERVICE_FACTORY_MAP = {
     "discord": DiscordServiceWidget.create,
     "github": GithubServiceWidget.create,
