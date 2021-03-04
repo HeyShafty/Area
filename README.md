@@ -25,8 +25,8 @@ In the `documentation/` folder you can find these documents:
 ## Achievement:    
 
 ### Mobile app:  
-![image](https://user-images.githubusercontent.com/44638280/109938856-c2e8a380-7cd0-11eb-8d79-80f82451c040.png)  
-![image](https://user-images.githubusercontent.com/44638280/109938960-dc89eb00-7cd0-11eb-8a23-416a420eb3d7.png)  
+![image](https://user-images.githubusercontent.com/44638280/109952488-2d084500-7cdf-11eb-8f6e-c30829f86112.png)  
+![image](https://user-images.githubusercontent.com/44638280/109952667-617c0100-7cdf-11eb-98e5-833c6de091d9.png)  
   
   
 ### Web app:  
