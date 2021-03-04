@@ -1,9 +1,8 @@
 import 'dart:async';
 
-import 'package:area/area_services/area_service_widget_base.dart';
-import 'package:area/area_services/service_widget_factory.dart';
+import 'package:area/area_services_widget/area_service_widget_base.dart';
 
-class Service {
+abstract class Service {
   final String name;
   final String uri;
   final String callbackUrlScheme;
@@ -17,7 +16,5 @@ class Service {
       this.hasReactions);
 
   AreaServiceWidgetBase createServiceWidgetInstance(StreamController<Map<String, dynamic>> streamParamsController, bool isAction,
-      [Map<String, dynamic> params = const {}]) {
-    return ServiceWidgetFactory.createServiceWidgetInstance(this.name.toLowerCase(), streamParamsController, isAction, params);
-  }
+      [Map<String, dynamic> params = const {}]);
 }

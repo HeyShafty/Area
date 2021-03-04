@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:area/area_services/input.dart';
-import 'package:area/area_services/option.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../constants.dart';
+import 'input.dart';
+import 'option.dart';
 
 abstract class AreaServiceWidgetBase extends StatefulWidget {
   AreaServiceWidgetBase({Key key}) : super(key: key);

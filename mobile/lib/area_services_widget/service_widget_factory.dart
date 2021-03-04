@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:area/area_services/discord_service_widget.dart';
-import 'package:area/area_services/github_service_widget.dart';
-import 'package:area/area_services/google_service_widget.dart';
-import 'package:area/area_services/microsoft_service_widget.dart';
-import 'package:area/area_services/timer_service_widget.dart';
-import 'package:area/area_services/twitter_service_widget.dart';
+import 'package:area/area_services_widget/timer_service_widget.dart';
+import 'package:area/area_services_widget/twitter_service_widget.dart';
 
 import 'area_service_widget_base.dart';
+import 'discord_service_widget.dart';
+import 'github_service_widget.dart';
+import 'google_service_widget.dart';
+import 'microsoft_service_widget.dart';
 
 class ServiceWidgetFactory {
   static const Map<String, Function> SERVICE_FACTORY_MAP = {

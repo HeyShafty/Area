@@ -29,7 +29,7 @@ class _UpdateAreaFormPageState extends AreaFormPageState<UpdateAreaFormPage> {
     if (area == null) {
       return;
     }
-    SERVICES_INFORMATION_MAP.forEach((key, value) {
+    SERVICES_MAP.forEach((key, value) {
       if (area.action.service.toLowerCase() == value.name.toLowerCase()) {
         Map<String, dynamic> params = Map();
 

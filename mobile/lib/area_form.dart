@@ -8,8 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
-import 'area_services/area_service_widget_base.dart';
-import 'area_services/option.dart';
+import 'area_services_widget/area_service_widget_base.dart';
+import 'area_services_widget/option.dart';
 import 'constants.dart';
 import 'exceptions/bad_token_exception.dart';
 import 'models/area.dart';
@@ -78,7 +78,7 @@ class AreaFormPageState<Page extends AreaFormPage> extends State<Page> {
   List<DropdownMenuItem<Service>> buildDropDownMenuItems(bool actions) {
     List<DropdownMenuItem<Service>> items = [];
 
-    for (MapEntry<String, Service> serviceMapEntry in SERVICES_INFORMATION_MAP.entries) {
+    for (MapEntry<String, Service> serviceMapEntry in SERVICES_MAP.entries) {
       if (actions && serviceMapEntry.value.hasActions) {
         items.add(DropdownMenuItem(
           child: Text(serviceMapEntry.value.name),

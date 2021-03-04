@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:area/area_services/option.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'area_service_widget_base.dart';
 import 'input.dart';
+import 'option.dart';
 
 class TwitterServiceWidget extends AreaServiceWidgetBase {
   static const List<Option> ACTIONS = [];
