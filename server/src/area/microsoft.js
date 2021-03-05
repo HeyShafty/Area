@@ -1,47 +1,62 @@
-const Area = require('../models/Area');
 const User = require('../models/User');
 const microsoftService = require('../services/microsoftService');
+const checkCount = require('./checkCount');
 
-async function incomingMail(area, user, react, publicMsalClient, confidentialMsalClient) {
-    const accessToken = await microsoftService.getUserAccessToken(user, (area.isMobile ? publicMsalClient : confidentialMsalClient));
-    const { data } = area.action;
+async function getInboxItemCount(user, msalClient) {
+    const accessToken = await microsoftService.getUserAccessToken(user, msalClient);
     let count = undefined;
 
     if (accessToken === null) {
-        console.log("disconnected?");
-        return;
+        throw "Not connected to microsoft";
     }
     try {
         count = await microsoftService.getInboxItemCount(accessToken);
     } catch (err) {
         console.log(err);
-        // delete area?
-        return;
+        throw "Could not process query";
     }
     if (count === undefined) {
-        console.log('tfuck');
-        return;
+        throw "Could not find any email";
     }
-    console.log({ count, data: data.currentCount });
-    if (count !== data.currentCount) {
-        if (count > data.currentCount) { // TODO: devrait proc plusieures fois si jamais il y en a plusieurs en même temps
-            area.action.data.currentCount = count;
-            await Area.findByIdAndUpdate(area._id, area);
-            react(area);
-        } else {
-            area.action.data.currentCount = count;
-            await Area.findByIdAndUpdate(area._id, area);
-        }
-    }
+    return count;
 }
 
 async function microsoftTriggers(area, react, publicMsalClient, confidentialMsalClient) {
     const user = await User.findById(area.userId);
 
-    console.log(area.action);
     if (area.action.name === 'incoming_mail') {
-        await incomingMail(area, user, react, publicMsalClient, confidentialMsalClient);
+        await checkCount(area, () => getInboxItemCount(user, (area.isMobile ? publicMsalClient : confidentialMsalClient)), react);
     }
 }
 
-module.exports = microsoftTriggers;
+async function microsoftReact(area, publicMsalClient, confidentialMsalClient) {
+    const user = await User.findById(area.userId);
+
+    if (area.reaction.name === "send_mail") {
+        const accessToken = await microsoftService.getUserAccessToken(user, (area.isMobile ? publicMsalClient : confidentialMsalClient));
+
+        try {
+            await microsoftService.sendEmail(accessToken, area.reaction.data.to, area.reaction.data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+}
+
+async function microsoftCheck(user, action, msalClient) {
+    if (action.name === 'incoming_mail') {
+        try {
+            await getInboxItemCount(user, msalClient);
+        } catch (err) {
+            return err;
+        }
+        return false;
+    }
+    return "Could not find any query from action name (not supposed to happen)";
+}
+
+module.exports = {
+    microsoftTriggers,
+    microsoftReact,
+    microsoftCheck
+};
