@@ -2,25 +2,12 @@
   <div class="min-h-screen p-6 bg-gray-100 lg:justify-center">
     <div class="md:-space-y-96 sm:-space-y-48">
       <!-- EDIT PROFILE CARDS -->
-      <EditInfos v-if="!officeLogin" ref="editInfos"></EditInfos>
-      <EditPassword v-if="!officeLogin"></EditPassword>
-
-      <!-- SIGNED IN W. OFFICE-->
-      <div class="flex items-center justify-center min-h-screen p-4 -mt-24">
-        <div class="mx-auto bg-white rounded-md shadow-md xl:w-3/12 xl:-mt-96 -mt-32">
-          <h3 class="my-4 xl:mt-10 text-lg font-semibold text-gray-600">
-            You are signed in with your Microsoft account:
-          </h3>
-          <h3 class="my-4 text-lg font-semibold text-blue-500">
-            {{ email }}
-          </h3>
-        </div>
-      </div>
-
+      <EditInfos ref="editInfos"></EditInfos>
+      <EditPassword></EditPassword>
       <!-- SERVICES CARDS GRID-->
-      <div class="flex flex-wrap -mx-3 overflow-shown -mt-60">
+      <div class="flex flex-wrap -mx-3 overflow-shown">
         <!-- TWITTER CARD -->
-        <div class="my-3 w-full overflow-hidden xl:-mt-32">
+        <div class="my-3 w-full overflow-hidden -mt-16">
           <div class="mx-auto bg-white rounded-md shadow-lg md:w-1/4">
             <div
               v-on:click="twitterRegistration"
@@ -69,34 +56,6 @@
                       class="bg-white w-8 h-8 rounded-full shadow-md transform duration-300 ease-in-out"
                       :class="{ 'translate-x-6': toggles['github'] }"
                     ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- DISCORD CARD -->
-          <div class="my-3 w-full overflow-hidden">
-            <div class="mx-auto bg-white rounded-md shadow-lg md:w-1/4">
-              <div
-                v-on:click="discordRegistration"
-                class="p-5 bg-indigo-400 cursor-pointer"
-                :class="{ 'cursor-not-allowed': toggles['discord'] }"
-              >
-                <div
-                  class="flex flex-wrap -mx-3 overflow-hidden space-x-6 items-center"
-                >
-                  <img src="../assets/servicesIcons/discord.png" />
-                  <span class="text-white font-semibold text-xl">Discord</span>
-                  <div class="switch">
-                    <div
-                      class="w-16 h-10 bg-gray-300 rounded-full p-1 duration-300 ease-in-out"
-                      :class="{ 'bg-indigo-300': toggles['discord'] }"
-                    >
-                      <div
-                        class="bg-white w-8 h-8 rounded-full shadow-md transform duration-300 ease-in-out"
-                        :class="{ 'translate-x-6': toggles['discord'] }"
-                      ></div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -193,7 +152,6 @@ export default defineComponent({
       toggles: [],
       username: "",
       email: "",
-      officeLogin: false,
       konami: false,
     };
   },
@@ -309,8 +267,6 @@ export default defineComponent({
       });
       this.$refs.editInfos.username = ret.data.displayName;
       this.$refs.editInfos.email = ret.data.email;
-      this.email = ret.data.email;
-      this.officeLogin = ret.data.isMicrosoftAuthed;
 
       this.checkregisteredServices(ret);
     } catch (error) {
