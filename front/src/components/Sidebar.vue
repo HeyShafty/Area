@@ -62,12 +62,14 @@
           <span>About</span>
         </span>
       </router-link>
-      <span @click="isOpen = false" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
-        <span class="mr-2">
-            <span class="iconify" data-icon="mdi:code-json" data-inline="false"></span>
+      <router-link to="/aboutjson" v-slot="{ href, route, navigate, isActive, isExactActive }">
+        <span @click="isOpen = false" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
+          <span class="mr-2">
+              <span class="iconify" data-icon="mdi:code-json" data-inline="false"></span>
+          </span>
+          <span>about.json</span>
         </span>
-        <span>about.json</span>
-      </span>
+      </router-link>
       <div class="fixed bottom-0 w-full">
         <a href="/client.apk" target="_blank">
           <span @click="isOpen = false" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">

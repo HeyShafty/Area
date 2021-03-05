@@ -1,5 +1,5 @@
 <template>
-    <div class="">
+    <div class="relative overflow-y-scroll h-full">
       <header class="root bg-white shadow">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <h1 class="mytitle text-3xl leading-tight text-gray-900 font-light">
@@ -38,7 +38,7 @@
               </button>
               <!-- ALL AREAS HERE -->
               <div class="flex flex-col">
-                <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="overflow-y-auto sm:-mx-6 lg:-mx-8">
                   <div class="py-2 align-middle min-w-full sm:px-6 lg:px-8">
                     <div class="shadow border-b border-gray-200 sm:rounded-lg">
                       <table class="min-w-full divide-y divide-gray-200">
@@ -59,7 +59,7 @@
                           </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                          <template v-for="anArea in allAreas">
+                          <template v-for="anArea in allAreas" class="overflow-y-scroll">
                             <tr>
                               <td class="px-6 py-4 whitespace-nowrap has-tooltip">
                                 <div class="relative mx-2 tooltip">
@@ -112,7 +112,7 @@
               <!-- MODAL HERE -->
               <template v-if="modalState">
                 <div>
-                  <div class="fixed z-10 inset-0 overflow-y-auto">
+                  <div class="fixed z-10 inset-0">
                     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                       <div class="fixed inset-0 transition-opacity" aria-hidden="true">
                         <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
@@ -229,6 +229,8 @@
             </div>
           </div>
         </div>
+        <div style="height: 300px">
+        </div>
       </main>
     </div>
 </template>
@@ -290,7 +292,7 @@ export default defineComponent({
       errorMsg: "",
       selectedArea: undefined,
       allAreas: undefined,
-      alert: true,
+      alert: false,
       alertStyle: "ok",
     }
   },

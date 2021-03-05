@@ -8,6 +8,7 @@ import Page_Profile from './components/Profile.vue'
 import Page_Users from './components/Users.vue'
 import Page_About from './components/About.vue'
 import currentUser from './services/UserService'
+import PageAboutJson from './components/AboutJson.vue'
 
 const routes = [
     { path: '/', component: Page_Home },
@@ -17,6 +18,7 @@ const routes = [
     { path: '/about', component: Page_About },
     { path: '/profile', component: Page_Profile },
     { path: '/users', component: Page_Users },
+    { path: '/aboutjson', component: PageAboutJson },
     { path: '/:pathMatch(.*)*', component: Page_404 }
 ];
 const history = createWebHistory();
