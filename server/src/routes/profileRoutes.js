@@ -25,7 +25,12 @@ router.get('/', protectedRequest, (req, res) => {
     for (const [ k ] of connectData) {
         formattedConnectData.push(k);
     }
-    res.send({ displayName: req.user.displayName, email: req.user.email, services: formattedConnectData, isMicrosoftAuthed: req.user.isMicrosoftAuthed });
+    res.send({
+        displayName: req.user.displayName,
+        email: req.user.email,
+        services: formattedConnectData,
+        isMicrosoftAuthed: req.user.isMicrosoftAuthed
+    });
 });
 
 /**
@@ -33,12 +38,12 @@ router.get('/', protectedRequest, (req, res) => {
  *
  * /profile:
  *   put:
- *     summary: Update username and email.
+ *     summary: Update displayName and email.
  *     responses:
  *       200:
- *         description: Informations updated.
+ *         description: Information updated.
  *       400:
- *         description: Could not update informations.
+ *         description: Could not update information.
  *       500:
  *         description: Error.
  */
@@ -46,13 +51,13 @@ router.put('/', protectedRequest, async (req, res) => {
     const { user } = req;
 
     try {
-        await User.findByIdAndUpdate(user._id, { displayName: req.body.username, email: req.body.email });
+        await User.findByIdAndUpdate(user._id, { displayName: req.body.displayName, email: req.body.email });
     } catch (err) {
         console.log(err);
-        return res.status(400).send("Can't edit username");
+        return res.status(400).send('Can\'t edit username');
     }
     return res.sendStatus(200);
-})
+});
 
 /**
  * @swagger
@@ -77,12 +82,12 @@ router.put('/password', protectedRequest, async (req, res) => {
     try {
         let pwd = await bcrypt.hash(req.body.password, 10);
 
-        await User.findByIdAndUpdate(user._id, { password: pwd})
+        await User.findByIdAndUpdate(user._id, { password: pwd });
     } catch (err) {
         console.log(err);
-        return res.status(400).send("Can't edit password");
+        return res.status(400).send('Can\'t edit password');
     }
     return res.sendStatus(200);
-})
+});
 
 module.exports = router;
