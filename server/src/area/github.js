@@ -132,7 +132,7 @@ async function githubCheck(user, action) {
 
     if (query) {
         try {
-            await getQueryCount(user, action.data, graphQuery);
+            await getQueryCount(user, action.data, query);
         } catch (err) {
             return err;
         }

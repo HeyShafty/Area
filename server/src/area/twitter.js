@@ -1,3 +1,4 @@
+const User = require("../models/User");
 const twitterService = require("../services/twitterService");
 
 async function twitterReact(area) {
@@ -6,13 +7,13 @@ async function twitterReact(area) {
 
     if (area.reaction.name === "post_tweet") {
         try {
-            twitterService.postTweet(data.accessToken, data.data.oauthAccessTokenSecret, area.reaction.data.body);
+            await twitterService.postTweet(data.accessToken, data.data.oauthAccessTokenSecret, area.reaction.data.body);
         } catch (err) {
             console.log(err);
         }
     } else if (area.reaction.name === "update_bio") {
         try {
-            twitterService.updateDescription(data.accessToken, data.data.oauthAccessTokenSecret, area.reaction.data.body);
+            await twitterService.updateDescription(data.accessToken, data.data.oauthAccessTokenSecret, area.reaction.data.body);
         } catch (err) {
             console.log(err);
         }

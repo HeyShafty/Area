@@ -21,11 +21,15 @@ async function getVideoCount(user, data) {
         });
 
         if (!googleRes.data.items || googleRes.data.items.length === 0) {
-            throw "Could not find any video from given channel id parameter";
+            count = undefined;
+        } else {
+            count = parseInt(googleRes.data.items[0].statistics.videoCount);
         }
-        count = parseInt(googleRes.data.items[0].statistics.videoCount);
     } catch (err) {
         throw "Could not process query";
+    }
+    if (count === undefined) {
+        throw "Could not find any playlist from given id parameter";
     }
     return count;
 }
@@ -47,11 +51,15 @@ async function getPlaylistVideoCount(user, data) {
         });
 
         if (!googleRes.data.items || googleRes.data.items.length === 0) {
-            throw "Could not find any playlist from given id parameter";
+            count = undefined;
+        } else {
+            count = googleRes.data.items[0].contentDetails.itemCount;
         }
-        count = googleRes.data.items[0].contentDetails.itemCount;
     } catch (err) {
         throw "Could not process query";
+    }
+    if (count === undefined) {
+        throw "Could not find any playlist from given id parameter";
     }
     return count;
 }
