@@ -139,7 +139,7 @@ export default defineComponent({
       try {
         await axios.put(baseUri + "/profile",
         {
-          username: this.username,
+          displayName: this.username,
           email: this.email
         },
         {
