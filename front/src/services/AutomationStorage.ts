@@ -21,7 +21,7 @@ export class Param {
         var regexpHours = /^([0-1]?[0-9]|2[0-3])$/;
         var regexpChannel = /^\d{18}$/;
 
-        if (this.value == "" || this.value == null || this.value == undefined) {
+        if (this.check!= "None" && (this.value == "" || this.value == null || this.value == undefined)) {
             this.error = "You're missing a value here.";
             return false;
         }
@@ -124,7 +124,7 @@ export class ParamList {
                 action: this.requestValue,
                 minute: Number(this.list[0].value)
             }
-        } else if (this.requestValue == "send_email") {
+        } else if (this.requestValue == "send_mail") {
             data = {
                 reaction: this.requestValue,
                 to: this.list[0].value,
@@ -149,6 +149,10 @@ export class ParamList {
                 repo: this.list[1].value,
                 title: this.list[2].value,
                 body: this.list[3].value
+            }
+        } else if (this.requestValue == "incomming_mail") {
+            data = {
+                reaction: this.requestValue,
             }
         }
         return data;

@@ -140,13 +140,17 @@ class AreaManager {
         return constructedAreas;
     }
 
-    constructAreaFromData(action: Selectable, actionParams: Array<Param>, index: number): any {
+    constructAreaFromData(action: Selectable, index: number): any {
+        var params:ParamList = new ParamList(action.params[index].description);
+        params.list = action.params[index].list;
+        params.requestValue = action.params[index].requestValue;
         var data = {
             service: action.service.toLowerCase(),
             name: action.params[index].requestValue,
-            data: action.params[index].getData()
+            data: params.getData()
         }
 
+        console.log("Data ??? ", data.data);
         return data;
     }
 
@@ -156,14 +160,14 @@ class AreaManager {
             return "401 : Unauthorized";
         }
         try {
-            console.log({
-                action: this.constructAreaFromData(data.action, data.actionParams, data.actionIndex),
-                reaction: this.constructAreaFromData(data.reaction, data.reactionParams, data.reactionIndex)
-            });
+            //console.log({
+            //    action: this.constructAreaFromData(data.action, data.actionIndex),
+            //    reaction: this.constructAreaFromData(data.reaction, data.reactionIndex)
+            //});
             if (data.editMode == true) {
                 const ret = await axios.put(baseUri + "/areas/" + data.selectedArea.id, {
-                    action: this.constructAreaFromData(data.action, data.actionParams, data.actionIndex),
-                    reaction: this.constructAreaFromData(data.reaction, data.reactionParams, data.reactionIndex)
+                    action: this.constructAreaFromData(data.action, data.actionIndex),
+                    reaction: this.constructAreaFromData(data.reaction, data.reactionIndex)
                 },
                 {
                     headers: {
@@ -173,8 +177,8 @@ class AreaManager {
                 return "OK";
             } else {
                 const ret = await axios.post(baseUri + "/areas", {
-                    action: this.constructAreaFromData(data.action, data.actionParams, data.actionIndex),
-                    reaction: this.constructAreaFromData(data.reaction, data.reactionParams, data.reactionIndex)
+                    action: this.constructAreaFromData(data.action, data.actionIndex),
+                    reaction: this.constructAreaFromData(data.reaction, data.reactionIndex)
                 },
                 {
                     headers: {
