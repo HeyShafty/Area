@@ -53,8 +53,9 @@
               >
                 Confirm
               </button>
-              <span v-if="errorMessages.request" class="text-sm font-semibold text-red-500">{{errorMessages.request}}</span>
             </div>
+              <span v-if="errorMessages.request" class="text-sm font-semibold text-red-500">{{errorMessages.request}}</span>
+              <span v-if="successMessage" class="text-md font-semibold text-green-500">{{successMessage}}</span>
           </form>
         </div>
       </div>
@@ -63,7 +64,10 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue'
+import { ref, defineComponent } from 'vue';
+import axios from "axios";
+import { baseUri } from "../../config";
+import currentUser from "../../services/UserService";
 
 export default defineComponent({
   name: 'EditInfos',
@@ -73,10 +77,11 @@ export default defineComponent({
   },
   data() {
     return {
-      username: 'Current Username',
-      email: 'Current Email',
+      username: '',
+      email: '',
       password: '',
       errorMessages: [],
+      successMessage: ''
     }
   },
   watch: {
@@ -130,8 +135,23 @@ export default defineComponent({
     },
 
     // EDIT USERNAME/EMAIL
-    editInfos() {
-      alert('CALL SERVER')
+    async editInfos() {
+      try {
+        await axios.put(baseUri + "/profile",
+        {
+          displayName: this.username,
+          email: this.email
+        },
+        {
+          headers: {
+            authorization: `Bearer ${currentUser.jwt}`,
+          },
+        });
+        this.successMessage = 'Information succesfully changed!'
+      } catch (error) {
+        console.log(error);
+        if (error.response.status == 500) console.log("500: Server Error");
+      }
     },
   }
 })

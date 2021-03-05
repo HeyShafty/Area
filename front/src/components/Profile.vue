@@ -61,34 +61,6 @@
               </div>
             </div>
           </div>
-          <!-- DISCORD CARD -->
-          <div class="my-3 w-full overflow-hidden">
-            <div class="mx-auto bg-white rounded-md shadow-lg md:w-1/4">
-              <div
-                v-on:click="discordRegistration"
-                class="p-5 bg-indigo-400 cursor-pointer"
-                :class="{ 'cursor-not-allowed': toggles['discord'] }"
-              >
-                <div
-                  class="flex flex-wrap -mx-3 overflow-hidden space-x-6 items-center"
-                >
-                  <img src="../assets/servicesIcons/discord.png" />
-                  <span class="text-white font-semibold text-xl">Discord</span>
-                  <div class="switch">
-                    <div
-                      class="w-16 h-10 bg-gray-300 rounded-full p-1 duration-300 ease-in-out"
-                      :class="{ 'bg-indigo-300': toggles['discord'] }"
-                    >
-                      <div
-                        class="bg-white w-8 h-8 rounded-full shadow-md transform duration-300 ease-in-out"
-                        :class="{ 'translate-x-6': toggles['discord'] }"
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
           <!-- YOUTUBE CARD -->
           <div class="my-3 w-full overflow-hidden">
             <div class="mx-auto bg-white rounded-md shadow-lg md:w-1/4">
@@ -188,15 +160,15 @@ export default defineComponent({
     checkregisteredServices(ret) {
       console.log(ret.data.services);
       if (ret.data.services) {
-        if (ret.data.connectData.twitter) this.toggles["twitter"] = true;
+        if (ret.data.services.twitter) this.toggles["twitter"] = true;
         else this.toggles["twitter"] = false;
-        if (ret.data.connectData.github) this.toggles["github"] = true;
+        if (ret.data.services.github) this.toggles["github"] = true;
         else this.toggles["github"] = false;
-        if (ret.data.connectData.discord) this.toggles["discord"] = true;
+        if (ret.data.services.discord) this.toggles["discord"] = true;
         else this.toggles["discord"] = false;
-        if (ret.data.connectData.google) this.toggles["youtube"] = true;
+        if (ret.data.services.google) this.toggles["youtube"] = true;
         else this.toggles["youtube"] = false;
-        if (ret.data.connectData.microsoft) this.toggles["outlook"] = true;
+        if (ret.data.services.microsoft) this.toggles["outlook"] = true;
         else this.toggles["outlook"] = false;
       } else this.toggles.fill(false);
     },

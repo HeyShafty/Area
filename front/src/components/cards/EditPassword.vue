@@ -66,8 +66,9 @@
               >
                 Confirm
               </button>
-              <span v-if="errorMessages.request" class="text-sm font-semibold text-red-500">{{errorMessages.request}}</span>
             </div>
+              <span v-if="errorMessages.request" class="text-sm font-semibold text-red-500">{{errorMessages.request}}</span>
+              <span v-if="successMessage" class="text-md font-semibold text-green-500">{{successMessage}}</span>
           </form>
         </div>
       </div>
@@ -76,7 +77,10 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue'
+import { ref, defineComponent } from 'vue';
+import axios from "axios";
+import { baseUri } from "../../config";
+import currentUser from "../../services/UserService";
 
 export default defineComponent({
   name: 'EditPassword',
@@ -90,6 +94,7 @@ data() {
       newPassword: '',
       newPasswordConfirm: '',
       errorMessages: [],
+      successMessage: ''
     }
   },
   watch: {
@@ -150,8 +155,22 @@ data() {
     },
 
     // EDIT UPASSWORD
-    editPassword() {
-      alert('CALL SERVER')
+    async editPassword() {
+      try {
+        await axios.put(baseUri + "/profile/password",
+        {
+          password: this.newPassword
+        },
+        {
+          headers: {
+            authorization: `Bearer ${currentUser.jwt}`,
+          },
+        });
+        this.successMessage = 'Password succesfully changed!'
+      } catch (error) {
+        console.log(error);
+        if (error.response.status == 500) console.log("500: Server Error");
+      }
     },
   }
 })
