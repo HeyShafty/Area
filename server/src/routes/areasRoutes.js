@@ -83,7 +83,7 @@ router.post('/', protectedRequest, async(req, res) => {
  *     parameters:
  *       - name: id
  *         required: true
- *         description: User ID
+ *         description: Area ID
  *         in: path
  *     responses:
  *       200:
@@ -112,7 +112,7 @@ router.put('/:id', protectedRequest, async (req, res) => {
  *     parameters:
  *       - name: id
  *         required: true
- *         description: User ID
+ *         description: Area ID
  *         in: path
  *     responses:
  *       200:
