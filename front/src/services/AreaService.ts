@@ -150,7 +150,6 @@ class AreaManager {
             data: params.getData()
         }
 
-        console.log("Data ??? ", data.data);
         return data;
     }
 
@@ -160,10 +159,6 @@ class AreaManager {
             return "401 : Unauthorized";
         }
         try {
-            //console.log({
-            //    action: this.constructAreaFromData(data.action, data.actionIndex),
-            //    reaction: this.constructAreaFromData(data.reaction, data.reactionIndex)
-            //});
             if (data.editMode == true) {
                 const ret = await axios.put(baseUri + "/areas/" + data.selectedArea.id, {
                     action: this.constructAreaFromData(data.action, data.actionIndex),
