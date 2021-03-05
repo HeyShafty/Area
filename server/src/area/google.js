@@ -29,7 +29,7 @@ async function getVideoCount(user, data) {
         throw "Could not process query";
     }
     if (count === undefined) {
-        throw "Could not find any playlist from given id parameter";
+        throw "Could not find any channel from given id parameter";
     }
     return count;
 }

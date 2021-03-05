@@ -57,7 +57,7 @@ const AREA_SERVICES = {
     ),
     google: new AreaService(
         [
-            new AreaAction("new_video", "Triggers when a video was uploaded by a subscribed channel", [ "id" ], googleCheck),
+            new AreaAction("new_video", "Triggers when a video was uploaded by a channel", [ "id" ], googleCheck),
             new AreaAction("playlist_update", "Triggers when a video was added to a playlist", [ "id" ], googleCheck),
         ],
         [],

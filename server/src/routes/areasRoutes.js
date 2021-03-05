@@ -20,7 +20,7 @@ const router = express.Router();
  *       500:
  *         description: Error.
  */
-router.post('/', protectedRequest, async(req, res) => {
+router.post('/', protectedRequest, async (req, res) => {
     const isMobile = !!req.query.mobile;
     const { user } = req;
     const actionService = AREA_SERVICES[req.body.action.service];
@@ -55,7 +55,7 @@ router.post('/', protectedRequest, async(req, res) => {
         }
     }
 
-    const error = action.checkFct(user, req.body.action, isMobile ? req.app.locals.publicMsalClient : req.app.locals.confidentialMsalClient);
+    const error = await action.checkFct(user, req.body.action, isMobile ? req.app.locals.publicMsalClient : req.app.locals.confidentialMsalClient);
     if (error) {
         return res.status(400).send(error);
     }
@@ -115,7 +115,7 @@ router.put('/:id', protectedRequest, async (req, res) => {
  *         description: Area ID
  *         in: path
  *     responses:
- *       200:
+ *       204:
  *         description: Area deleted.
  *       400:
  *         description: Could not delete Area.

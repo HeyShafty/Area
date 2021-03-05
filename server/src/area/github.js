@@ -96,10 +96,10 @@ async function getQueryCount(user, queryData, graphQuery) {
         }
     } catch (err) {
         console.log(err);
-        throw "Could not process query";
+        throw "Could not process query (maybe user/repo does not exist)";
     }
     if (count === undefined) {
-        throw "Could not find any count in query response";
+        throw "Could not find anything in query response (maybe user/repo does not exist)";
     }
     return count;
 }
