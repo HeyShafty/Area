@@ -28,8 +28,8 @@ const CONNECT_SESSION_TWITTER = 'twitter';
  *   get:
  *     summary: Login to Microsoft service.
  *     responses:
- *       302:
- *         description: Redirects to Microsoft login page. On error, redirects to app home page.
+ *       200:
+ *         description: Returns the url to microsoft login page.
  *       401:
  *         description: Not authenticated to the app.
  *       500:
@@ -105,8 +105,8 @@ router.get('/microsoft/callback', async (req, res) => {
  *   get:
  *     summary: Login to Google service.
  *     responses:
- *       302:
- *         description: Redirects to Google login page. On error, redirects to app home page.
+ *       200:
+ *         description: Returns the url to google login page.
  *       401:
  *         description: Not authenticated to the app.
  *       500:
@@ -178,8 +178,8 @@ router.get('/google/callback', async (req, res, next) => {
  *   get:
  *     summary: Login to Github service.
  *     responses:
- *       302:
- *         description: Redirects to Github login page. On error, redirects to home page.
+ *       200:
+ *         description: Returns the url to github login page.
  *       401:
  *         description: Not authenticated to the app.
  *       500:
@@ -241,6 +241,20 @@ router.get('/github/callback', async (req, res, next) => {
     })(req, res, next);
 });
 
+/**
+ * @swagger
+ *
+ * /connect/twitter:
+ *   get:
+ *     summary: Login to Twitter service.
+ *     responses:
+ *       200:
+ *         description: Returns the url to twitter login page.
+ *       401:
+ *         description: Not authenticated to the app.
+ *       500:
+ *         description: Error.
+ */
 router.get('/twitter', protectedRequest, async (req, res) => {
     const isMobile = !!req.query.mobile;
     const connectSessionId = await createConnectSession(req.user._id, CONNECT_SESSION_TWITTER, isMobile);
@@ -270,6 +284,20 @@ router.get('/twitter', protectedRequest, async (req, res) => {
     })
 })
 
+/**
+ * @swagger
+ *
+ * /connect/twitter/callback:
+ *   get:
+ *     summary: Callback used to catch Twitter authentication response.
+ *     responses:
+ *       302:
+ *         description: Redirects to app home page.
+ *       401:
+ *         description: Not authenticated to the app.
+ *       500:
+ *         description: Error.
+ */
 router.get('/twitter/callback', async (req, res, next) => {
     const { user, isMobile, data } = await extractConnectSession(req.query.state || '', CONNECT_SESSION_TWITTER);
     const oauth = new OAuth(

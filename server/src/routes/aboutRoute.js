@@ -47,7 +47,7 @@ function getAreaServices() {
  *
  * /about.json:
  *   get:
- *     summary: get about.json.
+ *     summary: Get about.json.
  *     responses:
  *       200:
  *         description: about.json sent.
