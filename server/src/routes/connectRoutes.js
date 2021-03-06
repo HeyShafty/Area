@@ -48,10 +48,10 @@ router.get('/microsoft', protectedRequest, async (req, res) => {
     try {
         const authUrl = await (isMobile ? req.app.locals.publicMsalClient : req.app.locals.confidentialMsalClient).getAuthCodeUrl(urlParameters);
 
-        res.json({ url: authUrl });
+        return res.json({ url: authUrl });
     } catch (err) {
         console.log(err);
-        res.sendStatus(500);
+        return res.sendStatus(500);
     }
 });
 
@@ -274,7 +274,7 @@ router.get('/twitter', protectedRequest, async (req, res) => {
     oauth.getOAuthRequestToken( async (err, oauthToken, oauthTokenSecret, response) => {
         if (err) {
             console.log(err);
-            res.sendStatus(500);
+            return res.sendStatus(500);
         } else {
             await addDataToConnectSession(connectSessionId, oauthTokenSecret);
             urlDeGrosChad.searchParams.append('oauth_token', oauthToken);
@@ -313,7 +313,7 @@ router.get('/twitter/callback', async (req, res, next) => {
     oauth.getOAuthAccessToken(req.query.oauth_token, data, req.query.oauth_verifier, async (err, oauthAccessToken, oauthAccessTokenSecret, response) => {
         if (err) {
             console.log(err);
-            res.sendStatus(500);
+            return res.sendStatus(500);
         } else {
             if (!user) {
                 return res.status(400).send('Invalid state');

@@ -34,7 +34,7 @@ function makeToken(user, office) {
 router.get('/ping', protectedRequest, (req, res) => {
     const { user } = req;
 
-    res.status(200).send({ email: user.email, displayName: user.displayName, isMicrosoftAuthed: user.isMicrosoftAuthed });
+    return res.status(200).send({ email: user.email, displayName: user.displayName, isMicrosoftAuthed: user.isMicrosoftAuthed });
 });
 
 /**

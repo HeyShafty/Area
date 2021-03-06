@@ -25,7 +25,7 @@ router.get('/', protectedRequest, (req, res) => {
     for (const [ k ] of connectData) {
         formattedConnectData.push(k);
     }
-    res.send({
+    return res.send({
         displayName: req.user.displayName,
         email: req.user.email,
         services: formattedConnectData,
