@@ -59,7 +59,7 @@ Here are all the diiferent actions/reactions that you can use:
   - Specific day.
   
 ## API endpoints:  
-![image](https://user-images.githubusercontent.com/44638280/110129971-cf502780-7dc8-11eb-9fac-f4f0f290cf57.png)  
+![image](https://user-images.githubusercontent.com/44638280/110214949-5d024480-7ea7-11eb-863b-3524c8d67b40.png)   
 
 ### Made by:  
 - [Kylian Balan](https://github.com/Kilio22)  
