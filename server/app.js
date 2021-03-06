@@ -30,7 +30,7 @@ const SWAGGER_OPTIONS = {
             version: '1.0.0'
         }
     },
-    apis: [ './src/routes/*Routes*.js' ]
+    apis: [ './src/routes/*Route*.js' ]
 };
 
 const swaggerSpec = swaggerJSDoc(SWAGGER_OPTIONS); // TODO: move (avec la config) dans un fichier de config.

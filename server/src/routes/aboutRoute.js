@@ -42,6 +42,16 @@ function getAreaServices() {
     return services;
 }
 
+/**
+ * @swagger
+ *
+ * /about.json:
+ *   get:
+ *     summary: get about.json.
+ *     responses:
+ *       200:
+ *         description: about.json sent.
+ */
 router.get('/', (req, res) => {
     return res.json({ client: { host: req.ip }, server: { current_time: moment().unix(), services: getAreaServices() } });
 });
