@@ -2,12 +2,30 @@
   <div class="min-h-screen p-6 bg-gray-100 lg:justify-center">
     <div class="md:-space-y-96 sm:-space-y-48">
       <!-- EDIT PROFILE CARDS -->
-      <EditInfos ref="editInfos"></EditInfos>
-      <EditPassword></EditPassword>
+      <EditInfos v-if="!officeLogin" ref="editInfos"></EditInfos>
+      <EditPassword v-if="!officeLogin"></EditPassword>
+
+      <!-- SIGNED IN W. OFFICE-->
+      <div
+        v-if="officeLogin"
+        class="flex items-center justify-center min-h-screen p-4 -mt-24"
+      >
+        <div
+          class="mx-auto bg-white rounded-md shadow-md xl:w-3/12 xl:-mt-96 -mt-32"
+        >
+          <h3 class="my-4 xl:mt-10 text-lg font-semibold text-gray-600">
+            You are signed in with your Microsoft account:
+          </h3>
+          <h3 class="my-4 text-lg font-semibold text-blue-500">
+            {{ email }}
+          </h3>
+        </div>
+      </div>
+
       <!-- SERVICES CARDS GRID-->
       <div class="flex flex-wrap -mx-3 overflow-shown">
         <!-- TWITTER CARD -->
-        <div class="my-3 w-full overflow-hidden -mt-16">
+        <div class="my-3 w-full overflow-hidden xl:-mt-16">
           <div class="mx-auto bg-white rounded-md shadow-lg md:w-1/4">
             <div
               v-on:click="twitterRegistration"
@@ -152,29 +170,40 @@ export default defineComponent({
       toggles: [],
       username: "",
       email: "",
+      officeLogin: false,
       konami: false,
     };
   },
 
   methods: {
     checkregisteredServices(ret) {
-      console.log(ret.data.services);
-      if (ret.data.services) {
-        if (ret.data.services.twitter) this.toggles["twitter"] = true;
-        else this.toggles["twitter"] = false;
-        if (ret.data.services.github) this.toggles["github"] = true;
-        else this.toggles["github"] = false;
-        if (ret.data.services.discord) this.toggles["discord"] = true;
-        else this.toggles["discord"] = false;
-        if (ret.data.services.google) this.toggles["youtube"] = true;
-        else this.toggles["youtube"] = false;
-        if (ret.data.services.microsoft) this.toggles["outlook"] = true;
-        else this.toggles["outlook"] = false;
-      } else this.toggles.fill(false);
+      if (ret.data.services && ret.data.services.length) {
+        console.log(ret.data.services);
+        for (const service of ret.data.services) {
+          if (service.localeCompare("twitter") == 0)
+            this.toggles["twitter"] = true;
+          else this.toggles["twitter"] = false;
+          if (service.localeCompare("github") == 0)
+            this.toggles["github"] = true;
+          else this.toggles["github"] = false;
+          if (service.localeCompare("google") == 0)
+            this.toggles["youtube"] = true;
+          else this.toggles["youtube"] = false;
+          if (service.localeCompare("microsoft") == 0)
+            this.toggles["outlook"] = true;
+          else this.toggles["outlook"] = false;
+        }
+      } else {
+        this.toggles["twitter"] = false;
+        this.toggles["github"] = false;
+        this.toggles["youtube"] = false;
+        this.toggles["outlook"] = false;
+      }
     },
 
     async twitterRegistration() {
       if (this.toggles["twitter"] == false) {
+        console.log("Click twitter");
         try {
           const ret = await axios.get(baseUri + "/connect/twitter", {
             headers: {
@@ -267,6 +296,8 @@ export default defineComponent({
       });
       this.$refs.editInfos.username = ret.data.displayName;
       this.$refs.editInfos.email = ret.data.email;
+      this.email = ret.data.email;
+      this.officeLogin = ret.data.isMicrosoftAuthed;
 
       this.checkregisteredServices(ret);
     } catch (error) {
