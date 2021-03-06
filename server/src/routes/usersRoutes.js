@@ -37,7 +37,7 @@ router.get('/', protectedRequest, async (req, res) => {
 /**
  * @swagger
  *
- * /delete/:id:
+ * /users/:id:
  *   delete:
  *     summary: Delete User by id.
  *     parameters:
