@@ -1,7 +1,6 @@
 const express = require('express');
 
 const protectedRequest = require('../passport/protectedRequest');
-const User = require('../models/User');
 const Area = require('../models/Area');
 const AREA_SERVICES = require('../services');
 
@@ -17,37 +16,52 @@ const router = express.Router();
  *       201:
  *         description: Area created.
  *       400:
- *         description: Action or Reaction service does not exist.
- *       401:
- *         description: Action or Reaction does not exist.
+ *         description: Bad request body parameters.
  *       500:
  *         description: Error.
  */
-router.post('/', protectedRequest, async(req, res) => {
+router.post('/', protectedRequest, async (req, res) => {
     const isMobile = !!req.query.mobile;
     const { user } = req;
-    const actionService = AREA_SERVICES.find(service => service.name === req.body.action.service);
-    const reactionService = AREA_SERVICES.find(service => service.name === req.body.reaction.service);
+    const actionService = AREA_SERVICES[req.body.action.service];
+    const reactionService = AREA_SERVICES[req.body.reaction.service];
 
     if (!actionService) {
-        return res.status(400).send('Action service does not exist');
+        return res.status(400).send('Action: service does not exist');
     }
     if (!reactionService) {
-        return res.status(400).send('Reaction service does not exist');
+        return res.status(400).send('Reaction: service does not exist');
     }
 
-    const actionName = actionService.actions.find(action => action.name === req.body.action.name);
-    const reactionName = reactionService.reactions.find(reaction => reaction.name === req.body.reaction.name);
+    const action = actionService.actions.find(a => a.name === req.body.action.name);
+    const reaction = reactionService.reactions.find(r => r.name === req.body.reaction.name);
 
-    if (!actionName) {
-        return res.status(401).send('Action does not exist');
+    if (!action) {
+        return res.status(400).send('Action: name does not exist');
     }
-    if (!reactionName) {
-        return res.status(401).send('Reaction does not exist');
+    if (!reaction) {
+        return res.status(400).send('Reaction: name does not exist');
+    }
+
+    // Check if all params are given in data object for both action and reaction.
+    for (const param of action.paramNames) {
+        if (!req.body.action.data.hasOwnProperty(param)) {
+            return res.status(400).send(`Action: missing '${param}' data argument.`);
+        }
+    }
+    for (const param of reaction.paramNames) {
+        if (!req.body.reaction.data.hasOwnProperty(param)) {
+            return res.status(400).send(`Reaction: missing '${param}' data argument.`);
+        }
+    }
+
+    const error = await action.checkFct(user, req.body.action, isMobile ? req.app.locals.publicMsalClient : req.app.locals.confidentialMsalClient);
+    if (error) {
+        return res.status(400).send(error);
     }
 
     try {
-        const newArea = await Area.create({
+        await Area.create({
             userId: user._id,
             isMobile,
             action: req.body.action,
@@ -69,7 +83,7 @@ router.post('/', protectedRequest, async(req, res) => {
  *     parameters:
  *       - name: id
  *         required: true
- *         description: User ID
+ *         description: Area ID
  *         in: path
  *     responses:
  *       200:
@@ -98,10 +112,10 @@ router.put('/:id', protectedRequest, async (req, res) => {
  *     parameters:
  *       - name: id
  *         required: true
- *         description: User ID
+ *         description: Area ID
  *         in: path
  *     responses:
- *       200:
+ *       204:
  *         description: Area deleted.
  *       400:
  *         description: Could not delete Area.

@@ -9,7 +9,6 @@ async function everyHour(area, react) {
     if (data.minute === minutes && data.lastHour !== hour) {
         area.action.data.lastHour = hour;
         await Area.findByIdAndUpdate(area._id, area);
-        // await Area.updateOne(area, area); // TODO: check if better
         react(area);
     }
 }
@@ -36,4 +35,6 @@ async function timerTriggers(area, react) {
     }
 }
 
-module.exports = timerTriggers;
+module.exports = {
+    timerTriggers
+};
