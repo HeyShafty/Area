@@ -109,7 +109,7 @@ export class ParamList {
                 owner: this.list[0].value,
                 repo: this.list[1].value
             }
-        } else if (this.requestValue == "new_repo") {
+        } else if (this.requestValue == "new_repository") {
             data = {
                 action: this.requestValue,
                 owner: this.list[0].value
@@ -131,7 +131,7 @@ export class ParamList {
                 subject: this.list[1].value,
                 body: this.list[2].value
             }
-        } else if (this.requestValue == "send_tweet" || this.requestValue == "update_bio") {
+        } else if (this.requestValue == "post_tweet" || this.requestValue == "update_bio") {
             data = {
                 reaction: this.requestValue,
                 body: this.list[0].value
@@ -150,7 +150,7 @@ export class ParamList {
                 title: this.list[2].value,
                 body: this.list[3].value
             }
-        } else if (this.requestValue == "incomming_mail") {
+        } else if (this.requestValue == "incoming_mail") {
             data = {
                 reaction: this.requestValue,
             }
