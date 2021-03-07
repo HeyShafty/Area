@@ -122,7 +122,7 @@ export default defineComponent({
         this.dialogIndex++;
       else
         this.hiddenButton = false;
-    }, 1)
+    }, 3000)
     
   },
   methods: {
