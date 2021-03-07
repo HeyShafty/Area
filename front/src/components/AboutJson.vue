@@ -8,7 +8,7 @@
         </pre> -->
         <vue-json-pretty :path="'res'" :data="aboutString"> </vue-json-pretty>
       </div>
-      <div class="spacebottom">
+      <div class="space-bottom">
       </div>
     </div>
   </div>
@@ -51,7 +51,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.spacebottom {
+.space-bottom {
   margin-top: 65px;
 }
 .root {
