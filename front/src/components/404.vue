@@ -108,6 +108,11 @@ export default defineComponent({
       if (!this.playMode)
         return;
       this.score++;
+      var highscore = localStorage.getItem("highscore");
+      if (highscore == null || highscore < this.bestScore)
+        localStorage.setItem("highscore", this.bestScore);
+      else
+        this.bestScore = highscore;
     }, 1000)
     window.setInterval(() => {
       if (!this.hiddenButton)
@@ -117,7 +122,7 @@ export default defineComponent({
         this.dialogIndex++;
       else
         this.hiddenButton = false;
-    }, 3000)
+    }, 1)
     
   },
   methods: {
