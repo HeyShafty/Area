@@ -177,27 +177,22 @@ export default defineComponent({
 
   methods: {
     checkregisteredServices(ret) {
+      this.toggles["twitter"] = false;
+      this.toggles["github"] = false;
+      this.toggles["youtube"] = false;
+      this.toggles["outlook"] = false;
       if (ret.data.services && ret.data.services.length) {
         console.log(ret.data.services);
         for (const service of ret.data.services) {
           if (service.localeCompare("twitter") == 0)
             this.toggles["twitter"] = true;
-          else this.toggles["twitter"] = false;
           if (service.localeCompare("github") == 0)
             this.toggles["github"] = true;
-          else this.toggles["github"] = false;
           if (service.localeCompare("google") == 0)
             this.toggles["youtube"] = true;
-          else this.toggles["youtube"] = false;
           if (service.localeCompare("microsoft") == 0)
             this.toggles["outlook"] = true;
-          else this.toggles["outlook"] = false;
         }
-      } else {
-        this.toggles["twitter"] = false;
-        this.toggles["github"] = false;
-        this.toggles["youtube"] = false;
-        this.toggles["outlook"] = false;
       }
     },
 

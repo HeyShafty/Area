@@ -34,7 +34,7 @@ In the `documentation/` folder you can find these documents:
 ![image](https://user-images.githubusercontent.com/44638280/109786257-45a82a80-7c0d-11eb-899c-9dc23f803bff.png)  
 
 ## Services:  
-Here are all the diiferent actions/reactions that you can use:  
+Here are all the different actions/reactions that you can use:  
 - Outlook:  
   - Reception of a new email.
   - Send an email.
@@ -65,5 +65,5 @@ Here are all the diiferent actions/reactions that you can use:
 - [Kylian Balan](https://github.com/Kilio22)  
 - [Nathan Lecorchet](https://github.com/HeyShafty)  
 - [Ghassane Sebaï](https://github.com/SuperZikoure)  
-- [Rodolphe Dupuis](https://github.com/rodolphedps)    
+- [Rodolphe Dupuis](https://github.com/RodolpheDupuis)    
 - [Eliott Palueau](https://github.com/EliottPal)  
