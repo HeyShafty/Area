@@ -61,6 +61,10 @@ Here are all the different actions/reactions that you can use:
 ## API endpoints:  
 ![image](https://user-images.githubusercontent.com/44638280/110248591-3a892d80-7f72-11eb-8b0b-1d004d7bbd2e.png)    
 
+## Results:  
+Project mark: **26/28**  
+Grade: **A**
+
 ### Made by:  
 - [Kylian Balan](https://github.com/Kilio22)  
 - [Nathan Lecorchet](https://github.com/HeyShafty)  
